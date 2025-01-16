@@ -4,11 +4,19 @@ version = "0.1.0"
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["textual>=1.0.0", "whenever>=0.6.16"]
+dependencies = [
+    "textual>=1.0.0",
+    "whenever>=0.6.16",
+]
 classifiers = ["Private :: Do Not Upload"]
 
 [dependency-groups]
-dev = ["pytest>=8.3.4", "textual-dev>=1.7.0"]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+    "pytest-textual-snapshot>=1.0.0",
+    "textual-dev>=1.7.0",
+]
 
 
 [project.scripts]
