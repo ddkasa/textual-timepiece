@@ -4,10 +4,64 @@ version = "0.1.0"
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "textual>=1.0.0",
-    "whenever>=0.6.16",
-]
+dependencies = ["textual>=1.0.0", "whenever>=0.6.16"]
+classifiers = ["Private :: Do Not Upload"]
 
 [dependency-groups]
 dev = ["pytest>=8.3.4", "textual-dev>=1.7.0"]
+
+
+[project.scripts]
+demo = "textual_timepiece.__main__:main"
+
+
+[tool.ruff]
+target-version = "py39"
+output-format = "full"
+line-length = 99
+fix = true
+extend-exclude = ["docs/*"]
+
+[tool.ruff.lint]
+select = [
+    "E401",
+    "E",
+    "F",
+    "W",    # flake8
+    "C",    # mccabe
+    "I",    # isort
+    "N",    # pep8-naming
+    # "D",   # flake8-docstrings
+    "ANN", # flake8-annotations
+    "S",   # flake8-bandit
+    "BLE", # flake8-blind-except
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "G",   # flake8-logging-format
+    "ERA", # eradicate
+    "ISC", # flake8-implicit-str-concat
+    "RUF", # Ruff-specific rules
+]
+ignore = ["ANN101", "ANN401", "D107", "ANN102", "A002", "A001"]
+unfixable = [
+    "ERA", # Don't remove commented-out code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+
+[tool.ruff.lint.isort]
+known-first-party = ["textual_timepiece"]
+force-single-line = true
+
+
+[tool.mypy]
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_configs = true
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
