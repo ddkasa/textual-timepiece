@@ -4,10 +4,7 @@ version = "0.1.0"
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "textual>=1.0.0",
-    "whenever>=0.6.16",
-]
+dependencies = ["textual>=1.0.0", "whenever>=0.6.16"]
 classifiers = ["Private :: Do Not Upload"]
 
 [dependency-groups]
@@ -55,9 +52,6 @@ unfixable = [
     "ERA", # Don't remove commented-out code
 ]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
-
 
 [tool.ruff.lint.isort]
 known-first-party = ["textual_timepiece"]
@@ -68,6 +62,17 @@ force-single-line = true
 ignore_missing_imports = true
 warn_return_any = true
 warn_unused_configs = true
+
+
+[tool.pytest.ini_options]
+markers = [
+    "snapshot: tests that take visual snapshots.",
+    "slow: tests that are slow to run or have delays included.",
+]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--strict-markers"
+asyncio_default_fixture_loop_scope = "function"
 
 
 [build-system]
