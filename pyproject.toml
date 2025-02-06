@@ -12,6 +12,7 @@ dev = [
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",
     "pytest-textual-snapshot>=1.0.0",
+    "pytest-xdist>=3.6.1",
     "textual-dev>=1.7.0",
 ]
 
@@ -55,6 +56,8 @@ unfixable = [
     "ERA", # Don't remove commented-out code
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN", "E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["textual_timepiece"]
@@ -63,12 +66,13 @@ force-single-line = true
 
 [tool.mypy]
 ignore_missing_imports = true
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
 
 
 [tool.pytest.ini_options]
 markers = [
+    "unit: basic unit tests with no special properties.",
     "snapshot: tests that take visual snapshots.",
     "slow: tests that are slow to run or have delays included.",
 ]
