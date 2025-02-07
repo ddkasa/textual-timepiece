@@ -10,3 +10,4 @@ wheels/
 .venv
 .envrc
 snapshot_report.html
+.coverage

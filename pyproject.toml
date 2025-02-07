@@ -9,8 +9,10 @@ classifiers = ["Private :: Do Not Upload"]
 
 [dependency-groups]
 dev = [
+    "coverage>=7.6.10",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",
+    "pytest-cov>=6.0.0",
     "pytest-textual-snapshot>=1.0.0",
     "pytest-xdist>=3.6.1",
     "textual-dev>=1.7.0",
@@ -80,3 +82,16 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 addopts = "--strict-markers"
 asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.report]
+fail_under = 80
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug",
+    "if settings.DEBUG:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == __main__:",
+]
