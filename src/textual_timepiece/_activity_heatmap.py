@@ -84,13 +84,13 @@ class HeatmapCursor(NamedTuple):
         week = self.week + week_delta
         day = self.day + day_delta
         if day == 9:
-            iso = date.fromisocalendar(year, min(week + 1, 52), 1)
-            iso_cal = iso.replace(
-                month=min(12, max(1, iso.month + week_delta)),
-                day=1,
-            )
-            week = iso_cal.isocalendar().week
-            month = iso_cal.month
+            if self.is_month:
+                iso = self.to_date(year).py_date()
+            else:
+                iso = date.fromisocalendar(year, min(week + 1, 52), 1)
+
+            month = min(12, max(1, iso.month + week_delta))
+            week = iso.replace(day=1, month=month).isocalendar().week
 
         return HeatmapCursor(week, day, month)
 

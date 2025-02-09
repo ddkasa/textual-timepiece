@@ -3,6 +3,7 @@ from functools import partial
 import pytest
 
 from textual_timepiece._activity_heatmap import ActivityHeatmap
+from textual_timepiece._activity_heatmap import HeatmapCursor
 from textual_timepiece._activity_heatmap import HeatmapManager
 
 
@@ -44,6 +45,28 @@ def test_heatmap_hover_month(
         await pilot.hover(heatmap_app.widget, (147, 17))
 
     assert heatmap_snap(heatmap_app, run_before=run_before)
+
+
+@pytest.mark.unit
+async def test_heatmap_month_nav(heatmap_app, heatmap_data, freeze_time):
+    async with heatmap_app.run_test() as pilot:
+        heatmap_app.widget.process_data(heatmap_data)
+        heatmap_app.widget.focus()
+        heatmap_app.widget.cursor = HeatmapCursor(week=0, day=9, month=1)
+        assert heatmap_app.widget.cursor.to_date(
+            freeze_time.year
+        ) == freeze_time.replace(month=1, day=1)
+
+        # NOTE: Additional left for checking date restrictions.
+        await pilot.press("left", "right")
+        assert heatmap_app.widget.cursor.to_date(
+            freeze_time.year
+        ) == freeze_time.replace(month=2, day=1)
+
+        await pilot.press("right", "left")
+        assert heatmap_app.widget.cursor.to_date(
+            freeze_time.year
+        ) == freeze_time.replace(month=2, day=1)
 
 
 @pytest.mark.snapshot
