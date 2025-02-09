@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  generate-jobs:
+    runs-on: ubuntu-latest
+    outputs:
+      session: ${{ steps.set-matrix.outputs.session }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wntrblm/nox@main
+      - id: set-matrix
+        shell: bash
+        run: echo session=$(nox --json -l | jq -c '[.[].session]') | tee --append $GITHUB_OUTPUT
+
+  checks:
+    name: ${{ matrix.session }}
+    needs: [generate-jobs]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        session: ${{ fromJson(needs.generate-jobs.outputs.session) }}
+
+    env:
+      TEXTUAL_THEME: tokyo-night
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wntrblm/nox@main
+      - uses: astral-sh/setup-uv@v5
+      - run: nox -s "${{ matrix.session }}"
+
+      - name: Upload snapshot report
+        if: ${{ matrix.session == 'test-3.12' }}
+        # NOTE: remove this check if other versions are flaking.
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot_report_textual
+          path: snapshot_report.html
+          overwrite: true
+
+      - name: Upload coverage reports to Codecov
+        if: ${{ matrix.session == 'test-3.12' }}
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

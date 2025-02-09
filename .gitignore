@@ -11,3 +11,4 @@ wheels/
 .envrc
 snapshot_report.html
 .coverage
+coverage.xml
