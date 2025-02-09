@@ -30,9 +30,6 @@ from textual.widgets import MaskedInput
 
 from textual_timepiece._extra import BaseWidget
 
-T = TypeVar("T")
-
-
 Directions: TypeAlias = Literal["up", "right", "down", "left"]
 
 
@@ -147,6 +144,9 @@ class AbstractDialog(BaseWidget):
             return len(self.children) > 1
 
         return bool(super().check_action(action, parameters))
+
+
+T = TypeVar("T")
 
 
 class BaseInput(MaskedInput, BaseWidget, Generic[T]):
@@ -274,10 +274,7 @@ class BaseInput(MaskedInput, BaseWidget, Generic[T]):
         self.set_reactive(getattr(self.__class__, self.ALIAS), value)
 
 
-TV = TypeVar("TV")
-
-
-class AbstractPicker(BaseWidget, Generic[TV]):
+class AbstractPicker(BaseWidget, Generic[T]):
     """Abstract Picker class that defines most of the base behaviour."""
 
     DEFAULT_CSS = """
@@ -419,14 +416,14 @@ class AbstractPicker(BaseWidget, Generic[TV]):
 TI = TypeVar("TI", bound=BaseInput)
 
 
-class BasePicker(AbstractPicker, Generic[TI, TV]):
+class BasePicker(AbstractPicker, Generic[TI, T]):
     """Base Picker class for combining various single ended widgets."""
 
     INPUT: type[TI]
 
     def __init__(
         self,
-        value: TV | None = None,
+        value: T | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -458,14 +455,14 @@ class BasePicker(AbstractPicker, Generic[TI, TV]):
 
     @cached_property
     def input_widget(self) -> TI:
-        return cast(TI, self.query_exactly_one(self.INPUT))
+        return self.query_exactly_one(self.INPUT)
 
     @property
     @abstractmethod
-    def value(self) -> TV | None:
+    def value(self) -> T | None:
         """Alias for whatever value the picker may be holding."""
 
     @value.setter
     @abstractmethod
-    def value(self, value: TV | None) -> None:
+    def value(self, value: T | None) -> None:
         """Alias for whatever value the picker may be holding."""
