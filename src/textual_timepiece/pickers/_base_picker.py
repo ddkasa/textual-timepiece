@@ -194,7 +194,7 @@ class BaseInput(MaskedInput, BaseWidget, Generic[T]):
         Binding(
             "down",
             "adjust_time(-1)",
-            "Increment",
+            "Decrement",
             tooltip="Decrement value depending on keyboard cursor location.",
             priority=True,
         ),
