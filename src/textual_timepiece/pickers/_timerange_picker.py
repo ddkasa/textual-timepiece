@@ -24,6 +24,7 @@ from whenever import TimeDelta
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import ExpandButton
 from textual_timepiece._extra import LockButton
+from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import round_time
 
 from ._base_picker import AbstractDialog
@@ -123,11 +124,8 @@ class DateRangePicker(AbstractPicker):
             yield DateInput(id="start-date-input").data_bind(
                 date=DateRangePicker.start_date,
             )
-            yield Button(
-                "🞜 ",
-                id="target-default-start",
-                classes="icon target",
-            )
+
+            yield TargetButton(id="target-default-start")
             yield LockButton(
                 is_locked=self._date_range is not None,
                 id="lock-button",
@@ -138,11 +136,7 @@ class DateRangePicker(AbstractPicker):
             yield DateInput(id="stop-date-input").data_bind(
                 date=DateRangePicker.end_date,
             )
-            yield Button(
-                "🞜 ",
-                id="target-default-end",
-                classes="icon target",
-            )
+            yield TargetButton(id="target-default-end")
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=DateRangePicker.expanded,
             )
@@ -349,9 +343,8 @@ class DateTimeRangePicker(AbstractPicker):
             yield DateTimeInput(id="start-input").data_bind(
                 datetime=DateTimeRangePicker.start_dt,
             )
-            yield Button(
-                "🞜 ", id="target-default-start", classes="icon target"
-            )
+
+            yield TargetButton(id="target-default-start")
             yield LockButton(
                 is_locked=self._time_range is not None,
                 id="lock-button",
@@ -362,7 +355,7 @@ class DateTimeRangePicker(AbstractPicker):
             yield DateTimeInput(id="end-input").data_bind(
                 datetime=DateTimeRangePicker.end_dt,
             )
-            yield Button("🞜 ", id="target-default-end", classes="icon target")
+            yield TargetButton(id="target-default-end")
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=DateTimeRangePicker.expanded,
             )

@@ -43,6 +43,7 @@ class BaseWidget(Widget):
         for seg in self.render_line(
             offset.y - self._top_border_offset()
         )._segments:
+            # NOTE: Probably should look for a public method for this.
             index += len(seg.text)
             if index > offset.x:
                 return str(seg.text.strip())
@@ -65,6 +66,11 @@ class BaseWidget(Widget):
 
 
 class LockButton(Button, BaseWidget):
+    LOCKED_ICON: str = "🔒"
+    """Icon the button renders when the widget is locked."""
+    UNLOCKED_ICON: str = "🔒"
+    """Icon the button renders when the widget is unlocked."""
+
     DEFAULT_CSS: ClassVar[str] = """
     LockButton {
         background: transparent;
@@ -79,7 +85,7 @@ class LockButton(Button, BaseWidget):
     """
 
     locked: var[bool] = var(True, init=False)
-    icon: reactive[Text] = reactive(Text("🔒"), init=False)
+    icon: reactive[Text] = reactive(Text(LOCKED_ICON), init=False)
 
     def __init__(
         self,
@@ -105,7 +111,10 @@ class LockButton(Button, BaseWidget):
         self.locked = is_locked
 
     def compute_icon(self) -> Text:
-        return Text("🔒" if self.locked else "🔓", self.rich_style)
+        return Text(
+            self.LOCKED_ICON if self.locked else self.UNLOCKED_ICON,
+            self.rich_style,
+        )
 
     def render(self) -> RenderResult:
         return self.icon
@@ -119,7 +128,7 @@ class LockButton(Button, BaseWidget):
 
 
 class ExpandButton(Button):
-    """Toggl button which essentially acts like a checkbox/switch."""
+    """Button with a special icon."""
 
     DEFAULT_CSS: ClassVar[str] = """
     ExpandButton {
@@ -135,11 +144,56 @@ class ExpandButton(Button):
     expanded: var[bool] = var(False, init=False)
     icon: reactive[Text] = reactive(Text(), init=False)
 
+    def __init__(
+        self,
+        name: str | None = None,
+        id: str | None = None,
+        classes: str | None = None,
+        *,
+        disabled: bool = False,
+        tooltip: RenderableType | None = None,
+        action: str | None = None,
+    ) -> None:
+        super().__init__(
+            name=name,
+            id=id,
+            classes=classes,
+            disabled=disabled,
+            tooltip=tooltip,
+            action=action,
+        )
+
     def compute_icon(self) -> Text:
         return Text("▲" if self.expanded else "▼", self.rich_style)
 
     def watch_icon(self, icon: Text) -> None:
         self.label = icon
+
+
+class TargetButton(Button):
+    TARGET_ICON: str = "◎"
+
+    def __init__(
+        self,
+        name: str | None = None,
+        id: str | None = None,
+        classes: str | None = None,
+        *,
+        disabled: bool = False,
+        tooltip: RenderableType | None = None,
+        action: str | None = None,
+    ) -> None:
+        super().__init__(
+            name=name,
+            id=id,
+            classes=classes,
+            disabled=disabled,
+            tooltip=tooltip,
+            action=action,
+        )
+
+    def render(self) -> RenderResult:
+        return Text(self.TARGET_ICON, self.rich_style)
 
 
 @dataclass

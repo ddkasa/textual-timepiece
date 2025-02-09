@@ -40,6 +40,7 @@ from whenever import years
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import ExpandButton
+from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
@@ -104,11 +105,11 @@ class DateSelect(AbstractSelect):
         widget: DateSelect
         date: Date | None
 
-    LEFT_ARROW = "←"
+    LEFT_ARROW: str = "←"
     """Arrow used for navigating backwards in time."""
-    TARGET_ICON = "◎"
+    TARGET_ICON: str = "◎"
     """Return to default location icon."""
-    RIGHT_ARROW = "→"
+    RIGHT_ARROW: str = "→"
     """Arrow use for navigating forward in time."""
 
     DEFAULT_CSS = """
@@ -982,11 +983,10 @@ class DatePicker(BasePicker[DateInput, Date]):
         with Horizontal(id="input-control"):
             yield DateInput(id="date-input").data_bind(date=DatePicker.date)
 
-            yield Button(
-                "🞜 ",
+            yield TargetButton(
                 id="target-default",
                 disabled=self.date == Date.today_in_system_tz(),
-                classes="target",
+                tooltip="Set the date to today.",
             )
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=BasePicker.expanded

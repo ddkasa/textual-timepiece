@@ -49,6 +49,7 @@ from whenever import days
 from textual_timepiece._extra import BaseMessage
 
 from ._extra import BaseWidget
+from ._extra import TargetButton
 from ._utility import flat_to_shape
 from ._utility import format_seconds
 from ._utility import iterate_timespan
@@ -771,8 +772,7 @@ class HeatmapManager(BaseWidget):
                 validate_on=("blur", "submitted"),
                 id="year-input",
             )
-            yield Button(
-                "🞜 ",
+            yield TargetButton(
                 id="today-button",
                 classes="nav",
                 tooltip="View Current Year",

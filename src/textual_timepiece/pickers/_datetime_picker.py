@@ -18,6 +18,7 @@ from whenever import Time
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import ExpandButton
+from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import round_time
 
@@ -210,7 +211,7 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
             yield DateTimeInput().data_bind(DateTimePicker.datetime)
-            yield Button("🞜 ", id="target-default", classes="target")
+            yield TargetButton(id="target-default")
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=DateTimePicker.expanded,
             )

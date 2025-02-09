@@ -29,6 +29,7 @@ from whenever import seconds
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import ExpandButton
+from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
 from textual_timepiece._utility import round_time
@@ -291,6 +292,8 @@ class DurationInput(BaseInput[TimeDelta]):
             else:
                 self.value = ""
 
+        self.post_message(self.DurationChanged(self, self.duration))
+
     def _watch_value(self, value: str) -> None:
         if dur := self.convert():
             self.duration = dur
@@ -315,8 +318,6 @@ class DurationInput(BaseInput[TimeDelta]):
             self.duration += minutes(offset)
         elif 6 <= self.cursor_position:
             self.duration += seconds(offset)
-
-        self.post_message(self.DurationChanged(self, self.duration))
 
 
 class DurationPicker(BasePicker[DurationInput, TimeDelta]):
@@ -347,10 +348,9 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
                     duration=DurationPicker.duration
                 )
             )
-            yield Button(
-                "🞜 ",
+            yield TargetButton(
                 id="target-default",
-                classes="icon target",
+                tooltip="Set the duration to zero.",
             )
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=DurationPicker.expanded
@@ -545,12 +545,7 @@ class TimePicker(BasePicker[TimeInput, Time]):
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
             yield TimeInput(id="data-input").data_bind(time=TimePicker.time)
-
-            yield Button(
-                "🞜 ",
-                id="target-default",
-                classes="icon target",
-            )
+            yield TargetButton(id="target-default")
             yield ExpandButton(id="toggle-button").data_bind(
                 expanded=TimePicker.expanded
             )

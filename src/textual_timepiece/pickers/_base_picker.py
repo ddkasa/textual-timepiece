@@ -331,14 +331,15 @@ class AbstractPicker(BaseWidget, Generic[T]):
                 border: none;
                 padding: 0;
                 height: 1;
-                &.target {
-                    min-width: 3;
-                    max-width: 5;
-                }
+
                 &:focus {
                     color: $accent;
                     text-style: none;
                 }
+            }
+            & > TargetButton {
+                min-width: 1;
+                max-width: 3;
             }
 
             & > BaseInput {
