@@ -1,21 +1,53 @@
 [project]
 name = "textual-timepiece"
 version = "0.1.0"
+authors = [{ name = "David Kasakaitis", email = "davidkasakaitis@proton.me" }]
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["textual>=1.0.0", "whenever>=0.6.16"]
-classifiers = ["Private :: Do Not Upload"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Typing :: Typed",
+    "Topic :: Terminals",
+]
+keywords = [
+    "textual",
+    "tui",
+    "time",
+    "date",
+    "whenever",
+    "heatmap",
+    "activity",
+    "widget",
+]
+license = "MIT"
+license-files = ["LICENSE.md"]
+
+[project.urls]
+Repository = "https://github.com/ddkasa/textual-timepiece"
+Issues = "https://github.com/ddkasa/textual-timepiece/issues"
+Changelog = "https://github.com/ddkasa/textual-timepiece/tree/main/docs/CHANGELOG.md"
+Coverage = "https://app.codecov.io/gh/ddkasa/textual-timepiece"
 
 [dependency-groups]
 dev = ["nox>=2024.10.9", "textual-dev>=1.7.0"]
 type = ["mypy>=1.15.0"]
 test = [
-  "pytest>=8.3.4",
-  "pytest-asyncio>=0.25.2",
-  "pytest-cov>=6.0.0",
-  "pytest-textual-snapshot>=1.0.0",
-  "pytest-xdist>=3.6.1",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+    "pytest-cov>=6.0.0",
+    "pytest-textual-snapshot>=1.0.0",
+    "pytest-xdist>=3.6.1",
 ]
 lint = ["ruff>=0.9.5"]
 
@@ -36,27 +68,27 @@ extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]
 select = [
-  "E401",
-  "E",
-  "F",
-  "W",    # flake8
-  "C",    # mccabe
-  "I",    # isort
-  "N",    # pep8-naming
-  # "D",   # flake8-docstrings
-  "ANN", # flake8-annotations
-  "S",   # flake8-bandit
-  "BLE", # flake8-blind-except
-  "B",   # flake8-bugbear
-  "A",   # flake8-builtins
-  "G",   # flake8-logging-format
-  "ERA", # eradicate
-  "ISC", # flake8-implicit-str-concat
-  "RUF", # Ruff-specific rules
+    "E401",
+    "E",
+    "F",
+    "W",    # flake8
+    "C",    # mccabe
+    "I",    # isort
+    "N",    # pep8-naming
+    # "D",   # flake8-docstrings
+    "ANN", # flake8-annotations
+    "S",   # flake8-bandit
+    "BLE", # flake8-blind-except
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "G",   # flake8-logging-format
+    "ERA", # eradicate
+    "ISC", # flake8-implicit-str-concat
+    "RUF", # Ruff-specific rules
 ]
 ignore = ["ANN101", "ANN401", "D107", "ANN102", "A002", "A001"]
 unfixable = [
-  "ERA", # Don't remove commented-out code
+    "ERA", # Don't remove commented-out code
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -77,9 +109,9 @@ warn_unused_configs = true
 
 [tool.pytest.ini_options]
 markers = [
-  "unit: basic unit tests with no special properties.",
-  "snapshot: tests that take visual snapshots.",
-  "slow: tests that are slow to run or have delays included.",
+    "unit: basic unit tests with no special properties.",
+    "snapshot: tests that take visual snapshots.",
+    "slow: tests that are slow to run or have delays included.",
 ]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -89,14 +121,14 @@ asyncio_default_fixture_loop_scope = "function"
 [tool.coverage.report]
 fail_under = 80
 exclude_lines = [
-  "pragma: no cover",
-  "def __repr__",
-  "if self.debug",
-  "if settings.DEBUG:",
-  "raise AssertionError",
-  "raise NotImplementedError",
-  "if 0:",
-  "if __name__ == __main__:",
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug",
+    "if settings.DEBUG:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == __main__:",
 ]
 
 
