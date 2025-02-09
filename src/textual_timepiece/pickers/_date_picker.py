@@ -104,6 +104,13 @@ class DateSelect(AbstractSelect):
         widget: DateSelect
         date: Date | None
 
+    LEFT_ARROW = "←"
+    """Arrow used for navigating backwards in time."""
+    TARGET_ICON = "◎"
+    """Return to default location icon."""
+    RIGHT_ARROW = "→"
+    """Arrow use for navigating forward in time."""
+
     DEFAULT_CSS = """
         DateSelect {
             width: auto;
@@ -208,7 +215,7 @@ class DateSelect(AbstractSelect):
     """Mouse cursor position for mouse navigation."""
 
     cursor: reactive[DateCursor | None] = reactive(None, init=False)
-    """Keyboard cursor position """
+    """Keyboard cursor position."""
 
     def __init__(
         self,
@@ -290,6 +297,7 @@ class DateSelect(AbstractSelect):
         if (new_y := cursor.y + y) == 0:
             new_x = cursor.x + x
             if cursor.y != 0:
+                # NOTE: Making sure different row lengths align.
                 new_x = math.ceil(((cursor.x) / len(self.data[y - 1])) * 3)
 
             self.cursor = cursor.replace(y=new_y, x=new_x).confine(self.data)
@@ -297,6 +305,7 @@ class DateSelect(AbstractSelect):
         elif y and 0 <= new_y <= len(self.data):
             new_x = cursor.x
             if cursor.y == 0:
+                # NOTE: Making sure different row lengths align.
                 new_x = math.ceil(((cursor.x) / 3) * len(self.data[y - 1]))
 
             self.cursor = cursor.replace(y=new_y, x=new_x).confine(self.data)
@@ -375,17 +384,22 @@ class DateSelect(AbstractSelect):
         """Triggers the functionality for what is below the keyboard cursor."""
         cursor = cast(DateCursor, self.cursor)
         if cursor.y == 0:
-            nav = ("🠬", self.header, "🞋", "🢚")
+            nav = (
+                self.LEFT_ARROW,
+                self.header,
+                self.TARGET_ICON,
+                self.RIGHT_ARROW,
+            )
             self._navigate_picker(nav[cursor.x], ctrl=ctrl)
         else:
             self._navigate_picker(self.data[cursor.y - 1][cursor.x], ctrl=ctrl)
 
     def _navigate_picker(self, target: str | int, *, ctrl: bool) -> None:
-        if target == "🠬":
+        if target == self.LEFT_ARROW:
             self._crement_scope(-1)
-        elif target == "🞋":
+        elif target == self.TARGET_ICON:
             self._set_current_scope()
-        elif target == "🢚":
+        elif target == self.RIGHT_ARROW:
             self._crement_scope(1)
         elif target == self.header:
             if ctrl:
@@ -508,7 +522,7 @@ class DateSelect(AbstractSelect):
         header_len = len(self.header)
         rem = self.size.width - (header_len + 10)
         blank, blank_extra = divmod(rem, 2)
-        header_start = 6 + blank + blank_extra
+        header_start = 5 + blank + blank_extra
         header_end = header_start + header_len
         next_start = header_end + (blank - blank_extra)
 
@@ -516,10 +530,10 @@ class DateSelect(AbstractSelect):
         return [
             Segment("   ", self.rich_style),
             Segment(
-                "🠬 ",
+                self.LEFT_ARROW,
                 self._filter_style(
                     y,
-                    range(4, 6),
+                    range(4, 5),
                     log_idx=DateCursor(0, 0),
                 ),
             ),
@@ -532,18 +546,18 @@ class DateSelect(AbstractSelect):
                     log_idx=DateCursor(0, 1),
                 ),
             ),
-            Segment("  ", self.rich_style),
+            Segment("   ", self.rich_style),
             Segment(
-                "🞋 ",
+                self.TARGET_ICON,
                 style=self._filter_style(
                     y,
                     range(header_end + 1, header_end + 3),
                     log_idx=DateCursor(0, 2),
                 ),
             ),
-            Segment(" " * (blank - (5 - blank_extra)), self.rich_style),
+            Segment(" " * (blank - (3 - blank_extra)), self.rich_style),
             Segment(
-                "🢚 ",
+                self.RIGHT_ARROW,
                 style=self._filter_style(
                     y,
                     range(next_start, next_start + 2),
