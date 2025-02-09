@@ -36,10 +36,6 @@ T = TypeVar("T")
 Directions: TypeAlias = Literal["up", "right", "down", "left"]
 
 
-class NotUpdated:
-    pass
-
-
 class AbstractSelect(BaseWidget):
     """Base Class that defines the interal widgets of the dialog."""
 
