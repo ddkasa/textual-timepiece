@@ -10,7 +10,6 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.containers import Vertical
 from textual.reactive import var
-from textual.widgets import Button
 from textual.widgets import Input
 from whenever import Date
 from whenever import SystemDateTime
@@ -280,11 +279,6 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
     def to_default(self) -> None:
         self.datetime = SystemDateTime.now()
         self.date_dialog.date_select.scope = DateScope.MONTH
-
-    @on(Button.Pressed, "#target-default")
-    def _action_target_today(self, message: Button.Pressed) -> None:
-        message.stop()
-        self.to_default()
 
     @cached_property
     def dt_input(self) -> DateTimeInput:
