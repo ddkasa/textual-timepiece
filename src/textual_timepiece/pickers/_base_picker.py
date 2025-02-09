@@ -449,9 +449,12 @@ class BasePicker(AbstractPicker, Generic[TI, TV]):
         self.default = value
 
     @on(Button.Pressed, "#target-default")
-    def _action_target_today(self, message: Button.Pressed) -> None:
+    def _action_target_today(
+        self, message: Button.Pressed | None = None
+    ) -> None:
+        if message:
+            message.stop()
         self.to_default()
-        message.stop()
 
     @abstractmethod
     def to_default(self) -> None:
