@@ -298,7 +298,7 @@ class DateSelect(AbstractSelect):
             new_x = cursor.x + x
             if cursor.y != 0:
                 # NOTE: Making sure different row lengths align.
-                new_x = math.ceil(((cursor.x) / len(self.data[y - 1])) * 3)
+                new_x = math.ceil(((cursor.x) / len(self.data[0])) * 3)
 
             self.cursor = cursor.replace(y=new_y, x=new_x).confine(self.data)
 
@@ -306,7 +306,7 @@ class DateSelect(AbstractSelect):
             new_x = cursor.x
             if cursor.y == 0:
                 # NOTE: Making sure different row lengths align.
-                new_x = math.ceil(((cursor.x) / 3) * len(self.data[y - 1]))
+                new_x = math.ceil(((cursor.x) / 3) * len(self.data[0]))
 
             self.cursor = cursor.replace(y=new_y, x=new_x).confine(self.data)
 
