@@ -84,8 +84,8 @@ class LockButton(Button, BaseWidget):
     }
     """
 
-    locked: var[bool] = var(True, init=False)
-    icon: reactive[Text] = reactive(Text(LOCKED_ICON), init=False)
+    locked = var[bool](False, init=False)
+    icon = reactive[Text](Text(LOCKED_ICON), init=False)
 
     def __init__(
         self,
@@ -141,8 +141,8 @@ class ExpandButton(Button):
     }
     """
 
-    expanded: var[bool] = var(False, init=False)
-    icon: reactive[Text] = reactive(Text(), init=False)
+    expanded = var[bool](False, init=False)
+    icon = reactive[Text](Text(), init=False)
 
     def __init__(
         self,

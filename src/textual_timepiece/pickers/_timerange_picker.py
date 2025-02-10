@@ -60,8 +60,8 @@ class DateRangeDialog(AbstractDialog):
         }
     }
     """
-    start: var[Date | None] = var(Date.today_in_system_tz, init=False)
-    stop: var[Date | None] = var(None, init=False)
+    start = var[Date | None](None, init=False)
+    stop = var[Date | None](None, init=False)
 
     def compose(self) -> ComposeResult:
         yield DateSelect(is_range=True, id="start-date-select").data_bind(
@@ -99,8 +99,8 @@ class DateRangePicker(AbstractPicker):
         Binding("ctrl+shift+d", "clear", "Clear Dates"),
     ]
 
-    start_date: var[Date | None] = var(None, init=False)
-    end_date: var[Date | None] = var(None, init=False)
+    start_date = var[Date | None](None, init=False)
+    end_date = var[Date | None](None, init=False)
 
     def __init__(
         self,
@@ -271,8 +271,8 @@ class DateTimeRangeDialog(AbstractDialog):
     }
     """
 
-    start: var[Date] = var(Date.today_in_system_tz, init=False)
-    stop: var[Date | None] = var(None, init=False)
+    start = var[Date | None](None, init=False)
+    stop = var[Date | None](None, init=False)
 
     def compose(self) -> ComposeResult:
         with Vertical(id="start-column"):
@@ -312,13 +312,11 @@ class DateTimeRangePicker(AbstractPicker):
         start: SystemDateTime | None
         end: SystemDateTime | None
 
-    start_dt = var[SystemDateTime | None](
-        lambda: SystemDateTime.now().to_system_tz(), init=False
-    )
-    end_dt: var[SystemDateTime | None] = var(None, init=False)
+    start_dt = var[SystemDateTime | None](None, init=False)
+    end_dt = var[SystemDateTime | None](None, init=False)
 
-    start_date: var[Date | None] = var(Date.today_in_system_tz, init=False)
-    end_date: var[Date | None] = var(None, init=False)
+    start_date = var[Date | None](None, init=False)
+    end_date = var[Date | None](None, init=False)
 
     def __init__(
         self,

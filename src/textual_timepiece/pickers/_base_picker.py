@@ -86,7 +86,7 @@ class AbstractDialog(BaseWidget):
         Binding("escape", "close_dialog", "Close dialog."),
     ]
 
-    show: var[bool] = var(False, init=False)
+    show = var[bool](False, init=False)
 
     def __init__(
         self,
@@ -382,7 +382,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
         Binding("shift+enter", "expand", "Open Dialog."),
     ]
 
-    expanded: var[bool] = var(False, init=False)
+    expanded = var[bool](False, init=False)
 
     def __init__(
         self,

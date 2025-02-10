@@ -35,7 +35,7 @@ class DateTimeSelect(AbstractSelect):
 
 
 class DateTimeDialog(AbstractDialog):
-    date: var[Date] = var(Date.today_in_system_tz, init=False)
+    date = var[Date | None](None, init=False)
 
     DEFAULT_CSS = """
     DateTimeDialog {
@@ -82,7 +82,7 @@ class DateTimeInput(BaseInput):
     PATTERN: ClassVar[str] = r"9999-B9-99 99:99:99"
     ALIAS = "datetime"
 
-    datetime: var[SystemDateTime | None] = var(SystemDateTime.now, init=False)
+    datetime = var[SystemDateTime | None](None, init=False)
 
     def __init__(
         self,
@@ -204,8 +204,8 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
 
     INPUT = DateTimeInput
 
-    datetime: var[SystemDateTime | None] = var(SystemDateTime.now, init=False)
-    date: var[Date | None] = var(Date.today_in_system_tz, init=False)
+    datetime = var[SystemDateTime | None](None, init=False)
+    date = var[Date | None](None, init=False)
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):

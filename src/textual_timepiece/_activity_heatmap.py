@@ -221,16 +221,16 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         "activityheatmap--empty-alt",
         "activityheatmap--hover",
     }
-    data: reactive[ActivityData] = reactive(list, init=False, layout=True)
+    data = reactive[ActivityData](list, init=False, layout=True)
     """Two dimensional data that should be normalized between 0 and 1."""
 
-    day: var[Date] = var(Date.today_in_system_tz, init=False)
+    day = var[Date](Date.today_in_system_tz, init=False)
     values = var[defaultdict[date, int]](
         lambda: defaultdict(lambda: 0), init=False
     )
-    """Original pre normalize_values for tooltips."""
+    """Original pre normalized values for tooltips."""
 
-    mouse_offset: var[Offset] = var(Offset, init=False)
+    mouse_offset = var[Offset](Offset, init=False)
     """Current mouse_offfset for tracking the cursor."""
 
     cursor = reactive[HeatmapCursor | None](None, init=False)
@@ -735,7 +735,7 @@ class HeatmapManager(BaseWidget):
     }
     """
 
-    day: var[Date] = var(Date.today_in_system_tz, init=False, bindings=True)
+    day = var[Date](Date.today_in_system_tz, init=False, bindings=True)
 
     def __init__(
         self,

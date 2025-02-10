@@ -275,7 +275,7 @@ class DurationInput(BaseInput[TimeDelta]):
 
     PATTERN = "99:99:99"
 
-    duration: var[TimeDelta | None] = var(None, init=False)
+    duration = var[TimeDelta | None](None, init=False)
 
     def _validate_duration(
         self, duration: TimeDelta | None
@@ -339,7 +339,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
         widget: DurationPicker
         duration: TimeDelta | None
 
-    duration: var[TimeDelta | None] = var(TimeDelta, init=False)
+    duration = var[TimeDelta | None](TimeDelta, init=False)
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
@@ -445,7 +445,7 @@ class TimeInput(BaseInput[Time]):
 
     PATTERN = "00:00:00"
     ALIAS = "time"
-    time: var[Time | None] = var(None, init=False)
+    time = var[Time | None](None, init=False)
 
     def watch_time(self, time: Time | None) -> None:
         with self.prevent(Input.Changed), suppress(ValueError):
@@ -540,7 +540,7 @@ class TimePicker(BasePicker[TimeInput, Time]):
 
     INPUT = TimeInput
 
-    time: var[Time | None] = var(None, init=False)
+    time = var[Time | None](None, init=False)
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):

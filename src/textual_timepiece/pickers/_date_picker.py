@@ -188,34 +188,34 @@ class DateSelect(AbstractSelect):
         "dateselect--range-date",
     }
 
-    date: reactive[Date | None] = reactive(None, init=False)
+    date = reactive[Date | None](None, init=False)
     """(Start) date. Bound to parent dialog."""
 
     date_range = var[DateDelta | None](None, init=False)
     """Constant date range in between the start and end dates."""
 
-    end_date: reactive[Date | None] = reactive(None, init=False)
+    end_date = reactive[Date | None](None, init=False)
     """(Stop) date. Bound to parent dialog."""
 
-    scope: var[DateScope] = var(DateScope.MONTH)
+    scope = var[DateScope](DateScope.MONTH)
     """Scope of the current date picker view."""
 
-    loc: reactive[Date] = reactive(Date.today_in_system_tz, init=False)
+    loc = reactive[Date](Date.today_in_system_tz, init=False)
     """Current location of the date picker for navigation."""
 
-    data: reactive[DisplayData] = reactive(list, init=False, layout=True)
+    data = reactive[DisplayData](list, init=False, layout=True)
     """Data for displaying date info.
 
     Layout required as the size might differ between months.
     """
 
-    header: reactive[str] = reactive("", init=False)
+    header = reactive[str]("", init=False)
     """Navigation date header is computed dynamically."""
 
-    cursor_offset: reactive[Offset | None] = reactive(None, init=False)
+    cursor_offset = reactive[Offset | None](None, init=False)
     """Mouse cursor position for mouse navigation."""
 
-    cursor: reactive[DateCursor | None] = reactive(None, init=False)
+    cursor = reactive[DateCursor | None](None, init=False)
     """Keyboard cursor position."""
 
     def __init__(
@@ -764,7 +764,7 @@ class EndDateSelect(DateSelect):
 
 
 class DateDialog(AbstractDialog):
-    date: var[Date | None] = var(Date.today_in_system_tz, init=False)
+    date = var[Date | None](None, init=False)
 
     def __init__(
         self,
@@ -789,7 +789,7 @@ class DateDialog(AbstractDialog):
 
 
 class EndDateDialog(DateDialog):
-    date: var[Date | None] = var(None, init=False)
+    date = var[Date | None](None, init=False)
 
     def __init__(
         self,
@@ -939,7 +939,7 @@ class DatePicker(BasePicker[DateInput, Date]):
         Binding("ctrl+shift+d", "clear", "Clear"),
     ]
 
-    date: var[Date | None] = var(None, init=False)
+    date = var[Date | None](None, init=False)
 
     # TODO: Implement a callable param for custom defaults.
 
