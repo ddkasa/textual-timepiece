@@ -1,3 +1,7 @@
+![PyPI - Version](https://img.shields.io/pypi/v/textual-timepiece)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/textual-timepiece?link=https%3A%2F%2Fpypi.org%2Fproject%2Ftextual-timepiece%2F)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ddkasa/textual-timepiece/ci.yaml?link=https%3A%2F%2Fgithub.com%2Fddkasa%2Ftextual-timepiece%2Factions%2Fworkflows%2Fci.yaml)
+
 # Textual Timepiece
 
 > Various time management related widgets for the [Textual](https://github.com/Textualize/textual) framework.
