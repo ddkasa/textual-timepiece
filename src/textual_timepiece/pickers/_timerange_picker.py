@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 from typing import Self
-from typing import TypeVar
 from typing import cast
 
 from textual import on
@@ -29,17 +28,11 @@ from textual_timepiece._utility import round_time
 from ._base_picker import AbstractDialog
 from ._base_picker import AbstractPicker
 from ._date_picker import DateInput
-from ._date_picker import DatePicker
 from ._date_picker import DateSelect
 from ._date_picker import EndDateSelect
 from ._datetime_picker import DateTimeInput
-from ._datetime_picker import DateTimePicker
 from ._time_picker import DurationInput
 from ._time_picker import DurationSelect
-
-T = TypeVar("T")
-
-TP = TypeVar("TP", bound=DateTimePicker | DatePicker)
 
 # TODO: Set a maximum and minimum range that is required.
 # TODO: Limit or validate to min/max dates
@@ -94,12 +87,28 @@ class DateRangePicker(AbstractPicker):
         start: Date | None
         end: Date | None
 
+    BINDING_GROUP_TITLE = "Date Range Picker"
+
     BINDINGS: ClassVar = [
         Binding("ctrl+shift+d", "clear", "Clear Dates"),
+        Binding(
+            "ctrl+t",
+            "target_default_start",
+            "Start To Today",
+            tooltip="Set the start date to todays date.",
+        ),
+        Binding(
+            "alt+ctrl+t",
+            "target_default_end",
+            "End To Today",
+            tooltip="Set the end date to today or the start date.",
+        ),
     ]
 
     start_date = var[Date | None](None, init=False)
+    """Picker start date. Bound to sub widgets"""
     end_date = var[Date | None](None, init=False)
+    """Picker end date. Bound to sub widgets"""
 
     def __init__(
         self,
@@ -124,7 +133,10 @@ class DateRangePicker(AbstractPicker):
                 date=DateRangePicker.start_date,
             )
 
-            yield TargetButton(id="target-default-start")
+            yield TargetButton(
+                id="target-default-start",
+                tooltip="Set the start date to today.",
+            )
             yield LockButton(
                 is_locked=self._date_range is not None,
                 id="lock-button",
@@ -135,7 +147,10 @@ class DateRangePicker(AbstractPicker):
             yield DateInput(id="stop-date-input").data_bind(
                 date=DateRangePicker.end_date,
             )
-            yield TargetButton(id="target-default-end")
+            yield TargetButton(
+                id="target-default-end",
+                tooltip="Set the end date to today or the start date.",
+            )
             yield self._compose_expand_button()
 
         yield DateRangeDialog().data_bind(
@@ -180,8 +195,12 @@ class DateRangePicker(AbstractPicker):
                 self.end_date = message.date
 
     @on(Button.Pressed, "#target-default-start")
-    def _target_default_start(self, message: Button.Pressed) -> None:
-        message.stop()
+    def _action_target_default_start(
+        self,
+        message: Button.Pressed | None = None,
+    ) -> None:
+        if message:
+            message.stop()
         new_date = Date.today_in_system_tz()
         if not self.end_date or new_date <= self.end_date:
             self.start_date = new_date
@@ -189,8 +208,12 @@ class DateRangePicker(AbstractPicker):
             self.start_date = self.end_date
 
     @on(Button.Pressed, "#target-default-end")
-    def _target_default_stop(self, message: Button.Pressed) -> None:
-        message.stop()
+    def _action_target_default_end(
+        self,
+        message: Button.Pressed | None = None,
+    ) -> None:
+        if message:
+            message.stop()
         if (
             self.start_date
             and (new_date := Date.today_in_system_tz()) >= self.start_date
@@ -212,7 +235,8 @@ class DateRangePicker(AbstractPicker):
             self._date_range = None
             cast(LockButton, message.control).locked = False
 
-    def _action_clear(self) -> None:
+    def action_clear(self) -> None:
+        """Clear the start and end dates."""
         self.start_date = None
         self.end_date = None
 
@@ -309,11 +333,38 @@ class DateTimeRangePicker(AbstractPicker):
         start: SystemDateTime | None
         end: SystemDateTime | None
 
+    BINDING_GROUP_TITLE = "Datetime Range Picker"
+
+    BINDINGS: ClassVar = [
+        Binding(
+            "ctrl+shift+d",
+            "clear",
+            "Clear",
+            tooltip="Clear end and start datetime.",
+        ),
+        Binding(
+            "ctrl+t",
+            "target_default_start",
+            "Start To Today",
+            tooltip="Set the start date to todays date.",
+        ),
+        Binding(
+            "alt+ctrl+t",
+            "target_default_end",
+            "End To Today",
+            tooltip="Set the end date to today or the start date.",
+        ),
+    ]
+
     start_dt = var[SystemDateTime | None](None, init=False)
+    """Picker start datetime. Bound to all the parent widgets."""
     end_dt = var[SystemDateTime | None](None, init=False)
+    """Picker end datetime. Bound to all the parent widgets."""
 
     start_date = var[Date | None](None, init=False)
+    """Start date dynamically computed depending on start datetime."""
     end_date = var[Date | None](None, init=False)
+    """End date dynamically computed depending on the end datetime."""
 
     def __init__(
         self,
@@ -327,7 +378,13 @@ class DateTimeRangePicker(AbstractPicker):
         disabled: bool = False,
         tooltip: str | None = None,
     ) -> None:
-        super().__init__(name, id, classes, disabled=disabled, tooltip=tooltip)
+        super().__init__(
+            name=name,
+            id=id,
+            classes=classes,
+            disabled=disabled,
+            tooltip=tooltip,
+        )
         self.set_reactive(DateTimeRangePicker.start_dt, start)
         self.set_reactive(DateTimeRangePicker.end_dt, end)
 
@@ -339,7 +396,10 @@ class DateTimeRangePicker(AbstractPicker):
                 datetime=DateTimeRangePicker.start_dt,
             )
 
-            yield TargetButton(id="target-default-start")
+            yield TargetButton(
+                id="target-default-start",
+                tooltip="Set the start time to now.",
+            )
             yield LockButton(
                 is_locked=self._time_range is not None,
                 id="lock-button",
@@ -350,7 +410,10 @@ class DateTimeRangePicker(AbstractPicker):
             yield DateTimeInput(id="end-input").data_bind(
                 datetime=DateTimeRangePicker.end_dt,
             )
-            yield TargetButton(id="target-default-end")
+            yield TargetButton(
+                id="target-default-end",
+                tooltip="Set the end time to now or the start time.",
+            )
             yield self._compose_expand_button()
 
         yield DateTimeRangeDialog().data_bind(
@@ -424,6 +487,11 @@ class DateTimeRangePicker(AbstractPicker):
         else:
             self.end_dt = date
 
+    def action_clear(self) -> None:
+        """Clear the start and end datetimes."""
+        self.start_dt = None
+        self.end_dt = None
+
     @on(DurationSelect.DurationRounded)
     def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
         message.stop()
@@ -453,7 +521,8 @@ class DateTimeRangePicker(AbstractPicker):
 
     @on(DateTimeInput.DateTimeChanged, "#start-input")
     def _start_dt_input_changed(
-        self, message: DateTimeInput.DateTimeChanged
+        self,
+        message: DateTimeInput.DateTimeChanged,
     ) -> None:
         message.stop()
         with message.control.prevent(DateTimeInput.DateTimeChanged):
@@ -482,12 +551,22 @@ class DateTimeRangePicker(AbstractPicker):
         return self
 
     @on(Button.Pressed, "#target-default-start")
-    def _target_default_start(self) -> None:
-        self.start_dt = SystemDateTime.now().to_system_tz()
+    def _action_target_default_start(
+        self,
+        message: Button.Pressed | None = None,
+    ) -> None:
+        if message:
+            message.stop()
+        self.start_dt = SystemDateTime.now()
 
     @on(Button.Pressed, "#target-default-end")
-    def _target_default_stop(self) -> None:
-        now = SystemDateTime.now().to_system_tz()
+    def _action_target_default_end(
+        self,
+        message: Button.Pressed | None = None,
+    ) -> None:
+        if message:
+            message.stop()
+        now = SystemDateTime.now()
         if not self.start_dt or now >= self.start_dt:
             self.end_dt = now
         else:
@@ -530,6 +609,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
     """
 
     duration = var[TimeDelta | None](None, init=False)
+    """Duration between start and end datetimes. Computed dynamically."""
 
     async def on_mount(self) -> None:
         """Overrides the compose method in order to a duration input."""
@@ -540,7 +620,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
             after=1,
         )
 
-    def compute_duration(self) -> TimeDelta:
+    def _compute_duration(self) -> TimeDelta:
         if self.start_dt is None or self.end_dt is None:
             return TimeDelta()
         return self.end_dt - self.start_dt

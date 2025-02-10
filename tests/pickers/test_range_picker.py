@@ -3,7 +3,6 @@ from functools import partial
 import pytest
 from whenever import DateDelta
 from whenever import days
-from whenever import weeks
 
 from textual_timepiece import DateRangePicker
 from textual_timepiece import DateTimeDurationPicker
@@ -66,6 +65,11 @@ def test_dt_range_dialog(datetime_range_app, range_snap_compare, freeze_time):
         datetime_range_app.action_focus_next()
         datetime_range_app.widget.query_one("#target-default-start").press()
         datetime_range_app.widget.query_one("#target-default-end").press()
+        await pilot.pause()
+        datetime_range_app.widget.end_dt = (
+            datetime_range_app.widget.end_dt.add(weeks=2)
+        )
+
         await pilot.press("shift+enter")
 
     assert range_snap_compare(datetime_range_app, run_before=run_before)
@@ -80,10 +84,13 @@ def test_dt_dur_range_dialog(
         datetime_dur_range_app.widget.query_one(
             "#target-default-start"
         ).press()
-        datetime_dur_range_app.widget.query_one("#target-default-end").press()
-        await pilot.pause()
-        datetime_dur_range_app.widget.end_dt += weeks(2)
+        datetime_dur_range_app.widget.query_one("#target-default-end").focus()
+        await pilot.press("enter")
+        datetime_dur_range_app.widget.end_dt = (
+            datetime_dur_range_app.widget.end_dt.add(weeks=2)
+        )
         await pilot.press("shift+enter")
+        await pilot.pause()
 
     assert range_snap_compare(datetime_dur_range_app, run_before=run_before)
 
@@ -91,7 +98,7 @@ def test_dt_dur_range_dialog(
 @pytest.mark.unit
 async def test_dt_dur_range_lock(create_app, freeze_time):
     datetime_dur_range_app = create_app(
-        DateTimeDurationPicker(time_range=DateDelta(days=5))
+        DateTimeDurationPicker(time_range=DateDelta(days=2))
     )
 
     async with datetime_dur_range_app.run_test() as pilot:
@@ -102,5 +109,23 @@ async def test_dt_dur_range_lock(create_app, freeze_time):
         await pilot.pause()
         assert (
             datetime_dur_range_app.widget.end_date
-            == freeze_time + DateDelta(days=5)
+            == freeze_time + DateDelta(days=2)
         )
+
+
+@pytest.mark.unit
+async def test_datetime_range_bindings(
+    datetime_range_app, range_snap_compare, freeze_time
+):
+    async with datetime_range_app.run_test() as pilot:
+        datetime_range_app.action_focus_next()
+
+        await pilot.press("ctrl+t")
+        assert datetime_range_app.widget.start_dt.date() == freeze_time
+
+        await pilot.press("alt+ctrl+t")
+        assert datetime_range_app.widget.end_dt.date() == freeze_time
+
+        await pilot.press("ctrl+shift+d")
+        assert datetime_range_app.widget.start_dt is None
+        assert datetime_range_app.widget.end_dt is None
