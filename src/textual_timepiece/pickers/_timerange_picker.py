@@ -22,7 +22,6 @@ from whenever import Time
 from whenever import TimeDelta
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._extra import ExpandButton
 from textual_timepiece._extra import LockButton
 from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import round_time
@@ -137,9 +136,7 @@ class DateRangePicker(AbstractPicker):
                 date=DateRangePicker.end_date,
             )
             yield TargetButton(id="target-default-end")
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=DateRangePicker.expanded,
-            )
+            yield self._compose_expand_button()
 
         yield DateRangeDialog().data_bind(
             show=DateRangePicker.expanded,
@@ -354,9 +351,7 @@ class DateTimeRangePicker(AbstractPicker):
                 datetime=DateTimeRangePicker.end_dt,
             )
             yield TargetButton(id="target-default-end")
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=DateTimeRangePicker.expanded,
-            )
+            yield self._compose_expand_button()
 
         yield DateTimeRangeDialog().data_bind(
             show=DateTimeDurationPicker.expanded,

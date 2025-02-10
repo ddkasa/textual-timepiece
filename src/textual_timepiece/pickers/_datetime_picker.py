@@ -16,22 +16,16 @@ from whenever import SystemDateTime
 from whenever import Time
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._extra import ExpandButton
 from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import round_time
 
 from ._base_picker import AbstractDialog
-from ._base_picker import AbstractSelect
 from ._base_picker import BaseInput
 from ._base_picker import BasePicker
 from ._date_picker import DateSelect
 from ._time_picker import DurationSelect
 from ._time_picker import TimeSelect
-
-
-class DateTimeSelect(AbstractSelect):
-    pass
 
 
 class DateTimeDialog(AbstractDialog):

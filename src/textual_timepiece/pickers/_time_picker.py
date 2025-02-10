@@ -28,7 +28,6 @@ from whenever import minutes
 from whenever import seconds
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._extra import ExpandButton
 from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
@@ -359,9 +358,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
                 id="target-default",
                 tooltip="Set the duration to zero.",
             )
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=DurationPicker.expanded
-            )
+            yield self._compose_expand_button()
 
         yield DurationDialog().data_bind(show=DurationPicker.expanded)
 

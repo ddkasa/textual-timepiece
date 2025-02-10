@@ -39,7 +39,6 @@ from whenever import months
 from whenever import years
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._extra import ExpandButton
 from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
@@ -989,9 +988,7 @@ class DatePicker(BasePicker[DateInput, Date]):
                 disabled=self.date == Date.today_in_system_tz(),
                 tooltip="Set the date to today.",
             )
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=BasePicker.expanded
-            )
+            yield self._compose_expand_button()
 
         yield (
             DateDialog(date_range=self._date_range).data_bind(

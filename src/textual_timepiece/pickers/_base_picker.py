@@ -29,6 +29,7 @@ from textual.widgets import Input
 from textual.widgets import MaskedInput
 
 from textual_timepiece._extra import BaseWidget
+from textual_timepiece._extra import ExpandButton
 
 Directions: TypeAlias = Literal["up", "right", "down", "left"]
 
@@ -379,11 +380,11 @@ class AbstractPicker(BaseWidget, Generic[T]):
     """
 
     BINDINGS: ClassVar = [
-        Binding("shift+enter", "expand", "Open Dialog."),
+        Binding("shift+enter", "toggle('expanded')", "Open Overlay."),
     ]
 
     expanded = var[bool](False, init=False)
-    """Whether the picker is showing its dialog/overlay or not."""
+    """Whether the picker is showing its overlay or not."""
 
     def __init__(
         self,
@@ -398,11 +399,18 @@ class AbstractPicker(BaseWidget, Generic[T]):
         self.tooltip = tooltip
 
     def _on_abstract_dialog_close(self, message: AbstractDialog.Close) -> None:
-        self.expanded = False
         message.stop()
+        self.expanded = False
+
+    def _compose_expand_button(self) -> ExpandButton:
+        return ExpandButton(
+            id="toggle-button",
+            tooltip="Toggle the overlay.",
+        ).data_bind(AbstractPicker.expanded)
 
     @on(Button.Pressed, "#toggle-button")
-    def action_expand(self) -> None:
+    def _expand_overlay(self, message: Button.Pressed) -> None:
+        message.stop()
         self.expanded = not self.expanded
 
     @on(DescendantBlur)
