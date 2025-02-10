@@ -218,6 +218,7 @@ class BaseInput(MaskedInput, BaseWidget, Generic[T]):
             id=id,
             classes=classes,
             disabled=disabled,
+            validate_on=["changed"],
             select_on_focus=select_on_focus,
             tooltip=tooltip,
             valid_empty=valid_empty,
@@ -354,6 +355,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
             }
         }
         & > AbstractDialog {
+            border: round $secondary;
             overlay: screen !important;
             constrain: inside;
             position: absolute;
@@ -362,8 +364,6 @@ class AbstractPicker(BaseWidget, Generic[T]):
             background: $surface;
             box-sizing: content-box;
             opacity: 0;
-
-            border: round $secondary;
 
             &:focus,
             &:focus-within {
@@ -383,6 +383,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
     ]
 
     expanded = var[bool](False, init=False)
+    """Whether the picker is showing its dialog/overlay or not."""
 
     def __init__(
         self,
@@ -420,7 +421,23 @@ TI = TypeVar("TI", bound=BaseInput)
 class BasePicker(AbstractPicker, Generic[TI, T]):
     """Base Picker class for combining various single ended widgets."""
 
+    ALIAS: str
     INPUT: type[TI]
+
+    BINDINGS: ClassVar = [
+        Binding(
+            "ctrl+shift+d",
+            "clear",
+            "Clear Value",
+            tooltip="Clear the current value.",
+        ),
+        Binding(
+            "ctrl+t",
+            "target_default",
+            "To Default Value",
+            tooltip="Set the default value.",
+        ),
+    ]
 
     def __init__(
         self,
@@ -440,15 +457,17 @@ class BasePicker(AbstractPicker, Generic[TI, T]):
             tooltip=tooltip,
         )
         self.value = value
-        self.default = value
 
     @on(Button.Pressed, "#target-default")
-    def _action_target_today(
+    def _action_target_default(
         self, message: Button.Pressed | None = None
     ) -> None:
         if message:
             message.stop()
         self.to_default()
+
+    def action_clear(self) -> None:
+        self.input_widget.clear()
 
     @abstractmethod
     def to_default(self) -> None:
@@ -459,11 +478,11 @@ class BasePicker(AbstractPicker, Generic[TI, T]):
         return self.query_exactly_one(self.INPUT)
 
     @property
-    @abstractmethod
     def value(self) -> T | None:
         """Alias for whatever value the picker may be holding."""
+        return getattr(self, self.ALIAS)
 
     @value.setter
-    @abstractmethod
     def value(self, value: T | None) -> None:
         """Alias for whatever value the picker may be holding."""
+        self.set_reactive(getattr(self.__class__, self.ALIAS), value)

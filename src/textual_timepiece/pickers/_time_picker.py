@@ -320,6 +320,9 @@ class DurationInput(BaseInput[TimeDelta]):
             self.duration += seconds(offset)
 
 
+# TODO: Find a better way to show larger durations.
+
+
 class DurationPicker(BasePicker[DurationInput, TimeDelta]):
     """Picker widget for picking durations.
 
@@ -339,7 +342,11 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
         widget: DurationPicker
         duration: TimeDelta | None
 
-    duration = var[TimeDelta | None](TimeDelta, init=False)
+    INPUT = DurationInput
+    ALIAS = "duration"
+
+    duration = var[TimeDelta | None](None, init=False)
+    """Current duration. Bound to all the child widgets."""
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
@@ -368,14 +375,6 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
             delta is None or delta.in_seconds() == 0
         )
         self.post_message(self.DurationChanged(self, delta))
-
-    def _validate_duration(
-        self, duration: TimeDelta | None
-    ) -> TimeDelta | None:
-        if duration is None or duration.in_seconds() <= 0:
-            return None
-
-        return duration
 
     @on(DurationSelect.DurationRounded)
     def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
@@ -408,14 +407,6 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
 
     def to_default(self) -> None:
         self.duration = TimeDelta()
-
-    @property
-    def value(self) -> TimeDelta | None:
-        return self.duration
-
-    @value.setter
-    def value(self, value: TimeDelta | None) -> None:
-        self.set_reactive(DurationPicker.duration, value)
 
 
 class TimeValidator(Validator):
@@ -540,15 +531,15 @@ class TimePicker(BasePicker[TimeInput, Time]):
 
     INPUT = TimeInput
 
+    ALIAS = "time"
+
     time = var[Time | None](None, init=False)
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
             yield TimeInput(id="data-input").data_bind(time=TimePicker.time)
-            yield TargetButton(id="target-default")
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=TimePicker.expanded
-            )
+            yield TargetButton(id="target-default", tooltip="Set time to now.")
+            yield self._compose_expand_button()
 
         yield TimeDialog().data_bind(show=TimePicker.expanded)
 
@@ -579,11 +570,3 @@ class TimePicker(BasePicker[TimeInput, Time]):
 
     def to_default(self) -> None:
         self.time = SystemDateTime.now().time()
-
-    @property
-    def value(self) -> Time | None:
-        return self.time
-
-    @value.setter
-    def value(self, value: Time | None) -> None:
-        self.set_reactive(TimePicker.time, value)

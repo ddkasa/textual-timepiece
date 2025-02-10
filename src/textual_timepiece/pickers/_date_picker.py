@@ -152,14 +152,20 @@ class DateSelect(AbstractSelect):
     BINDING_GROUP_TITLE = "Date Select"
 
     BINDINGS: ClassVar = [
-        Binding("up", "move_cursor('up')", tooltip="Move the cursor up."),
+        Binding(
+            "up",
+            "move_cursor('up')",
+            tooltip="Move the cursor up.",
+        ),
         Binding(
             "right",
             "move_cursor('right')",
             tooltip="Move cursor to the right.",
         ),
         Binding(
-            "down", "move_cursor('down')", tooltip="Move the cursor down."
+            "down",
+            "move_cursor('down')",
+            tooltip="Move the cursor down.",
         ),
         Binding(
             "left",
@@ -910,9 +916,6 @@ class DateInput(BaseInput[Date]):
         super().insert_text_at_cursor(text)
 
 
-DateValidator: TypeAlias = Callable[[Date | None], Date | None]
-
-
 class DatePicker(BasePicker[DateInput, Date]):
     """Single date picker with an input and overlay.
 
@@ -932,16 +935,14 @@ class DatePicker(BasePicker[DateInput, Date]):
         widget: DatePicker
         date: Date | None
 
+    DateValidator: TypeAlias = Callable[[Date | None], Date | None]
+
     BINDING_GROUP_TITLE = "Date Picker"
 
-    BINDINGS: ClassVar = [
-        Binding("t", "target_today", "To Today"),
-        Binding("ctrl+shift+d", "clear", "Clear"),
-    ]
+    ALIAS = "date"
 
     date = var[Date | None](None, init=False)
-
-    # TODO: Implement a callable param for custom defaults.
+    """Current date for the picker. This is bound to every other subwidget."""
 
     def __init__(
         self,
@@ -1027,11 +1028,3 @@ class DatePicker(BasePicker[DateInput, Date]):
     @cached_property
     def date_dialog(self) -> DateDialog:
         return self.query_exactly_one(DateDialog)
-
-    @property
-    def value(self) -> Date | None:
-        return self.date
-
-    @value.setter
-    def value(self, value: Date | None) -> None:
-        self.set_reactive(DatePicker.date, value)

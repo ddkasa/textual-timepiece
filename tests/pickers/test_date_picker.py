@@ -112,11 +112,17 @@ async def test_date_range(date_app, freeze_time) -> None:
 
 
 @pytest.mark.unit
-async def test_target_today_hotkey(date_app, freeze_time):
+async def test_date_dialog_hotkeys(date_app, freeze_time):
     async with date_app.run_test() as pilot:
         date_app.widget.query_one("#target-default").focus()
         select = date_app.widget.date_dialog.date_select
-        await pilot.press("t")
         select.date_range = DateDelta(days=5)
+
+        # NOTE: Test Default
+        await pilot.press("ctrl+t")
         assert date_app.widget.date == freeze_time
         assert select.end_date == Date(2025, 2, 11)
+
+        # NOTE: Test Clear
+        await pilot.press("ctrl+shift+d")
+        assert date_app.widget.date is None

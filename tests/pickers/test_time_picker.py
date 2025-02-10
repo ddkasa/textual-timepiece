@@ -1,5 +1,6 @@
 import pytest
 from whenever import Time
+from whenever import TimeDelta
 
 from textual_timepiece import DurationPicker
 from textual_timepiece import TimePicker
@@ -46,7 +47,7 @@ async def test_duration_pick_spinbox(duration_app, freeze_time):
         assert duration_app.widget.duration.in_seconds() == 61
 
         await pilot.press("left", "left", "down")
-        assert duration_app.widget.duration is None
+        assert duration_app.widget.duration == TimeDelta()
 
 
 @pytest.mark.snapshot

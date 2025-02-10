@@ -203,17 +203,21 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
         datetime: SystemDateTime | None
 
     INPUT = DateTimeInput
+    ALIAS = "datetime"
 
     datetime = var[SystemDateTime | None](None, init=False)
+    """The current set datetime. Bound of to all subwidgets."""
     date = var[Date | None](None, init=False)
+    """Computed date based on the datetime for the overlay."""
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
             yield DateTimeInput().data_bind(DateTimePicker.datetime)
-            yield TargetButton(id="target-default")
-            yield ExpandButton(id="toggle-button").data_bind(
-                expanded=DateTimePicker.expanded,
+            yield TargetButton(
+                id="target-default",
+                tooltip="Set the datetime to now.",
             )
+            yield self._compose_expand_button()
 
         yield (
             DateTimeDialog().data_bind(
@@ -287,11 +291,3 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
     @cached_property
     def date_dialog(self) -> DateTimeDialog:
         return self.query_exactly_one(DateTimeDialog)
-
-    @property
-    def value(self) -> SystemDateTime | None:
-        return self.datetime
-
-    @value.setter
-    def value(self, value: SystemDateTime | None) -> None:
-        self.set_reactive(DateTimePicker.datetime, value)
