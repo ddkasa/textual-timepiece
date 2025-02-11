@@ -12,6 +12,7 @@ from textual.containers import Vertical
 from textual.reactive import var
 from textual.widgets import Input
 from whenever import Date
+from whenever import LocalDateTime
 from whenever import SystemDateTime
 from whenever import Time
 
@@ -73,7 +74,8 @@ class DateTimeInput(BaseInput):
         widget: DateTimeInput
         datetime: SystemDateTime | None
 
-    PATTERN: ClassVar[str] = r"9999-B9-99 99:99:99"
+    PATTERN: ClassVar[str] = r"0009-B9-99 99:99:99"
+    FORMAT: ClassVar[str] = r"%Y-%m-%d %H:%M:%S"
     ALIAS = "datetime"
 
     datetime = var[SystemDateTime | None](None, init=False)
@@ -122,21 +124,26 @@ class DateTimeInput(BaseInput):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-        if self.datetime is None:
-            self.datetime = SystemDateTime.now()
 
-        if self.cursor_position in range(0, 4):
-            self.datetime = self.datetime.add(years=offset)
-        elif self.cursor_position in range(5, 7):
-            self.datetime = self.datetime.add(months=offset)
-        elif self.cursor_position in range(8, 10):
-            self.datetime = self.datetime.add(days=offset)
-        elif self.cursor_position in range(11, 13):
-            self.datetime = self.datetime.add(hours=offset)
-        elif self.cursor_position in range(14, 16):
-            self.datetime = self.datetime.add(minutes=offset)
-        elif self.cursor_position in range(17, 19):
-            self.datetime = self.datetime.add(seconds=offset)
+        try:
+            if self.datetime is None:
+                self.datetime = SystemDateTime.now()
+            elif self.cursor_position < 4:
+                self.datetime = self.datetime.add(years=offset)
+            elif 5 <= self.cursor_position < 7:
+                self.datetime = self.datetime.add(months=offset)
+            elif 8 <= self.cursor_position < 10:
+                self.datetime = self.datetime.add(days=offset)
+            elif 11 <= self.cursor_position < 13:
+                self.datetime = self.datetime.add(hours=offset)
+            elif 14 <= self.cursor_position < 16:
+                self.datetime = self.datetime.add(minutes=offset)
+            else:
+                self.datetime = self.datetime.add(seconds=offset)
+        except ValueError as err:
+            self.log.debug(err)
+            if not str(err).endswith("is out of range"):
+                raise
 
     def insert_text_at_cursor(self, text: str) -> None:
         if not text.isdigit():
@@ -229,13 +236,21 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
         self.post_message(self.DateTimeChanged(self, datetime))
 
     def _on_date_select_date_changed(
-        self, message: DateSelect.DateChanged
+        self,
+        message: DateSelect.DateChanged,
     ) -> None:
         message.stop()
         if not message.date:
             return
         if self.datetime:
-            self.datetime = self.datetime.replace_date(message.date)
+            try:
+                self.datetime = (
+                    self.datetime.time()
+                    .on(message.date)
+                    .assume_system_tz(disambiguate="compatible")
+                )
+            except ValueError as err:
+                self.log.debug(err)
         else:
             self.datetime = message.date.at(Time()).assume_system_tz(
                 disambiguate="compatible"

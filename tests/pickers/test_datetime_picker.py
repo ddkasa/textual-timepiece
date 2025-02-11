@@ -18,10 +18,7 @@ async def test_datetime_default(datetime_app, freeze_time):
         datetime_app.action_focus_next()
         datetime_app.widget.query_one("#target-default").focus()
         await pilot.press("enter")
-        assert (
-            datetime_app.widget.datetime
-            == freeze_time.at(Time()).assume_system_tz()
-        )
+        assert datetime_app.widget.datetime == freeze_time.at(Time())
 
 
 @pytest.mark.snapshot
@@ -45,9 +42,7 @@ async def test_datetime_dialog_messages(datetime_app, freeze_time):
 
         datetime_app.widget.query_one(TimeSelect).action_focus_neighbor("up")
         await pilot.press("up", "enter")
-        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(
-            Time(22)
-        ).assume_system_tz(disambiguate="compatible")
+        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(Time(22))
 
 
 @pytest.mark.unit
@@ -58,16 +53,12 @@ async def test_datetime_dialog_messages_reverse(datetime_app, freeze_time):
         await pilot.press("shift+enter")
         datetime_app.widget.query_one(TimeSelect).action_focus_neighbor("up")
         await pilot.press("up", "enter")
-        assert datetime_app.widget.datetime == freeze_time.at(
-            Time(22)
-        ).assume_system_tz(disambiguate="compatible")
+        assert datetime_app.widget.datetime == freeze_time.at(Time(22))
         datetime_app.widget.query_one("#target-default").focus()
 
         datetime_app.widget.query_one(DateSelect).focus()
         await pilot.press("down", "down", "enter")
-        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(
-            Time(22)
-        ).assume_system_tz(disambiguate="compatible")
+        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(Time(22))
 
 
 @pytest.mark.unit
@@ -78,22 +69,29 @@ async def test_dt_pick_spinbox(datetime_app, freeze_time):
 
         await pilot.press("right", "right", "right", "up")
 
-        assert (
-            datetime_app.widget.datetime
-            == freeze_time.replace(year=2026).at(Time()).assume_system_tz()
-        )
+        assert datetime_app.widget.datetime == freeze_time.replace(
+            year=2026
+        ).at(Time())
 
         await pilot.press("right", "right", "down")
-        assert (
-            datetime_app.widget.datetime
-            == freeze_time.replace(year=2026, month=1)
-            .at(Time())
-            .assume_system_tz()
-        )
+        assert datetime_app.widget.datetime == freeze_time.replace(
+            year=2026, month=1
+        ).at(Time())
         await pilot.press("shift+end", "left", "down")
-        assert (
-            datetime_app.widget.datetime
-            == freeze_time.replace(year=2026, month=1, day=5)
-            .at(Time(23, 59, 59))
-            .assume_system_tz()
-        )
+        assert datetime_app.widget.datetime == freeze_time.replace(
+            year=2026, month=1, day=5
+        ).at(Time(23, 59, 59))
+
+
+@pytest.mark.unit
+async def test_dt_dialog_edge_cases(datetime_app, freeze_time):
+    async with datetime_app.run_test() as pilot:
+        datetime_app.widget.focus()
+        select = datetime_app.widget.date_dialog.date_select
+        select.post_message(DateSelect.DateChanged(select, Date.MIN))
+        await pilot.pause()
+        assert datetime_app.widget.date == Date.MIN
+
+        select.post_message(DateSelect.DateChanged(select, Date.MAX))
+        await pilot.pause()
+        assert datetime_app.widget.date == Date.MAX
