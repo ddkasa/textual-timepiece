@@ -2,11 +2,13 @@ from functools import partial
 
 import pytest
 from whenever import DateDelta
+from whenever import Time
 from whenever import days
 
 from textual_timepiece import DateRangePicker
 from textual_timepiece import DateTimeDurationPicker
 from textual_timepiece import DateTimeRangePicker
+from textual_timepiece._extra import LockButton
 
 
 @pytest.fixture
@@ -129,3 +131,33 @@ async def test_datetime_range_bindings(
         await pilot.press("ctrl+shift+d")
         assert datetime_range_app.widget.start_dt is None
         assert datetime_range_app.widget.end_dt is None
+
+
+@pytest.mark.unit
+async def test_datetime_range_lock(datetime_range_app, freeze_time):
+    async with datetime_range_app.run_test() as pilot:
+        datetime_range_app.action_focus_next()
+
+        await pilot.press("ctrl+t")
+        assert datetime_range_app.widget.start_dt.date() == freeze_time
+
+        datetime_range_app.widget.end_dt = None
+        button = datetime_range_app.widget.query_one(LockButton).press()
+        await pilot.pause()
+        assert button.locked is False
+
+        datetime_range_app.widget.end_dt = (
+            freeze_time.at(Time())
+            .add(days=5)
+            .assume_system_tz(disambiguate="compatible")
+        )
+
+        button.press()
+        assert button.locked
+        await pilot.pause()
+        datetime_range_app.widget.end_dt = (
+            datetime_range_app.widget.end_dt.add(days=5)
+        )
+        assert datetime_range_app.widget.start_dt.date() == freeze_time.add(
+            days=5
+        )

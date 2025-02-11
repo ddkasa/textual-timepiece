@@ -225,6 +225,7 @@ class DateRangePicker(AbstractPicker):
     @on(Button.Pressed, "#lock-button")
     def _lock_delta(self, message: Button.Pressed) -> None:
         message.stop()
+
         if (
             self.end_date
             and self.start_date
@@ -448,10 +449,11 @@ class DateTimeRangePicker(AbstractPicker):
     @on(Button.Pressed, "#lock-button")
     def _lock_delta(self, message: Button.Pressed) -> None:
         message.stop()
+
         if (
-            self.end_dt
+            cast(LockButton, message.control).locked
+            and self.end_dt
             and self.start_dt
-            and cast(LockButton, message.control).locked
         ):
             self._time_range = self.end_dt - self.start_dt
         else:
@@ -468,6 +470,7 @@ class DateTimeRangePicker(AbstractPicker):
             self.adjust_end_date(message.date)
 
     def adjust_start_date(self, date: Date | None) -> None:
+        """Set or clear the current start date depending on the input."""
         if self.start_dt and date:
             self.start_dt = self.start_dt.replace_date(date)
         elif date:
@@ -478,6 +481,7 @@ class DateTimeRangePicker(AbstractPicker):
             self.start_dt = date
 
     def adjust_end_date(self, date: Date | None) -> None:
+        """Set or clear the current end date depending on the input."""
         if self.end_dt and date:
             self.end_dt = self.end_dt.replace_date(date)
         elif date:

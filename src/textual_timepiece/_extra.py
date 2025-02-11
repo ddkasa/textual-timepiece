@@ -68,7 +68,7 @@ class BaseWidget(Widget):
 class LockButton(Button, BaseWidget):
     LOCKED_ICON: str = "🔒"
     """Icon the button renders when the widget is locked."""
-    UNLOCKED_ICON: str = "🔒"
+    UNLOCKED_ICON: str = "🔓"
     """Icon the button renders when the widget is unlocked."""
 
     DEFAULT_CSS: ClassVar[str] = """
@@ -81,6 +81,10 @@ class LockButton(Button, BaseWidget):
         content-align-vertical: middle;
         text-style: bold;
         border: none;
+
+        &:focus {
+            background-tint: $primary 50%;
+        }
     }
     """
 
@@ -119,8 +123,9 @@ class LockButton(Button, BaseWidget):
     def render(self) -> RenderResult:
         return self.icon
 
-    def on_mouse_down(self) -> None:
+    def press(self) -> Self:
         self.locked = not self.locked
+        return super().press()
 
     def watch_locked(self) -> None:
         if self._use_variant:
