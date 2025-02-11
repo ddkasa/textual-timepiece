@@ -319,14 +319,13 @@ class DateSelect(AbstractSelect):
     def _set_date(self, target: str | int, *, ctrl: bool) -> None:
         try:
             value = int(target)
+            date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
         except ValueError:
             return
+        if ctrl:
+            self.post_message(self.EndDateChanged(self, date))
         else:
-            date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
-            if ctrl:
-                self.post_message(self.EndDateChanged(self, date))
-            else:
-                self.post_message(self.DateChanged(self, date))
+            self.post_message(self.DateChanged(self, date))
 
     def _on_date_select_date_changed(
         self,
@@ -937,6 +936,14 @@ class DatePicker(BasePicker[DateInput, Date]):
         disabled: Disable the widget.
         validator: A callable that will validate and adjust the date if needed.
         tooltip: A tooltip to show when hovering the widget.
+
+    Examples:
+        >>> def limit_dates(date: Date | None) -> Date | None:
+        >>>     if date is None:
+        >>>         return None
+        >>>     return min(Date(2025, 2, 20), max(Date(2025, 2, 6), date))
+
+        >>> yield DatePicker(validator=limit_dates)
     """
 
     @dataclass
@@ -1026,10 +1033,11 @@ class DatePicker(BasePicker[DateInput, Date]):
             self.date = message.date
 
     def action_clear(self) -> None:
-        """Clear the date to None."""
+        """Clear the date."""
         self.date = None
 
     def to_default(self) -> None:
+        """Reset the date to today."""
         self.date_dialog.date_select.scope = DateScope.MONTH
         self.date = Date.today_in_system_tz()
 
