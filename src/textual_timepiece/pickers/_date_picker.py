@@ -427,13 +427,13 @@ class DateSelect(AbstractSelect):
     def _crement_scope(self, value: int) -> None:
         with suppress(ValueError):
             if self.scope == DateScope.MONTH:
-                self.loc += months(value)
+                self.loc = self.loc.add(months=value)
             elif self.scope == DateScope.YEAR:
-                self.loc += years(value)
+                self.loc = self.loc.add(years=value)
             elif self.scope == DateScope.DECADE:
-                self.loc += years(10 * value)
+                self.loc = self.loc.add(years=10 * value)
             else:
-                self.loc += years(100 * value)
+                self.loc = self.loc.add(years=100 * value)
 
     def _filter_style(
         self,
@@ -875,7 +875,6 @@ class DateInput(BaseInput[Date]):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-        print(self.cursor_position)
         if self.date is None:
             self.date = Date.today_in_system_tz()
         elif 0 <= self.cursor_position < 4:
