@@ -3,6 +3,7 @@ from whenever import Date
 from whenever import Time
 
 from textual_timepiece import DateTimePicker
+from textual_timepiece.pickers._date_picker import DateSelect
 from textual_timepiece.pickers._time_picker import TimeSelect
 
 
@@ -44,10 +45,29 @@ async def test_datetime_dialog_messages(datetime_app, freeze_time):
 
         datetime_app.widget.query_one(TimeSelect).action_focus_neighbor("up")
         await pilot.press("up", "enter")
-        assert (
-            datetime_app.widget.datetime
-            == Date(2025, 2, 3).at(Time(22)).assume_system_tz()
-        )
+        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(
+            Time(22)
+        ).assume_system_tz(disambiguate="compatible")
+
+
+@pytest.mark.unit
+async def test_datetime_dialog_messages_reverse(datetime_app, freeze_time):
+    async with datetime_app.run_test() as pilot:
+        datetime_app.action_focus_next()
+
+        await pilot.press("shift+enter")
+        datetime_app.widget.query_one(TimeSelect).action_focus_neighbor("up")
+        await pilot.press("up", "enter")
+        assert datetime_app.widget.datetime == freeze_time.at(
+            Time(22)
+        ).assume_system_tz(disambiguate="compatible")
+        datetime_app.widget.query_one("#target-default").focus()
+
+        datetime_app.widget.query_one(DateSelect).focus()
+        await pilot.press("down", "down", "enter")
+        assert datetime_app.widget.datetime == Date(2025, 2, 3).at(
+            Time(22)
+        ).assume_system_tz(disambiguate="compatible")
 
 
 @pytest.mark.unit

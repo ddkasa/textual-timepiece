@@ -215,7 +215,7 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
 
         yield (
             DateTimeDialog().data_bind(
-                date=DateTimePicker.datetime,
+                date=DateTimePicker.date,
                 show=DateTimePicker.expanded,
             )
         )
@@ -256,7 +256,7 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
         if self.datetime:
             self.datetime += message.delta
         else:
-            self.dateime = SystemDateTime.now()
+            self.datetime = SystemDateTime.now()
 
     @on(TimeSelect.TimeSelected)
     def _set_time(self, message: TimeSelect.TimeSelected) -> None:
