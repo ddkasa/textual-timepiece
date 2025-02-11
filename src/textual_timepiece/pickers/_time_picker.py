@@ -29,6 +29,7 @@ from whenever import seconds
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
+from textual_timepiece._types import Directions
 from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
 from textual_timepiece._utility import round_time
@@ -37,7 +38,6 @@ from ._base_picker import AbstractDialog
 from ._base_picker import AbstractSelect
 from ._base_picker import BaseInput
 from ._base_picker import BasePicker
-from ._base_picker import Directions
 
 
 class DurationSelect(AbstractSelect):

@@ -48,6 +48,7 @@ from whenever import Date
 from whenever import days
 
 from textual_timepiece._extra import BaseMessage
+from textual_timepiece._types import Directions
 
 from ._extra import BaseWidget
 from ._extra import TargetButton
@@ -529,7 +530,8 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             and offset.y % 2 != 0
         )
 
-    def action_move_cursor(self, direction: str) -> None:
+    def action_move_cursor(self, direction: Directions) -> None:
+        """Move the keyboard cursor"""
         if self.cursor is None:
             self.cursor = HeatmapCursor(1, 1)
 

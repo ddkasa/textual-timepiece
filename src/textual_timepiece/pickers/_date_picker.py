@@ -40,6 +40,7 @@ from whenever import years
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
+from textual_timepiece._types import Directions
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
@@ -48,7 +49,6 @@ from ._base_picker import AbstractDialog
 from ._base_picker import AbstractSelect
 from ._base_picker import BaseInput
 from ._base_picker import BasePicker
-from ._base_picker import Directions
 
 if TYPE_CHECKING:
     pass

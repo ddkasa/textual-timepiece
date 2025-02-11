@@ -5,8 +5,6 @@ from functools import cached_property
 from typing import Callable
 from typing import ClassVar
 from typing import Generic
-from typing import Literal
-from typing import TypeAlias
 from typing import TypeVar
 from typing import cast
 
@@ -30,8 +28,6 @@ from textual.widgets import MaskedInput
 
 from textual_timepiece._extra import BaseWidget
 from textual_timepiece._extra import ExpandButton
-
-Directions: TypeAlias = Literal["up", "right", "down", "left"]
 
 
 class AbstractSelect(BaseWidget):
