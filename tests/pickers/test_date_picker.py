@@ -6,6 +6,7 @@ from whenever import Date
 from whenever import DateDelta
 
 from textual_timepiece import DatePicker
+from textual_timepiece.pickers._date_picker import DateSelect
 
 
 @pytest.fixture
@@ -126,3 +127,17 @@ async def test_date_dialog_hotkeys(date_app, freeze_time):
         # NOTE: Test Clear
         await pilot.press("ctrl+shift+d")
         assert date_app.widget.date is None
+
+
+@pytest.mark.unit
+async def test_date_dialog_edge_cases(date_app, freeze_time):
+    async with date_app.run_test() as pilot:
+        date_app.widget.focus()
+        select = date_app.widget.date_dialog.date_select
+        select.post_message(DateSelect.DateChanged(select, Date.MIN))
+        await pilot.pause()
+        assert date_app.widget.date == Date.MIN
+
+        select.post_message(DateSelect.DateChanged(select, Date.MAX))
+        await pilot.pause()
+        assert date_app.widget.date == Date.MAX

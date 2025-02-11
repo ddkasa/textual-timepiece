@@ -34,9 +34,6 @@ from textual.widgets import Button
 from textual.widgets import Input
 from whenever import Date
 from whenever import DateDelta
-from whenever import days
-from whenever import months
-from whenever import years
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
@@ -187,10 +184,10 @@ class DateSelect(AbstractSelect):
         "dateselect--start-date",
         "dateselect--end-date",
         "dateselect--cursor-date",
-        "dateselect--hovered-date",
+        "dateselect--hovered-date",  # NOTE: Only affect the foreground
         "dateselect--secondary-date",
         "dateselect--primary-date",
-        "dateselect--range-date",
+        "dateselect--range-date",  # NOTE: Only affect the background.
     }
 
     date = reactive[Date | None](None, init=False)
@@ -325,7 +322,7 @@ class DateSelect(AbstractSelect):
         except ValueError:
             return
         else:
-            date = self.loc.replace(day=value)
+            date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
             if ctrl:
                 self.post_message(self.EndDateChanged(self, date))
             else:
@@ -363,7 +360,7 @@ class DateSelect(AbstractSelect):
         if self.scope == DateScope.CENTURY and isinstance(target, str):
             target = target.split("-")[0]
         try:
-            value = int(target)
+            value = max(1, min(int(target), 9999))
         except ValueError:
             return
         else:
@@ -384,7 +381,7 @@ class DateSelect(AbstractSelect):
         if action == "select_cursor":
             return self.cursor is not None
 
-        return bool(super().check_action(action, parameters))
+        return True
 
     def action_select_cursor(self, ctrl: bool = False) -> None:
         """Triggers the functionality for what is below the keyboard cursor."""
@@ -412,7 +409,7 @@ class DateSelect(AbstractSelect):
                 self.scope = DateScope(max(self.scope.value - 1, 1))
             else:
                 self.scope = DateScope(min(self.scope.value + 1, 4))
-        elif target:
+        elif target or isinstance(target, int):
             self._set_target(target, ctrl=ctrl and self._is_range)
 
     async def _on_click(self, event: Click) -> None:
@@ -754,7 +751,7 @@ class EndDateSelect(DateSelect):
         except ValueError:
             return
         else:
-            date = self.loc.replace(day=value)
+            date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
             if not ctrl:
                 self.post_message(self.EndDateChanged(self, date))
             else:
@@ -811,7 +808,6 @@ class EndDateDialog(DateDialog):
 
 
 # TODO: Support for End Date in same input "YYYY/MM/DD - YYYY/MM/DD"
-# TODO: Cleare input & output
 
 
 class DateInput(BaseInput[Date]):
@@ -875,14 +871,29 @@ class DateInput(BaseInput[Date]):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-        if self.date is None:
-            self.date = Date.today_in_system_tz()
-        elif 0 <= self.cursor_position < 4:
-            self.date += years(offset)
-        elif 5 <= self.cursor_position < 7:
-            self.date += months(offset)
-        elif 8 <= self.cursor_position:
-            self.date += days(offset)
+
+        try:
+            if self.date is None:
+                self.date = Date.today_in_system_tz()
+            elif self._is_year_pos():
+                self.date = self.date.add(years=offset)
+            elif self._is_month_pos():
+                self.date = self.date.add(months=offset)
+            else:
+                self.date = self.date.add(days=offset)
+        except ValueError as err:
+            self.log.debug(err)
+            if not str(err).endswith("out of range"):
+                raise
+
+    def _is_year_pos(self) -> bool:
+        return self.cursor_position < 4
+
+    def _is_month_pos(self) -> bool:
+        return 5 <= self.cursor_position < 7
+
+    def _is_day_pos(self) -> bool:
+        return 8 <= self.cursor_position
 
     def convert(self) -> Date | None:
         # NOTE: Pydate instead as I want to keep it open to standard formats.
@@ -975,7 +986,7 @@ class DatePicker(BasePicker[DateInput, Date]):
         self, action: str, parameters: tuple[object, ...]
     ) -> bool | None:
         if action == "target_today":
-            return bool(self.date != Date.today_in_system_tz())
+            return self.date != Date.today_in_system_tz()
         return True
 
     def compose(self) -> ComposeResult:
@@ -1014,7 +1025,8 @@ class DatePicker(BasePicker[DateInput, Date]):
         with message.widget.prevent(DateInput.DateChanged):
             self.date = message.date
 
-    def _action_clear(self) -> None:
+    def action_clear(self) -> None:
+        """Clear the date to None."""
         self.date = None
 
     def to_default(self) -> None:
