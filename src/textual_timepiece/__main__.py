@@ -111,7 +111,7 @@ class DemoWidget(Widget):
         self.post_message(self.ToggleFeature(self._widget_type, "bindings"))
 
 
-class PreviewScreen(ModalScreen):
+class PreviewScreen(ModalScreen[None]):
     BINDINGS: ClassVar = [
         ("escape", "hide_preview", "Close Preview"),
     ]
@@ -204,6 +204,11 @@ class TimepieceDemo(App[None]):
             )
 
         self.app.push_screen(PreviewScreen(data))
+
+    @on(HeatmapManager.YearChanged)
+    def change_heat_year(self, message: HeatmapManager.YearChanged) -> None:
+        fake_data = ActivityHeatmap.generate_empty_activity(message.year)
+        message.widget.heatmap.process_data(fake_data)
 
     @cached_property
     def preview_panel(self) -> Static:

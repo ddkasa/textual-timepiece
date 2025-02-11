@@ -131,7 +131,10 @@ def iterate_timespan(
 ) -> Iterator[Date]:
     for _ in range(total):
         yield start
-        start += increment
+        try:
+            start += increment
+        except ValueError:
+            return
 
 
 def _nomalize_value(
