@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from functools import cached_property
 from typing import ClassVar
 from typing import cast
@@ -106,7 +107,7 @@ class DateTimeInput(BaseInput):
     def watch_datetime(self, value: SystemDateTime | None) -> None:
         with self.prevent(Input.Changed):
             if value:
-                self.value = value.format_common_iso().replace("T", " ")
+                self.value = value.py_datetime().strftime(self.FORMAT)
             else:
                 self.value = ""
 
@@ -118,7 +119,9 @@ class DateTimeInput(BaseInput):
 
     def convert(self) -> SystemDateTime | None:
         try:
-            return SystemDateTime.parse_common_iso(self.value)
+            return LocalDateTime.from_py_datetime(
+                datetime.strptime(self.value, self.FORMAT)
+            ).assume_system_tz(disambiguate="compatible")
         except ValueError:
             return None
 
