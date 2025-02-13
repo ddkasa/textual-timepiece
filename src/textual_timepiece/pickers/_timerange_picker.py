@@ -215,10 +215,8 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
     ) -> None:
         if message:
             message.stop()
-        if (
-            self.start_date
-            and (new_date := Date.today_in_system_tz()) >= self.start_date
-        ):
+        new_date = Date.today_in_system_tz()
+        if not self.start_date or (new_date) >= self.start_date:
             self.end_date = new_date
         else:
             self.end_date = self.start_date
