@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
 from functools import cached_property
 from typing import ClassVar
 from typing import cast
@@ -73,17 +72,17 @@ class DateTimeInput(BaseInput):
     @dataclass
     class DateTimeChanged(BaseMessage):
         widget: DateTimeInput
-        datetime: SystemDateTime | None
+        datetime: LocalDateTime | None
 
     PATTERN: ClassVar[str] = r"0009-B9-99 99:99:99"
     FORMAT: ClassVar[str] = r"%Y-%m-%d %H:%M:%S"
     ALIAS = "datetime"
 
-    datetime = var[SystemDateTime | None](None, init=False)
+    datetime = var[LocalDateTime | None](None, init=False)
 
     def __init__(
         self,
-        value: SystemDateTime | None = None,
+        value: LocalDateTime | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -104,7 +103,7 @@ class DateTimeInput(BaseInput):
             spinbox_sensitivity=spinbox_sensitivity,
         )
 
-    def watch_datetime(self, value: SystemDateTime | None) -> None:
+    def watch_datetime(self, value: LocalDateTime | None) -> None:
         with self.prevent(Input.Changed):
             if value:
                 self.value = value.py_datetime().strftime(self.FORMAT)
@@ -114,14 +113,12 @@ class DateTimeInput(BaseInput):
         self.post_message(self.DateTimeChanged(self, self.datetime))
 
     def _watch_value(self, value: str) -> None:
-        if (datetime := self.convert()) is not None:
-            self.datetime = datetime
+        if (dt := self.convert()) is not None:
+            self.datetime = dt
 
-    def convert(self) -> SystemDateTime | None:
+    def convert(self) -> LocalDateTime | None:
         try:
-            return LocalDateTime.from_py_datetime(
-                datetime.strptime(self.value, self.FORMAT)
-            ).assume_system_tz(disambiguate="compatible")
+            return LocalDateTime.strptime(self.value, self.FORMAT)
         except ValueError:
             return None
 
@@ -130,22 +127,40 @@ class DateTimeInput(BaseInput):
 
         try:
             if self.datetime is None:
-                self.datetime = SystemDateTime.now()
+                self.datetime = SystemDateTime.now().local()
             elif self.cursor_position < 4:
-                self.datetime = self.datetime.add(years=offset)
+                self.datetime = self.datetime.add(
+                    years=offset,
+                    ignore_dst=True,
+                )
             elif 5 <= self.cursor_position < 7:
-                self.datetime = self.datetime.add(months=offset)
+                self.datetime = self.datetime.add(
+                    months=offset,
+                    ignore_dst=True,
+                )
             elif 8 <= self.cursor_position < 10:
-                self.datetime = self.datetime.add(days=offset)
+                self.datetime = self.datetime.add(
+                    days=offset,
+                    ignore_dst=True,
+                )
             elif 11 <= self.cursor_position < 13:
-                self.datetime = self.datetime.add(hours=offset)
+                self.datetime = self.datetime.add(
+                    hours=offset,
+                    ignore_dst=True,
+                )
             elif 14 <= self.cursor_position < 16:
-                self.datetime = self.datetime.add(minutes=offset)
+                self.datetime = self.datetime.add(
+                    minutes=offset,
+                    ignore_dst=True,
+                )
             else:
-                self.datetime = self.datetime.add(seconds=offset)
+                self.datetime = self.datetime.add(
+                    seconds=offset,
+                    ignore_dst=True,
+                )
         except ValueError as err:
             self.log.debug(err)
-            if not str(err).endswith("is out of range"):
+            if not str(err).endswith("out of range"):
                 raise
 
     def insert_text_at_cursor(self, text: str) -> None:
@@ -190,7 +205,7 @@ class DateTimeInput(BaseInput):
         super().insert_text_at_cursor(text)
 
 
-class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
+class DateTimePicker(BasePicker[DateTimeInput, LocalDateTime]):
     """Datetime picker with a date and time in one input.
 
     Params:
@@ -204,12 +219,12 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
 
     @dataclass
     class DateTimeChanged(BaseMessage):
-        datetime: SystemDateTime | None
+        datetime: LocalDateTime | None
 
     INPUT = DateTimeInput
     ALIAS = "datetime"
 
-    datetime = var[SystemDateTime | None](None, init=False)
+    datetime = var[LocalDateTime | None](None, init=False)
     """The current set datetime. Bound of to all subwidgets."""
     date = var[Date | None](None, init=False)
     """Computed date based on the datetime for the overlay."""
@@ -235,7 +250,7 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
             return self.datetime.date()
         return None
 
-    def _watch_datetime(self, datetime: SystemDateTime | None) -> None:
+    def _watch_datetime(self, datetime: LocalDateTime | None) -> None:
         self.post_message(self.DateTimeChanged(self, datetime))
 
     def _on_date_select_date_changed(
@@ -246,18 +261,9 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
         if not message.date:
             return
         if self.datetime:
-            try:
-                self.datetime = (
-                    self.datetime.time()
-                    .on(message.date)
-                    .assume_system_tz(disambiguate="compatible")
-                )
-            except ValueError as err:
-                self.log.debug(err)
+            self.datetime = self.datetime.time().on(message.date)
         else:
-            self.datetime = message.date.at(Time()).assume_system_tz(
-                disambiguate="compatible"
-            )
+            self.datetime = message.date.at(Time())
 
     @on(DurationSelect.DurationRounded)
     def _round_time(self, message: DurationSelect.DurationRounded) -> None:
@@ -272,15 +278,17 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
     def _adjust_time(self, message: DurationSelect.DurationAdjusted) -> None:
         message.stop()
         if self.datetime:
-            self.datetime += message.delta
+            self.datetime = self.datetime.add(message.delta, ignore_dst=True)
         else:
-            self.datetime = SystemDateTime.now()
+            self.datetime = SystemDateTime.now().local()
 
     @on(TimeSelect.TimeSelected)
     def _set_time(self, message: TimeSelect.TimeSelected) -> None:
         message.stop()
         if self.datetime is None:
-            self.datetime = SystemDateTime.now().replace_time(message.target)
+            self.datetime = (
+                SystemDateTime.now().local().replace_time(message.target)
+            )
         else:
             self.datetime = self.datetime.replace_time(message.target)
 
@@ -293,7 +301,7 @@ class DateTimePicker(BasePicker[DateTimeInput, SystemDateTime]):
             self.datetime = message.datetime
 
     def to_default(self) -> None:
-        self.datetime = SystemDateTime.now()
+        self.datetime = SystemDateTime.now().local()
         self.date_dialog.date_select.scope = DateScope.MONTH
 
     @cached_property

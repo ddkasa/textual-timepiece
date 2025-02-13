@@ -146,6 +146,10 @@ class AbstractDialog(BaseWidget):
 T = TypeVar("T")
 
 
+# TODO: Rewrite a better masked input suitable for time input.
+# NOTE: Current implementation of masked input is highly restrictive. I need
+# a more flexible version in order to allow for different formats to be parsed
+# on the fly.
 class BaseInput(MaskedInput, BaseWidget, Generic[T]):
     """Abstract class that defines behaviour for all datetime input widgets.
 

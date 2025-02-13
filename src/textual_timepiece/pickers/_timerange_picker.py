@@ -16,6 +16,7 @@ from textual.widgets import Button
 from textual.widgets import Static
 from whenever import Date
 from whenever import DateDelta
+from whenever import LocalDateTime
 from whenever import SystemDateTime
 from whenever import Time
 from whenever import TimeDelta
@@ -331,8 +332,8 @@ class DateTimeRangePicker(AbstractPicker):
     @dataclass
     class DTRangeChanged(BaseMessage):
         widget: DateTimeRangePicker
-        start: SystemDateTime | None
-        end: SystemDateTime | None
+        start: LocalDateTime | None
+        end: LocalDateTime | None
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
@@ -357,9 +358,9 @@ class DateTimeRangePicker(AbstractPicker):
         ),
     ]
 
-    start_dt = var[SystemDateTime | None](None, init=False)
+    start_dt = var[LocalDateTime | None](None, init=False)
     """Picker start datetime. Bound to all the parent widgets."""
-    end_dt = var[SystemDateTime | None](None, init=False)
+    end_dt = var[LocalDateTime | None](None, init=False)
     """Picker end datetime. Bound to all the parent widgets."""
 
     start_date = var[Date | None](None, init=False)
@@ -369,8 +370,8 @@ class DateTimeRangePicker(AbstractPicker):
 
     def __init__(
         self,
-        start: SystemDateTime | None = None,
-        end: SystemDateTime | None = None,
+        start: LocalDateTime | None = None,
+        end: LocalDateTime | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -434,16 +435,22 @@ class DateTimeRangePicker(AbstractPicker):
 
         return self.end_dt.date()
 
-    def _watch_start_dt(self, new: SystemDateTime | None) -> None:
+    def _watch_start_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
             with self.prevent(self.DTRangeChanged):
-                self.end_dt = new + self._time_range
+                self.end_dt = new.add(
+                    seconds=self._time_range.in_seconds(),
+                    ignore_dst=True,
+                )
         self.post_message(self.DTRangeChanged(self, new, self.end_dt))
 
-    def _watch_end_dt(self, new: SystemDateTime | None) -> None:
+    def _watch_end_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
             with self.prevent(self.DTRangeChanged):
-                self.start_dt = new - self._time_range
+                self.start_dt = new.subtract(
+                    seconds=self._time_range.in_seconds(),
+                    ignore_dst=True,
+                )
         self.post_message(self.DTRangeChanged(self, self.start_dt, new))
 
     @on(Button.Pressed, "#lock-button")
@@ -455,7 +462,9 @@ class DateTimeRangePicker(AbstractPicker):
             and self.end_dt
             and self.start_dt
         ):
-            self._time_range = self.end_dt - self.start_dt
+            self._time_range = self.end_dt.difference(
+                self.start_dt, ignore_dst=True
+            )
         else:
             self._time_range = None
             cast(LockButton, message.control).locked = False
@@ -474,9 +483,7 @@ class DateTimeRangePicker(AbstractPicker):
         if self.start_dt and date:
             self.start_dt = self.start_dt.replace_date(date)
         elif date:
-            self.start_dt = date.at(Time()).assume_system_tz(
-                disambiguate="compatible"
-            )
+            self.start_dt = date.at(Time())
         else:
             self.start_dt = date
 
@@ -485,9 +492,7 @@ class DateTimeRangePicker(AbstractPicker):
         if self.end_dt and date:
             self.end_dt = self.end_dt.replace_date(date)
         elif date:
-            self.end_dt = date.at(Time()).assume_system_tz(
-                disambiguate="compatible"
-            )
+            self.end_dt = date.at(Time())
         else:
             self.end_dt = date
 
@@ -517,11 +522,11 @@ class DateTimeRangePicker(AbstractPicker):
         if message.widget.id == "start-time-select":
             if self.start_dt is None:
                 return
-            self.start_dt += message.delta
+            self.start_dt = self.start_dt.add(message.delta, ignore_dst=True)
         elif self.end_dt:
-            self.end_dt += message.delta
+            self.end_dt = self.end_dt.add(message.delta, ignore_dst=True)
         elif self.start_dt:
-            self.end_dt = self.start_dt + message.delta
+            self.end_dt = self.start_dt.add(message.delta, ignore_dst=True)
 
     @on(DateTimeInput.DateTimeChanged, "#start-input")
     def _start_dt_input_changed(
@@ -561,7 +566,7 @@ class DateTimeRangePicker(AbstractPicker):
     ) -> None:
         if message:
             message.stop()
-        self.start_dt = SystemDateTime.now()
+        self.start_dt = SystemDateTime.now().local()
 
     @on(Button.Pressed, "#target-default-end")
     def _action_target_default_end(
@@ -570,7 +575,7 @@ class DateTimeRangePicker(AbstractPicker):
     ) -> None:
         if message:
             message.stop()
-        now = SystemDateTime.now()
+        now = SystemDateTime.now().local()
         if not self.start_dt or now >= self.start_dt:
             self.end_dt = now
         else:
@@ -627,7 +632,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
     def _compute_duration(self) -> TimeDelta:
         if self.start_dt is None or self.end_dt is None:
             return TimeDelta()
-        return self.end_dt - self.start_dt
+        return self.end_dt.difference(self.start_dt, ignore_dst=True)
 
     @on(DurationInput.DurationChanged)
     def _new_duration(self, message: DurationInput.DurationChanged) -> None:
@@ -636,9 +641,15 @@ class DateTimeDurationPicker(DateTimeRangePicker):
             if message.duration is None:
                 self.end_dt = None
             elif self.start_dt:
-                self.end_dt = self.start_dt + message.duration
+                self.end_dt = self.start_dt.add(
+                    seconds=message.duration.in_seconds(),
+                    ignore_dst=True,
+                )
             elif self.end_dt:
-                self.start_dt = self.end_dt - message.duration
+                self.start_dt = self.end_dt.subtract(
+                    seconds=message.duration.in_seconds(),
+                    ignore_dst=True,
+                )
 
     @on(Button.Pressed, "#lock-button")
     def _lock_duration(self, message: Button.Pressed) -> None:

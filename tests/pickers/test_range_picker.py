@@ -3,6 +3,7 @@ from functools import partial
 import pytest
 from whenever import DateDelta
 from whenever import Time
+from whenever import TimeDelta
 from whenever import days
 
 from textual_timepiece import DateRangePicker
@@ -100,7 +101,7 @@ def test_dt_dur_range_dialog(
 @pytest.mark.unit
 async def test_dt_dur_range_lock(create_app, freeze_time):
     datetime_dur_range_app = create_app(
-        DateTimeDurationPicker(time_range=DateDelta(days=2))
+        DateTimeDurationPicker(time_range=TimeDelta(hours=48))
     )
 
     async with datetime_dur_range_app.run_test() as pilot:
@@ -146,10 +147,8 @@ async def test_datetime_range_lock(datetime_range_app, freeze_time):
         await pilot.pause()
         assert button.locked is False
 
-        datetime_range_app.widget.end_dt = (
-            freeze_time.at(Time())
-            .add(days=5)
-            .assume_system_tz(disambiguate="compatible")
+        datetime_range_app.widget.end_dt = freeze_time.at(Time()).add(
+            days=5, ignore_dst=True
         )
 
         button.press()

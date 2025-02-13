@@ -828,7 +828,7 @@ class DateInput(BaseInput[Date]):
         widget: DateInput
         date: Date | None
 
-    PATTERN: ClassVar[str] = "0000-00-00"
+    PATTERN: ClassVar[str] = "0009-B9-99"
     DATE_FORMAT: ClassVar[str] = "%Y-%m-%d"
     ALIAS = "date"
     date = var[Date | None](None, init=False)
