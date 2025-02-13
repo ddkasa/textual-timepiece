@@ -87,7 +87,7 @@ async def test_dt_pick_spinbox(datetime_app, freeze_time):
 async def test_dt_dialog_edge_cases(datetime_app, freeze_time):
     async with datetime_app.run_test() as pilot:
         datetime_app.widget.focus()
-        select = datetime_app.widget.date_dialog.date_select
+        select = datetime_app.widget.overlay.date_select
         select.post_message(DateSelect.DateChanged(select, Date.MIN))
         await pilot.pause()
         assert datetime_app.widget.date == Date.MIN

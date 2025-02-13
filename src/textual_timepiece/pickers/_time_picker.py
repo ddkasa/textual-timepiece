@@ -34,13 +34,13 @@ from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
 from textual_timepiece._utility import round_time
 
-from ._base_picker import AbstractDialog
-from ._base_picker import AbstractSelect
-from ._base_picker import BaseInput
+from ._base_picker import AbstractInput
+from ._base_picker import BaseOverlay
+from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
 
 
-class DurationSelect(AbstractSelect):
+class DurationSelect(BaseOverlayWidget):
     """Duration picker with various buttons in order to set time."""
 
     @dataclass
@@ -134,7 +134,7 @@ class DurationSelect(AbstractSelect):
         message.stop()
 
 
-class TimeSelect(AbstractSelect):
+class TimeSelect(BaseOverlayWidget):
     """Time selection interface."""
 
     @dataclass
@@ -234,18 +234,18 @@ class TimeSelect(AbstractSelect):
         self.app.set_focus(widget)
 
 
-class DurationDialog(AbstractDialog):
+class DurationOverlay(BaseOverlay):
     """Basic dialog widget for editing durations."""
 
     def compose(self) -> ComposeResult:
         yield DurationSelect()
 
 
-class TimeDialog(AbstractDialog):
+class TimeOverlay(BaseOverlay):
     """Time dialog which include a time matrix as well."""
 
     DEFAULT_CSS = """
-    TimeDialog {
+    TimeOverlay {
         max-width: 40;
 
         Rule#divider {
@@ -261,7 +261,7 @@ class TimeDialog(AbstractDialog):
         yield TimeSelect()
 
 
-class DurationInput(BaseInput[TimeDelta]):
+class DurationInput(AbstractInput[TimeDelta]):
     """Duration input for time deltas."""
 
     @dataclass
@@ -322,7 +322,7 @@ class DurationInput(BaseInput[TimeDelta]):
 # TODO: Find a better way to show larger durations.
 
 
-class DurationPicker(BasePicker[DurationInput, TimeDelta]):
+class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
     """Picker widget for picking durations.
 
     Maxes out duration at *99:99:99*.
@@ -360,7 +360,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta]):
             )
             yield self._compose_expand_button()
 
-        yield DurationDialog().data_bind(show=DurationPicker.expanded)
+        yield DurationOverlay().data_bind(show=DurationPicker.expanded)
 
     def on_mount(self) -> None:
         self.query_exactly_one("#target-default", Button).disabled = (
@@ -424,7 +424,7 @@ class TimeValidator(Validator):
         return self.success()
 
 
-class TimeInput(BaseInput[Time]):
+class TimeInput(AbstractInput[Time]):
     """Time input for a HH:MM:SS format"""
 
     @dataclass
@@ -509,7 +509,7 @@ class TimeInput(BaseInput[Time]):
             self.time = add_time(self.time or Time(), seconds(offset))
 
 
-class TimePicker(BasePicker[TimeInput, Time]):
+class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
     """Time picker for a 24 hour clock.
 
     Params:
@@ -538,7 +538,7 @@ class TimePicker(BasePicker[TimeInput, Time]):
             yield TargetButton(id="target-default", tooltip="Set time to now.")
             yield self._compose_expand_button()
 
-        yield TimeDialog().data_bind(show=TimePicker.expanded)
+        yield TimeOverlay().data_bind(show=TimePicker.expanded)
 
     @on(DurationSelect.DurationRounded)
     def _round_duration(self, message: DurationSelect.DurationRounded) -> None:

@@ -42,9 +42,9 @@ from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
 
-from ._base_picker import AbstractDialog
-from ._base_picker import AbstractSelect
-from ._base_picker import BaseInput
+from ._base_picker import AbstractInput
+from ._base_picker import BaseOverlay
+from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
 
 if TYPE_CHECKING:
@@ -74,7 +74,7 @@ class DateCursor(NamedTuple):
         return self._replace(**kwargs)
 
 
-class DateSelect(AbstractSelect):
+class DateSelect(BaseOverlayWidget):
     """Date selection widget for selecting dates and date-ranges visually.
 
     Params:
@@ -764,7 +764,7 @@ class EndDateSelect(DateSelect):
             self.loc = self.date
 
 
-class DateDialog(AbstractDialog):
+class DateOverlay(BaseOverlay):
     date = var[Date | None](None, init=False)
 
     def __init__(
@@ -781,7 +781,7 @@ class DateDialog(AbstractDialog):
 
     def compose(self) -> ComposeResult:
         yield DateSelect(date_range=self._date_range).data_bind(
-            date=DateDialog.date
+            date=DateOverlay.date
         )
 
     @cached_property
@@ -789,7 +789,7 @@ class DateDialog(AbstractDialog):
         return cast(DateSelect, self.query_one(DateSelect))
 
 
-class EndDateDialog(DateDialog):
+class EndDateOverlay(DateOverlay):
     date = var[Date | None](None, init=False)
 
     def __init__(
@@ -803,13 +803,13 @@ class EndDateDialog(DateDialog):
         super().__init__(name, id, classes, disabled=disabled)
 
     def compose(self) -> ComposeResult:
-        yield EndDateSelect().data_bind(end_date=EndDateDialog.date)
+        yield EndDateSelect().data_bind(end_date=EndDateOverlay.date)
 
 
 # TODO: Support for End Date in same input "YYYY/MM/DD - YYYY/MM/DD"
 
 
-class DateInput(BaseInput[Date]):
+class DateInput(AbstractInput[Date]):
     """Date picker for full dates.
 
     Params:
@@ -924,7 +924,7 @@ class DateInput(BaseInput[Date]):
         super().insert_text_at_cursor(text)
 
 
-class DatePicker(BasePicker[DateInput, Date]):
+class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
     """Single date picker with an input and overlay.
 
     Params:
@@ -1008,7 +1008,7 @@ class DatePicker(BasePicker[DateInput, Date]):
             yield self._compose_expand_button()
 
         yield (
-            DateDialog(date_range=self._date_range).data_bind(
+            DateOverlay(date_range=self._date_range).data_bind(
                 date=DatePicker.date, show=DatePicker.expanded
             )
         )
@@ -1038,9 +1038,5 @@ class DatePicker(BasePicker[DateInput, Date]):
 
     def to_default(self) -> None:
         """Reset the date to today."""
-        self.date_dialog.date_select.scope = DateScope.MONTH
+        self.overlay.date_select.scope = DateScope.MONTH
         self.date = Date.today_in_system_tz()
-
-    @cached_property
-    def date_dialog(self) -> DateDialog:
-        return self.query_exactly_one(DateDialog)

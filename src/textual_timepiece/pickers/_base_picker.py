@@ -19,19 +19,19 @@ from textual.events import MouseUp
 from textual.events import Resize
 from textual.geometry import Offset
 from textual.geometry import Size
-from textual.message import Message
 from textual.reactive import var
 from textual.widget import Widget
 from textual.widgets import Button
 from textual.widgets import Input
 from textual.widgets import MaskedInput
 
+from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import BaseWidget
 from textual_timepiece._extra import ExpandButton
 
 
-class AbstractSelect(BaseWidget):
-    """Base Class that defines the interal widgets of the dialog."""
+class BaseOverlayWidget(BaseWidget):
+    """Base Class that defines the internal widgets of the dialog."""
 
     can_focus = True
 
@@ -46,14 +46,14 @@ class AbstractSelect(BaseWidget):
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
 
 
-class AbstractDialog(BaseWidget):
+class BaseOverlay(BaseWidget):
     """Base class for the widget that drops down for an easier selection."""
 
-    class Close(Message):
-        pass
+    class Close(BaseMessage):
+        widget: BaseOverlay
 
     DEFAULT_CSS = """
-    AbstractDialog {
+    BaseOverlay {
         overlay: screen !important;
         constrain: inside !important;
         position: absolute !important;
@@ -70,7 +70,7 @@ class AbstractDialog(BaseWidget):
             border: round $primary;
         }
 
-        AbstractSelect {
+        BaseOverlayWidget {
             width: 40;
             height: auto;
         }
@@ -103,7 +103,7 @@ class AbstractDialog(BaseWidget):
         self.display = False
 
     def action_close_dialog(self) -> None:
-        self.post_message(self.Close())
+        self.post_message(self.Close(self))
 
     def watch_show(self, show: bool) -> None:
         def anim(on_complete: Callable | None) -> None:
@@ -140,7 +140,7 @@ class AbstractDialog(BaseWidget):
         if action == "focus_next_select":
             return len(self.children) > 1
 
-        return bool(super().check_action(action, parameters))
+        return True
 
 
 T = TypeVar("T")
@@ -150,7 +150,7 @@ T = TypeVar("T")
 # NOTE: Current implementation of masked input is highly restrictive. I need
 # a more flexible version in order to allow for different formats to be parsed
 # on the fly.
-class BaseInput(MaskedInput, BaseWidget, Generic[T]):
+class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
     """Abstract class that defines behaviour for all datetime input widgets.
 
     Default Input messages are disabled and are meant to be replaced by a
@@ -171,7 +171,7 @@ class BaseInput(MaskedInput, BaseWidget, Generic[T]):
     can_focus = True
 
     DEFAULT_CSS = """
-    BaseInput {
+    AbstractInput {
         background: transparent;
         width: auto;
         border: none;
@@ -276,7 +276,10 @@ class BaseInput(MaskedInput, BaseWidget, Generic[T]):
         self.set_reactive(getattr(self.__class__, self.ALIAS), value)
 
 
-class AbstractPicker(BaseWidget, Generic[T]):
+Overlay = TypeVar("Overlay", bound=BaseOverlay)
+
+
+class AbstractPicker(BaseWidget, Generic[Overlay]):
     """Abstract Picker class that defines most of the base behaviour."""
 
     DEFAULT_CSS = """
@@ -300,7 +303,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
                     padding: 0;
                     border: none;
                 }
-                Button, BaseInput {
+                Button, AbstractInput {
                     border: none;
                     padding: 0;
                     height: 1;
@@ -329,7 +332,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
                 padding: 0;
             }
 
-            Button, BaseInput {
+            Button, AbstractInput {
                 border: none;
                 padding: 0;
                 height: 1;
@@ -344,7 +347,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
                 max-width: 3;
             }
 
-            & > BaseInput {
+            & > AbstractInput {
                 padding: 0 2;
                 &.-invalid {
                     color: $error;
@@ -355,7 +358,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
                 }
             }
         }
-        & > AbstractDialog {
+        & > BaseOverlay {
             border: round $secondary;
             overlay: screen !important;
             constrain: inside;
@@ -371,7 +374,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
                 border: round $primary;
             }
 
-            AbstractSelect {
+            & > BaseOverlayWidget {
                 width: 40;
                 height: auto;
             }
@@ -398,7 +401,7 @@ class AbstractPicker(BaseWidget, Generic[T]):
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self.tooltip = tooltip
 
-    def _on_abstract_dialog_close(self, message: AbstractDialog.Close) -> None:
+    def _on_base_overlay_close(self, message: BaseOverlay.Close) -> None:
         message.stop()
         self.expanded = False
 
@@ -414,19 +417,23 @@ class AbstractPicker(BaseWidget, Generic[T]):
         self.expanded = not self.expanded
 
     @on(DescendantBlur)
-    def close_dialog(self) -> None:
+    def close_overlay(self) -> None:
         if not self.has_focus_within:
             self.expanded = False
 
     def watch_expanded(self, expanded: bool) -> None:
         if expanded:
-            self.query_one(AbstractDialog).focus()
+            self.query_one(BaseOverlay).focus()
+
+    @cached_property
+    def overlay(self) -> Overlay:
+        return cast(Overlay, self.query_exactly_one(BaseOverlay))
 
 
-TI = TypeVar("TI", bound=BaseInput)
+TI = TypeVar("TI", bound=AbstractInput)
 
 
-class BasePicker(AbstractPicker, Generic[TI, T]):
+class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
     """Base Picker class for combining various single ended widgets."""
 
     ALIAS: str

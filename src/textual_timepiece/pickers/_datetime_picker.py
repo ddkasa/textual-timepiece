@@ -21,19 +21,19 @@ from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import round_time
 
-from ._base_picker import AbstractDialog
-from ._base_picker import BaseInput
+from ._base_picker import AbstractInput
+from ._base_picker import BaseOverlay
 from ._base_picker import BasePicker
 from ._date_picker import DateSelect
 from ._time_picker import DurationSelect
 from ._time_picker import TimeSelect
 
 
-class DateTimeDialog(AbstractDialog):
+class DateTimeOverlay(BaseOverlay):
     date = var[Date | None](None, init=False)
 
     DEFAULT_CSS = """
-    DateTimeDialog {
+    DateTimeOverlay {
         layout: horizontal;
         max-width: 78;
         height: auto;
@@ -55,7 +55,7 @@ class DateTimeDialog(AbstractDialog):
 
     def compose(self) -> ComposeResult:
         with Vertical():
-            yield DateSelect().data_bind(date=DateTimeDialog.date)
+            yield DateSelect().data_bind(date=DateTimeOverlay.date)
         with Vertical():
             yield DurationSelect()
             yield TimeSelect()
@@ -66,7 +66,7 @@ class DateTimeDialog(AbstractDialog):
         return cast(DateSelect, self.query_one(DateSelect))
 
 
-class DateTimeInput(BaseInput):
+class DateTimeInput(AbstractInput):
     """Input that combines both date and time into one."""
 
     @dataclass
@@ -205,7 +205,9 @@ class DateTimeInput(BaseInput):
         super().insert_text_at_cursor(text)
 
 
-class DateTimePicker(BasePicker[DateTimeInput, LocalDateTime]):
+class DateTimePicker(
+    BasePicker[DateTimeInput, LocalDateTime, DateTimeOverlay]
+):
     """Datetime picker with a date and time in one input.
 
     Params:
@@ -239,7 +241,7 @@ class DateTimePicker(BasePicker[DateTimeInput, LocalDateTime]):
             yield self._compose_expand_button()
 
         yield (
-            DateTimeDialog().data_bind(
+            DateTimeOverlay().data_bind(
                 date=DateTimePicker.date,
                 show=DateTimePicker.expanded,
             )
@@ -297,17 +299,9 @@ class DateTimePicker(BasePicker[DateTimeInput, LocalDateTime]):
         self, message: DateTimeInput.DateTimeChanged
     ) -> None:
         message.stop()
-        with self.dt_input.prevent(DateTimeInput.DateTimeChanged):
+        with self.input_widget.prevent(DateTimeInput.DateTimeChanged):
             self.datetime = message.datetime
 
     def to_default(self) -> None:
         self.datetime = SystemDateTime.now().local()
-        self.date_dialog.date_select.scope = DateScope.MONTH
-
-    @cached_property
-    def dt_input(self) -> DateTimeInput:
-        return self.query_exactly_one(DateTimeInput)
-
-    @cached_property
-    def date_dialog(self) -> DateTimeDialog:
-        return self.query_exactly_one(DateTimeDialog)
+        self.overlay.date_select.scope = DateScope.MONTH

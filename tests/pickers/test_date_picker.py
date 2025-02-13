@@ -105,7 +105,7 @@ async def test_clear_action(date_app) -> None:
 async def test_date_range(date_app, freeze_time) -> None:
     async with date_app.run_test() as pilot:
         date_app.widget.query_one("#target-default").focus()
-        select = date_app.widget.date_dialog.date_select
+        select = date_app.widget.overlay.date_select
         await pilot.press("enter")
         select.date_range = DateDelta(days=5)
         assert date_app.widget.date == freeze_time
@@ -116,7 +116,7 @@ async def test_date_range(date_app, freeze_time) -> None:
 async def test_date_dialog_hotkeys(date_app, freeze_time):
     async with date_app.run_test() as pilot:
         date_app.widget.query_one("#target-default").focus()
-        select = date_app.widget.date_dialog.date_select
+        select = date_app.widget.overlay.date_select
         select.date_range = DateDelta(days=5)
 
         # NOTE: Test Default
@@ -133,7 +133,7 @@ async def test_date_dialog_hotkeys(date_app, freeze_time):
 async def test_date_dialog_edge_cases(date_app, freeze_time):
     async with date_app.run_test() as pilot:
         date_app.widget.focus()
-        select = date_app.widget.date_dialog.date_select
+        select = date_app.widget.overlay.date_select
         select.post_message(DateSelect.DateChanged(select, Date.MIN))
         await pilot.pause()
         assert date_app.widget.date == Date.MIN

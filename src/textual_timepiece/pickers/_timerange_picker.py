@@ -26,8 +26,8 @@ from textual_timepiece._extra import LockButton
 from textual_timepiece._extra import TargetButton
 from textual_timepiece._utility import round_time
 
-from ._base_picker import AbstractDialog
 from ._base_picker import AbstractPicker
+from ._base_picker import BaseOverlay
 from ._date_picker import DateInput
 from ._date_picker import DateSelect
 from ._date_picker import EndDateSelect
@@ -39,11 +39,11 @@ from ._time_picker import DurationSelect
 # TODO: Limit or validate to min/max dates
 
 
-class DateRangeDialog(AbstractDialog):
+class DateRangeOverlay(BaseOverlay):
     """Simple date range dialog with to date selects combined."""
 
     DEFAULT_CSS = """
-    DateRangeDialog {
+    DateRangeOverlay {
         layout: horizontal;
 
         Static#spacer {
@@ -58,15 +58,15 @@ class DateRangeDialog(AbstractDialog):
 
     def compose(self) -> ComposeResult:
         yield DateSelect(is_range=True, id="start-date-select").data_bind(
-            date=DateRangeDialog.start, end_date=DateRangeDialog.stop
+            date=DateRangeOverlay.start, end_date=DateRangeOverlay.stop
         )
         yield Static(id="spacer")
         yield EndDateSelect(id="end-date-select").data_bind(
-            date=DateRangeDialog.start, end_date=DateRangeDialog.stop
+            date=DateRangeOverlay.start, end_date=DateRangeOverlay.stop
         )
 
 
-class DateRangePicker(AbstractPicker):
+class DateRangePicker(AbstractPicker[DateRangeOverlay]):
     """Date range picker for picking inclusive date ranges.
 
     Params:
@@ -154,7 +154,7 @@ class DateRangePicker(AbstractPicker):
             )
             yield self._compose_expand_button()
 
-        yield DateRangeDialog().data_bind(
+        yield DateRangeOverlay().data_bind(
             show=DateRangePicker.expanded,
             start=DateRangePicker.start_date,
             stop=DateRangePicker.end_date,
@@ -245,7 +245,7 @@ class DateRangePicker(AbstractPicker):
     def disable_start(self, *, disable: bool = True) -> Self:
         """Utility method to disable start input widgets."""
         self.start_input.disabled = disable
-        self.dialog.query_one(
+        self.overlay.query_one(
             "#start-date-select", DateSelect
         ).disabled = disable
         self.query_one("#target-default-start", Button).disabled = disable
@@ -254,15 +254,11 @@ class DateRangePicker(AbstractPicker):
     def disable_end(self, *, disable: bool = True) -> Self:
         """Utility method to disable end input widgets."""
         self.end_input.disabled = disable
-        self.dialog.query_one(
+        self.overlay.query_one(
             "#end-date-select", EndDateSelect
         ).disabled = disable
         self.query_one("#target-default-end", Button).disabled = disable
         return self
-
-    @cached_property
-    def dialog(self) -> DateRangeDialog:
-        return self.query_exactly_one(DateRangeDialog)
 
     @cached_property
     def start_input(self) -> DateInput:
@@ -277,9 +273,9 @@ class DateRangePicker(AbstractPicker):
         return cast(LockButton, self.query_exactly_one(LockButton))
 
 
-class DateTimeRangeDialog(AbstractDialog):
+class DateTimeRangeOverlay(BaseOverlay):
     DEFAULT_CSS = """
-    DateTimeRangeDialog {
+    DateTimeRangeOverlay {
         layout: horizontal !important;
         width: auto;
         Vertical {
@@ -301,19 +297,19 @@ class DateTimeRangeDialog(AbstractDialog):
         with Vertical(id="start-column"):
             yield DurationSelect(id="start-time-select")
             yield DateSelect(is_range=True, id="start-date-select").data_bind(
-                date=DateTimeRangeDialog.start,
-                end_date=DateTimeRangeDialog.stop,
+                date=DateTimeRangeOverlay.start,
+                end_date=DateTimeRangeOverlay.stop,
             )
         yield Static(id="spacer", expand=True)
         with Vertical(id="end-column"):
             yield DurationSelect(id="end-time-select")
             yield EndDateSelect(id="end-date-select").data_bind(
-                date=DateTimeRangeDialog.start,
-                end_date=DateTimeRangeDialog.stop,
+                date=DateTimeRangeOverlay.start,
+                end_date=DateTimeRangeOverlay.stop,
             )
 
 
-class DateTimeRangePicker(AbstractPicker):
+class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     """Datetime range picker with two datetime inputs.
 
     Params:
@@ -418,7 +414,7 @@ class DateTimeRangePicker(AbstractPicker):
             )
             yield self._compose_expand_button()
 
-        yield DateTimeRangeDialog().data_bind(
+        yield DateTimeRangeOverlay().data_bind(
             show=DateTimeDurationPicker.expanded,
             start=DateTimeDurationPicker.start_date,
             stop=DateTimeDurationPicker.end_date,
@@ -548,14 +544,14 @@ class DateTimeRangePicker(AbstractPicker):
     def disable_start(self, *, disable: bool = True) -> Self:
         """Utility method to disable start input widgets."""
         self.start_input.disabled = disable
-        self.dialog.query_one("#start-column", Vertical).disabled = disable
+        self.overlay.query_one("#start-column", Vertical).disabled = disable
         self.query_one("#target-default-start", Button).disabled = disable
         return self
 
     def disable_end(self, *, disable: bool = True) -> Self:
         """Utility method to disable end input widgets."""
         self.end_input.disabled = disable
-        self.dialog.query_one("#end-column", Vertical).disabled = disable
+        self.overlay.query_one("#end-column", Vertical).disabled = disable
         self.query_one("#target-default-end", Button).disabled = disable
         return self
 
@@ -580,10 +576,6 @@ class DateTimeRangePicker(AbstractPicker):
             self.end_dt = now
         else:
             self.end_dt = self.start_dt
-
-    @cached_property
-    def dialog(self) -> DateTimeRangeDialog:
-        return self.query_exactly_one(DateTimeRangeDialog)
 
     @cached_property
     def start_input(self) -> DateTimeInput:
