@@ -1,3 +1,3 @@
 __author__ = "David Kasakaitis"
 __email__ = "davidkasakaitis@proton.me"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
