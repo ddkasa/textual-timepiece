@@ -36,6 +36,9 @@ from textual_timepiece.pickers import DateTimePicker
 from textual_timepiece.pickers import DateTimeRangePicker
 from textual_timepiece.pickers import DurationPicker
 from textual_timepiece.pickers import TimePicker
+from textual_timepiece.pickers._date_picker import DateSelect
+from textual_timepiece.pickers._time_picker import DurationSelect
+from textual_timepiece.pickers._time_picker import TimeSelect
 
 
 class DemoWidget(Widget):
@@ -170,6 +173,16 @@ class TimepieceDemo(App[None]):
                         DateTimeDurationPicker,
                     ):
                         yield DemoWidget(item)
+
+            with TabPane("Select"):
+                with Container(id="Pickers", classes="previews"):
+                    for select in (
+                        DateSelect,
+                        TimeSelect,
+                        DurationSelect,
+                    ):
+                        yield DemoWidget(select)
+
             with TabPane("Heatmap"):
                 with Container(id="heatmap", classes="previews"):
                     for i in (ActivityHeatmap, HeatmapManager):
