@@ -111,6 +111,10 @@ class DateSelect(BaseOverlayWidget):
     DEFAULT_CSS = """
         DateSelect {
             width: auto;
+
+            border: round $secondary;
+            background: $surface;
+
             .dateselect--primary-date {
                 color: $primary;
             }
