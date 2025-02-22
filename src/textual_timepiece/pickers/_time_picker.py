@@ -41,7 +41,14 @@ from ._base_picker import BasePicker
 
 
 class DurationSelect(BaseOverlayWidget):
-    """Duration picker with various buttons in order to set time."""
+    """Duration picker with various buttons in order to set time.
+
+    Params:
+        name: Name of the widget.
+        id: Unique dom id for the widget
+        classes: Any CSS classes that should be added to the widget.
+        disabled: Whether to disable the widget.
+    """
 
     @dataclass
     class DurationAdjusted(BaseMessage):
@@ -136,7 +143,14 @@ class DurationSelect(BaseOverlayWidget):
 
 
 class TimeSelect(BaseOverlayWidget):
-    """Time selection interface."""
+    """Time selection interface.
+
+    Params:
+        name: Name of the widget.
+        id: Unique dom id for the widget
+        classes: Any CSS classes that should be added to the widget.
+        disabled: Whether to disable the widget.
+    """
 
     @dataclass
     class TimeSelected(BaseMessage):

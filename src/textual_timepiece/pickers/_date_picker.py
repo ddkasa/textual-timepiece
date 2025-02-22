@@ -82,7 +82,7 @@ class DateSelect(BaseOverlayWidget):
         end: Initial end date for the widget.
         name: Name of the widget.
         id: Unique dom id for the widget
-        classes: Any dom classes that should be added to the widget.
+        classes: Any CSS classes that should be added to the widget.
         is_range: Whether the selection is a range. Automatically true if an
             'end_date' or 'date_range' parameter is supplied.
         disabled: Whether to disable the widget.
