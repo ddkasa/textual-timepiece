@@ -61,8 +61,6 @@ class DurationSelect(BaseOverlayWidget):
         value: int
         scope: Literal["hours", "minutes", "seconds"]
 
-    can_focus_children = True
-
     DEFAULT_CSS = """
     DurationSelect {
         height: 3;
