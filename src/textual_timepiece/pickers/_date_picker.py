@@ -486,7 +486,14 @@ class DateSelect(BaseOverlayWidget):
         return Style.combine(styles)
 
     def is_day_in_range(self, day: Date) -> bool:
-        """Checks if a given date is within the range of the selection."""
+        """Checks if a given date is within selected the date range(inclusive).
+
+        Args:
+            day: Date to check against.
+
+        Returns:
+            True if in the range else false.
+        """
         return bool(
             self._is_range
             and self.date
