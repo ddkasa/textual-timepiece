@@ -188,10 +188,10 @@ class DateSelect(BaseOverlayWidget):
         "dateselect--start-date",
         "dateselect--end-date",
         "dateselect--cursor-date",
-        "dateselect--hovered-date",  # NOTE: Only affect the foreground
+        "dateselect--hovered-date",  # NOTE: Only affects the foreground
         "dateselect--secondary-date",
         "dateselect--primary-date",
-        "dateselect--range-date",  # NOTE: Only affect the background.
+        "dateselect--range-date",  # NOTE: Only affects the background.
     }
 
     date = reactive[Date | None](None, init=False)
@@ -245,6 +245,20 @@ class DateSelect(BaseOverlayWidget):
         self.set_reactive(DateSelect.end_date, end)
         self.set_reactive(DateSelect.date_range, date_range)
 
+    def _compute_header(self) -> str:
+        if self.scope == DateScope.YEAR:
+            return str(self.loc.year)
+
+        elif self.scope == DateScope.DECADE:
+            start = math.floor(self.loc.year / 10) * 10
+            return f"{start} <-> {start + 9}"
+
+        elif self.scope == DateScope.CENTURY:
+            start = math.floor(self.loc.year / 100) * 100
+            return f"{start} <-> {start + 99}"
+
+        return f"{month_name[self.loc.month]} {self.loc.year}"
+
     def _validate_date_range(
         self,
         date_range: DateDelta | None,
@@ -267,21 +281,52 @@ class DateSelect(BaseOverlayWidget):
         if self.cursor:
             self._find_move()
 
+    def _watch_date(self, date: Date | None) -> None:
+        self.scope = DateScope.MONTH
+        if date:
+            if self.date_range:
+                self.end_date = date + self.date_range
+
+            self.loc = date
+
+    def _watch_loc(self, loc: Date) -> None:
+        self.data = get_scope(self.scope, loc)
+
+        if self.cursor:
+            self.cursor = self.cursor.confine(self.data)
+
     async def _on_mouse_move(self, event: MouseMove) -> None:
         self.cursor_offset = event.offset
 
     def _on_leave(self, event: Leave) -> None:
-        super()._on_leave(event)
         self.cursor_offset = None
 
     def _on_blur(self, event: Blur) -> None:
-        super()._on_blur(event)
         self.cursor = None
 
     def _on_focus(self, event: Focus) -> None:
-        super()._on_focus(event)
         if self._select_on_focus:
             self.cursor = DateCursor()
+
+    def _on_date_select_date_changed(
+        self,
+        message: DateSelect.DateChanged,
+    ) -> None:
+        self.date = message.date
+        if self.date_range and message.date:
+            self.end_date = message.date + self.date_range
+
+    def _on_date_select_end_date_changed(
+        self,
+        message: DateSelect.EndDateChanged,
+    ) -> None:
+        self.end_date = message.date
+        if self.date_range and message.date:
+            self.date = message.date - self.date_range
+
+    async def _on_click(self, event: Click) -> None:
+        target = self.get_line_offset(event.offset)
+        self._navigate_picker(target, ctrl=event.ctrl)
 
     def action_move_cursor(self, direction: Directions) -> None:
         """Move cursor to the next spot depending on direction."""
@@ -328,22 +373,6 @@ class DateSelect(BaseOverlayWidget):
             self.post_message(self.EndDateChanged(self, date))
         else:
             self.post_message(self.DateChanged(self, date))
-
-    def _on_date_select_date_changed(
-        self,
-        message: DateSelect.DateChanged,
-    ) -> None:
-        self.date = message.date
-        if self.date_range and message.date:
-            self.end_date = message.date + self.date_range
-
-    def _on_date_select_end_date_changed(
-        self,
-        message: DateSelect.EndDateChanged,
-    ) -> None:
-        self.end_date = message.date
-        if self.date_range and message.date:
-            self.date = message.date - self.date_range
 
     def _set_month(self, target: str) -> None:
         try:
@@ -412,11 +441,6 @@ class DateSelect(BaseOverlayWidget):
                 self.scope = DateScope(min(self.scope.value + 1, 4))
         elif target or isinstance(target, int):
             self._set_target(target, ctrl=ctrl and self._is_range)
-
-    async def _on_click(self, event: Click) -> None:
-        await super()._on_click(event)
-        target = self.get_line_offset(event.offset)
-        self._navigate_picker(target, ctrl=event.ctrl)
 
     def _set_current_scope(self) -> None:
         self.scope = DateScope.MONTH
@@ -500,34 +524,6 @@ class DateSelect(BaseOverlayWidget):
             and self.end_date
             and self.date <= day <= self.end_date
         )
-
-    def _watch_date(self, date: Date | None) -> None:
-        self.scope = DateScope.MONTH
-        if date:
-            if self.date_range:
-                self.end_date = date + self.date_range
-
-            self.loc = date
-
-    def _watch_loc(self, loc: Date) -> None:
-        self.data = get_scope(self.scope, loc)
-
-        if self.cursor:
-            self.cursor = self.cursor.confine(self.data)
-
-    def _compute_header(self) -> str:
-        if self.scope == DateScope.YEAR:
-            return str(self.loc.year)
-
-        elif self.scope == DateScope.DECADE:
-            start = math.floor(self.loc.year / 10) * 10
-            return f"{start} <-> {start + 9}"
-
-        elif self.scope == DateScope.CENTURY:
-            start = math.floor(self.loc.year / 100) * 100
-            return f"{start} <-> {start + 99}"
-
-        return f"{month_name[self.loc.month]} {self.loc.year}"
 
     def _render_header(self, y: int) -> list[Segment]:
         header_len = len(self.header)
