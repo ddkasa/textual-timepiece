@@ -571,15 +571,12 @@ class DateSelect(BaseOverlayWidget):
         ]
 
     def _render_weekdays(self) -> list[Segment]:
-        empty = Segment(" ", style=self.rich_style)
-        segs: list[Segment] = [empty]
-        secondary = self.get_component_rich_style("dateselect--secondary-date")
-        for i in range(14):
-            index, rem = divmod(i, 2)
-            if not rem:
-                segs.extend([empty] * 2)
-            else:
-                segs.append(Segment(day_abbr[index], secondary))
+        day_style = self.get_component_rich_style("dateselect--secondary-date")
+        empty = Segment("  ", style=self.rich_style)
+        segs = [Segment(" ", style=self.rich_style)]
+        for i in range(7):
+            segs.append(empty)
+            segs.append(Segment(day_abbr[i], day_style))
         return segs
 
     def _render_month(self, y: int) -> list[Segment]:
