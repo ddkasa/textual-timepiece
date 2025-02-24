@@ -38,14 +38,15 @@ class BaseWidget(Widget):
                 yield n
 
     def get_line_offset(self, offset: Offset) -> str:
+        x = offset.x - int(self.styles.border_left[0] != "")
         index = 0
 
         for seg in self.render_line(
             offset.y - self._top_border_offset()
         )._segments:
-            # NOTE: Probably should look for a public method for this.
+            # REFACTOR: Look for a public method for this.
             index += len(seg.text)
-            if index > offset.x:
+            if index > x:
                 return str(seg.text.strip())
 
         return ""
