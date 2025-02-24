@@ -94,11 +94,15 @@ class DateSelect(BaseOverlayWidget):
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the start date changed."""
+
         widget: DateSelect
         date: Date | None
 
     @dataclass
     class EndDateChanged(BaseMessage):
+        """Message sent when the end date changed."""
+
         widget: DateSelect
         date: Date | None
 
@@ -111,10 +115,9 @@ class DateSelect(BaseOverlayWidget):
 
     DEFAULT_CSS = """
         DateSelect {
-            width: auto;
-
-            border: round $secondary;
             background: $surface;
+            width: auto;
+            border: round $secondary;
 
             .dateselect--primary-date {
                 color: $primary;
@@ -196,13 +199,16 @@ class DateSelect(BaseOverlayWidget):
     }
 
     date = reactive[Date | None](None, init=False)
-    """(Start) date. Bound to parent dialog."""
+    """Start date. Bound to base dialog if using with a prebuilt picker."""
 
     date_range = var[DateDelta | None](None, init=False)
     """Constant date range in between the start and end dates."""
 
     end_date = reactive[Date | None](None, init=False)
-    """(Stop) date. Bound to parent dialog."""
+    """End date for date ranges.
+
+    Bound to base dialog if using with a prebuilt picker.
+    """
 
     scope = var[DateScope](DateScope.MONTH)
     """Scope of the current date picker view."""
@@ -240,6 +246,7 @@ class DateSelect(BaseOverlayWidget):
     ) -> None:
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self._is_range = is_range or bool(end) or bool(date_range)
+
         self._select_on_focus = select_on_focus
 
         self.set_reactive(DateSelect.date, start)
@@ -448,7 +455,7 @@ class DateSelect(BaseOverlayWidget):
         self.loc = self.date or self.end_date or Date.today_in_system_tz()
 
     def _crement_scope(self, value: int) -> None:
-        with suppress(ValueError):
+        with suppress(ValueError):  # NOTE: Preventing out of range values.
             if self.scope == DateScope.MONTH:
                 self.loc = self.loc.add(months=value)
             elif self.scope == DateScope.YEAR:
@@ -532,7 +539,9 @@ class DateSelect(BaseOverlayWidget):
         blank, blank_extra = divmod(rem, 2)
         header_start = 5 + blank + blank_extra
         header_end = header_start + header_len
-        next_start = header_end + (blank - blank_extra)
+        right_nav_start = (
+            header_end + (blank - blank_extra) + len(self.TARGET_ICON)
+        )
 
         y += self._top_border_offset()
         return [
@@ -568,7 +577,7 @@ class DateSelect(BaseOverlayWidget):
                 self.RIGHT_ARROW,
                 style=self._filter_style(
                     y,
-                    range(next_start, next_start + 2),
+                    range(right_nav_start, right_nav_start + 2),
                     log_idx=DateCursor(0, 3),
                 ),
             ),
@@ -641,20 +650,22 @@ class DateSelect(BaseOverlayWidget):
         if (row := (y - 2) // 2) > 3:
             return []
 
-        segs: list[Segment] = []
-        values = self.data[row]
-        v_max_width = self.size.width // len(values)
         y += self._top_border_offset()
+
+        values = self.data[row]
+        value_max_width = self.size.width // len(values)
+
+        segs = list[Segment]()
         for i, value in enumerate(values):
             if self.scope == DateScope.CENTURY:
                 value = f"{value}-{cast(int, value) + 9}"
             else:
                 value = str(value)
             n = len(value)
-            start = (i * v_max_width) + (abs(v_max_width - n) // 2)
+            start = (i * value_max_width) + (abs(value_max_width - n) // 2)
             end = start + n + 1
 
-            value = value.center(v_max_width)
+            value = value.center(value_max_width)
             segs.append(
                 Segment(
                     value,
@@ -825,6 +836,8 @@ class DateInput(AbstractInput[Date]):
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the date changed."""
+
         widget: DateInput
         date: Date | None
 
@@ -949,6 +962,8 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the date changed."""
+
         widget: DatePicker
         date: Date | None
 
