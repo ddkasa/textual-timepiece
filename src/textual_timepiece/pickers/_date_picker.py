@@ -55,6 +55,7 @@ DisplayData: TypeAlias = Scope
 
 
 # TODO: Month and year picker
+# PERF: Region refreshing
 
 
 class DateCursor(NamedTuple):
@@ -583,32 +584,30 @@ class DateSelect(BaseOverlayWidget):
         return segs
 
     def _render_month(self, y: int) -> list[Segment]:
-        y += self._top_border_offset()
-
-        if y == (3 + self._top_border_offset()):
+        border_offset = self._top_border_offset()
+        y += border_offset
+        if y == (3 + border_offset):
             return self._render_weekdays()
 
-        month = (y - (4 + self._top_border_offset())) // 2
-        date = None
-        segments: list[Segment] = [Segment(" ", style=self.rich_style)]
-        subtotal = 1
-        for i in range(14):
-            index, rem = divmod(i, 2)
-            if not rem:
-                segments.append(
-                    Segment(
-                        "  ",
-                        self._filter_style(
-                            y,
-                            range(subtotal, subtotal + 3),
-                            date=date,
-                        ),
-                    )
-                )
+        month = (y - (4 + border_offset)) // 2
+        # NOTE: Removing nav header + weekdays
 
-                subtotal += 2
-                date = None
-            elif not (day := self.data[month][index]):
+        date = None
+        segments = [Segment(" ", style=self.rich_style)]
+        subtotal = int(self.styles.border_left[0] != "")
+        for i in range(7):
+            segments.append(
+                Segment(
+                    "  ",
+                    self._filter_style(
+                        y,
+                        range(subtotal, subtotal + 3),
+                        date=date,
+                    ),
+                )
+            )
+            subtotal += 2
+            if not (day := self.data[month][i]):
                 segments.append(
                     Segment(
                         "   ",
@@ -616,11 +615,10 @@ class DateSelect(BaseOverlayWidget):
                             y,
                             range(subtotal, subtotal + 4),
                             date=date,
-                            log_idx=DateCursor(month + 1, index),
+                            log_idx=DateCursor(month + 1, i),
                         ),
                     )
                 )
-                subtotal += 3
                 date = None
             else:
                 date = self.loc.replace(day=cast(int, day))
@@ -631,11 +629,11 @@ class DateSelect(BaseOverlayWidget):
                             y,
                             range(subtotal, subtotal + 4),
                             date=date,
-                            log_idx=DateCursor(month + 1, index),
+                            log_idx=DateCursor(month + 1, i),
                         ),
                     )
                 )
-                subtotal += 3
+            subtotal += 3
 
         return segments
 
