@@ -984,7 +984,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         self._date_range = date_range
         self.validator = validator
 
-    def validate_date(self, date: Date | None) -> Date | None:
+    def _validate_date(self, date: Date | None) -> Date | None:
         if self.validator is None:
             return date
 
