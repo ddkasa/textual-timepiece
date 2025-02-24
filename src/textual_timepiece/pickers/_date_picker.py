@@ -273,9 +273,9 @@ class DateSelect(BaseOverlayWidget):
             return
         self._is_range = True
         if self.date:
-            self.end_date = self.date + new
+            self.end_date = self.date.add(new)
         elif self.end_date:
-            self.date = self.end_date - new
+            self.date = self.end_date.subtract(new)
 
     def _watch_scope(self, scope: DateScope) -> None:
         self.data = get_scope(scope, self.loc)
@@ -286,7 +286,7 @@ class DateSelect(BaseOverlayWidget):
         self.scope = DateScope.MONTH
         if date:
             if self.date_range:
-                self.end_date = date + self.date_range
+                self.end_date = date.add(self.date_range)
 
             self.loc = date
 
@@ -315,7 +315,7 @@ class DateSelect(BaseOverlayWidget):
     ) -> None:
         self.date = message.date
         if self.date_range and message.date:
-            self.end_date = message.date + self.date_range
+            self.end_date = message.date.add(self.date_range)
 
     def _on_date_select_end_date_changed(
         self,
@@ -323,7 +323,7 @@ class DateSelect(BaseOverlayWidget):
     ) -> None:
         self.end_date = message.date
         if self.date_range and message.date:
-            self.date = message.date - self.date_range
+            self.date = message.date.subtract(self.date_range)
 
     async def _on_click(self, event: Click) -> None:
         target = self.get_line_offset(event.offset)
