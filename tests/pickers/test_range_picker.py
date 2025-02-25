@@ -62,6 +62,25 @@ async def test_date_range_lock(create_app, freeze_time):
         )
 
 
+@pytest.mark.unit
+async def test_date_range_cap_disable(date_range_app, freeze_time):
+    async with date_range_app.run_test():
+        assert date_range_app.widget.start_input.disabled is False
+        assert date_range_app.widget.end_input.disabled is False
+
+        date_range_app.widget.disable_end()
+        assert date_range_app.widget.start_input.disabled is False
+        assert date_range_app.widget.end_input.disabled
+
+        date_range_app.widget.disable_start()
+        assert date_range_app.widget.start_input.disabled
+        assert date_range_app.widget.end_input.disabled
+
+        date_range_app.widget.disable_end(disable=False)
+        assert date_range_app.widget.start_input.disabled
+        assert date_range_app.widget.end_input.disabled is False
+
+
 @pytest.mark.snapshot
 def test_dt_range_dialog(datetime_range_app, range_snap_compare, freeze_time):
     async def run_before(pilot):
@@ -132,6 +151,25 @@ async def test_datetime_range_bindings(
         await pilot.press("ctrl+shift+d")
         assert datetime_range_app.widget.start_dt is None
         assert datetime_range_app.widget.end_dt is None
+
+
+@pytest.mark.unit
+async def test_dt_range_cap_disable(datetime_range_app, freeze_time):
+    async with datetime_range_app.run_test():
+        assert datetime_range_app.widget.start_input.disabled is False
+        assert datetime_range_app.widget.end_input.disabled is False
+
+        datetime_range_app.widget.disable_end()
+        assert datetime_range_app.widget.start_input.disabled is False
+        assert datetime_range_app.widget.end_input.disabled
+
+        datetime_range_app.widget.disable_start()
+        assert datetime_range_app.widget.start_input.disabled
+        assert datetime_range_app.widget.end_input.disabled
+
+        datetime_range_app.widget.disable_end(disable=False)
+        assert datetime_range_app.widget.start_input.disabled
+        assert datetime_range_app.widget.end_input.disabled is False
 
 
 @pytest.mark.unit

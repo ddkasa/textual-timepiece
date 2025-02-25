@@ -260,11 +260,11 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     @cached_property
     def start_input(self) -> DateInput:
-        return self.query_exactly_one("#start-input", DateInput)
+        return self.query_exactly_one("#start-date-input", DateInput)
 
     @cached_property
     def end_input(self) -> DateInput:
-        return self.query_exactly_one("#end-input", DateInput)
+        return self.query_exactly_one("#stop-date-input", DateInput)
 
     @cached_property
     def lock_button(self) -> LockButton:
@@ -388,7 +388,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
-            yield DateTimeInput(id="start-input").data_bind(
+            yield DateTimeInput(id="start-dt-input").data_bind(
                 datetime=DateTimeRangePicker.start_dt,
             )
 
@@ -403,7 +403,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
                 disabled=self._time_range is not None,
             )
 
-            yield DateTimeInput(id="end-input").data_bind(
+            yield DateTimeInput(id="end-dt-input").data_bind(
                 datetime=DateTimeRangePicker.end_dt,
             )
             yield TargetButton(
@@ -522,7 +522,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         elif self.start_dt:
             self.end_dt = self.start_dt.add(message.delta, ignore_dst=True)
 
-    @on(DateTimeInput.DateTimeChanged, "#start-input")
+    @on(DateTimeInput.DateTimeChanged, "#start-dt-input")
     def _start_dt_input_changed(
         self,
         message: DateTimeInput.DateTimeChanged,
@@ -531,7 +531,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         with message.control.prevent(DateTimeInput.DateTimeChanged):
             self.start_dt = message.datetime
 
-    @on(DateTimeInput.DateTimeChanged, "#end-input")
+    @on(DateTimeInput.DateTimeChanged, "#end-dt-input")
     def _end_dt_input_changed(
         self, message: DateTimeInput.DateTimeChanged
     ) -> None:
@@ -577,11 +577,11 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     @cached_property
     def start_input(self) -> DateTimeInput:
-        return self.query_exactly_one("#start-input", DateTimeInput)
+        return self.query_exactly_one("#start-dt-input", DateTimeInput)
 
     @cached_property
     def end_input(self) -> DateTimeInput:
-        return self.query_exactly_one("#end-input", DateTimeInput)
+        return self.query_exactly_one("#end-dt-input", DateTimeInput)
 
     @cached_property
     def lock_button(self) -> LockButton:
