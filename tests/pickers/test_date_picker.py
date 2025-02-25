@@ -5,8 +5,8 @@ from textual.pilot import Pilot
 from whenever import Date
 from whenever import DateDelta
 
-from textual_timepiece import DatePicker
-from textual_timepiece.pickers._date_picker import DateSelect
+from textual_timepiece.pickers import DatePicker
+from textual_timepiece.pickers import DateSelect
 
 
 @pytest.fixture

@@ -2,9 +2,9 @@ import pytest
 from whenever import Time
 from whenever import TimeDelta
 
-from textual_timepiece import DurationPicker
-from textual_timepiece import TimePicker
-from textual_timepiece.pickers._time_picker import TimeSelect
+from textual_timepiece.pickers import DurationPicker
+from textual_timepiece.pickers import TimePicker
+from textual_timepiece.pickers import TimeSelect
 
 
 @pytest.fixture

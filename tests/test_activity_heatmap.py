@@ -2,9 +2,9 @@ from functools import partial
 
 import pytest
 
-from textual_timepiece._activity_heatmap import ActivityHeatmap
 from textual_timepiece._activity_heatmap import HeatmapCursor
-from textual_timepiece._activity_heatmap import HeatmapManager
+from textual_timepiece.activity_heatmap import ActivityHeatmap
+from textual_timepiece.activity_heatmap import HeatmapManager
 
 
 @pytest.fixture

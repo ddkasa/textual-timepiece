@@ -6,10 +6,10 @@ from whenever import Time
 from whenever import TimeDelta
 from whenever import days
 
-from textual_timepiece import DateRangePicker
-from textual_timepiece import DateTimeDurationPicker
-from textual_timepiece import DateTimeRangePicker
 from textual_timepiece._extra import LockButton
+from textual_timepiece.pickers import DateRangePicker
+from textual_timepiece.pickers import DateTimeDurationPicker
+from textual_timepiece.pickers import DateTimeRangePicker
 
 
 @pytest.fixture

@@ -2,9 +2,9 @@ import pytest
 from whenever import Date
 from whenever import Time
 
-from textual_timepiece import DateTimePicker
-from textual_timepiece.pickers._date_picker import DateSelect
-from textual_timepiece.pickers._time_picker import TimeSelect
+from textual_timepiece.pickers import DateSelect
+from textual_timepiece.pickers import DateTimePicker
+from textual_timepiece.pickers import TimeSelect
 
 
 @pytest.fixture
