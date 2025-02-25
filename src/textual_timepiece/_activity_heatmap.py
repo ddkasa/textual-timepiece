@@ -16,8 +16,6 @@ from typing import TypeAlias
 from typing import cast
 
 from rich.color import Color as RColor
-from rich.console import ConsoleRenderable
-from rich.console import RichCast
 from rich.segment import Segment
 from rich.style import Style as RStyle
 from textual import on
@@ -679,7 +677,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         return new_cal
 
     @property  # type: ignore[misc]  # NOTE: Tooltip is generated inside.
-    def tooltip(self) -> ConsoleRenderable | RichCast | str | None:
+    def tooltip(self) -> str | None:  # type: ignore[override]
         if (tip_date := self._date_lookup()) is not None:
             total = int(self.values[tip_date.py_date()])
             tooltip = f"{tip_date.py_date():%-d %B}\n"
