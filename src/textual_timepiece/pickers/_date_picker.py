@@ -41,6 +41,9 @@ from textual_timepiece._types import Directions
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
+from textual_timepiece.constants import LEFT_ARROW
+from textual_timepiece.constants import RIGHT_ARROW
+from textual_timepiece.constants import TARGET_ICON
 
 from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
@@ -105,13 +108,6 @@ class DateSelect(BaseOverlayWidget):
 
         widget: DateSelect
         date: Date | None
-
-    LEFT_ARROW: str = "←"
-    """Arrow used for navigating backwards in time."""
-    TARGET_ICON: str = "◎"
-    """Return to default location icon."""
-    RIGHT_ARROW: str = "→"
-    """Arrow use for navigating forward in time."""
 
     DEFAULT_CSS = """
         DateSelect {
@@ -426,21 +422,21 @@ class DateSelect(BaseOverlayWidget):
         cursor = cast(DateCursor, self.cursor)
         if cursor.y == 0:
             nav = (
-                self.LEFT_ARROW,
+                LEFT_ARROW,
                 self.header,
-                self.TARGET_ICON,
-                self.RIGHT_ARROW,
+                TARGET_ICON,
+                RIGHT_ARROW,
             )
             self._navigate_picker(nav[cursor.x], ctrl=ctrl)
         else:
             self._navigate_picker(self.data[cursor.y - 1][cursor.x], ctrl=ctrl)
 
     def _navigate_picker(self, target: str | int, *, ctrl: bool) -> None:
-        if target == self.LEFT_ARROW:
+        if target == LEFT_ARROW:
             self._crement_scope(-1)
-        elif target == self.TARGET_ICON:
+        elif target == TARGET_ICON:
             self._set_current_scope()
-        elif target == self.RIGHT_ARROW:
+        elif target == RIGHT_ARROW:
             self._crement_scope(1)
         elif target == self.header:
             if ctrl:
@@ -539,15 +535,13 @@ class DateSelect(BaseOverlayWidget):
         blank, blank_extra = divmod(rem, 2)
         header_start = 5 + blank + blank_extra
         header_end = header_start + header_len
-        right_nav_start = (
-            header_end + (blank - blank_extra) + len(self.TARGET_ICON)
-        )
+        right_nav_start = header_end + (blank - blank_extra) + len(TARGET_ICON)
 
         y += self._top_border_offset()
         return [
             Segment("   ", self.rich_style),
             Segment(
-                self.LEFT_ARROW,
+                LEFT_ARROW,
                 self._filter_style(
                     y,
                     range(4, 5),
@@ -565,7 +559,7 @@ class DateSelect(BaseOverlayWidget):
             ),
             Segment("   ", self.rich_style),
             Segment(
-                self.TARGET_ICON,
+                TARGET_ICON,
                 style=self._filter_style(
                     y,
                     range(header_end + 1, header_end + 3),
@@ -574,7 +568,7 @@ class DateSelect(BaseOverlayWidget):
             ),
             Segment(" " * (blank - (3 - blank_extra)), self.rich_style),
             Segment(
-                self.RIGHT_ARROW,
+                RIGHT_ARROW,
                 style=self._filter_style(
                     y,
                     range(right_nav_start, right_nav_start + 2),
