@@ -128,23 +128,41 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         can_focus_children: Can this container's children be focused?
         can_maximized: Allow this container to maximize?
             `None` to use default logic.
+
+    Examples:
+        >>> def compose(self) -> ComposeResult:
+        >>>     yield ActivityHeatmap()
+
+        >>> def on_mount(self) -> None:
+        >>>     activity = generate_activity()
+        >>>     self.query_one(ActivityHeatmap).process_data(activity)
     """
 
     @dataclass
     class DateSelected(BaseMessage):
+        """Message sent when a day is selected."""
+
+        widget: ActivityHeatmap
         day: Date
 
     @dataclass
     class WeekSelected(BaseMessage):
+        """Message sent when a week number is selected."""
+
+        widget: ActivityHeatmap
         week: Date
 
     @dataclass
     class MonthSelected(BaseMessage):
+        """Message sent when a month label is selected."""
+
+        widget: ActivityHeatmap
         month: Date
 
     can_focus = True
 
     ActivityData: TypeAlias = list[list[float | None]]
+    """Final data type that the heatmap uses."""
 
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
@@ -241,8 +259,8 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     """Current mouse_offfset for tracking the cursor."""
 
     cursor = reactive[HeatmapCursor | None](None, init=False)
-    """The widget logic checks against this reactive to see where to highlight
-    or what was clicked/hovered.
+    """Widget logic checks against this reactive to see where to highlight or
+    what was clicked/hovered.
     """
 
     def __init__(
@@ -529,7 +547,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         )
 
     def action_move_cursor(self, direction: Directions) -> None:
-        """Move the keyboard cursor"""
+        """Move the keyboard cursor."""
         if self.cursor is None:
             self.cursor = HeatmapCursor(1, 1)
 
@@ -543,6 +561,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             self.cursor = self.cursor.move(self.day.year, day_delta=-1)
 
     def action_clear_cursor(self) -> None:
+        """Clear the navigation cursor."""
         self.cursor = None
 
     def check_action(
@@ -653,9 +672,10 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     def generate_empty_activity(year: int) -> list[list[date | None]]:
         """Generates empty data for a specified year.
 
-        year: Year to generate. Minimum year 1 to a maximum year 9998.
+        Args:
+            year: Year to generate. Minimum year 1 to a maximum year 9998.
 
-        Return:
+        Returns:
             A 2 dimensional array of dates or None if the day belongs to
                 another year.
         """
@@ -709,6 +729,8 @@ class HeatmapManager(BaseWidget):
 
     @dataclass
     class YearChanged(BaseMessage):
+        """Message sent when the year is updated."""
+
         widget: HeatmapManager
         year: int
 
@@ -867,4 +889,5 @@ class HeatmapManager(BaseWidget):
 
     @cached_property
     def heatmap(self) -> ActivityHeatmap:
+        """Direct access to the underlying heatmap."""
         return self.query_exactly_one(ActivityHeatmap)
