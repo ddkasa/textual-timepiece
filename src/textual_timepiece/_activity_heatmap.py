@@ -41,7 +41,6 @@ from textual.validation import Integer
 from textual.widgets import Button
 from textual.widgets import Input
 from textual.widgets import MaskedInput
-from textual.widgets import Tabs
 from whenever import Date
 from whenever import days
 
@@ -886,10 +885,6 @@ class HeatmapManager(BaseWidget):
     @cached_property
     def year_input(self) -> Input:
         return self.query_exactly_one(Input)
-
-    @cached_property
-    def tabs(self) -> Tabs:
-        return cast(Tabs, self.query_exactly_one(Tabs))
 
     @cached_property
     def heatmap(self) -> ActivityHeatmap:
