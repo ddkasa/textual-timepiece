@@ -84,6 +84,8 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     @dataclass
     class DateRangeChanged(BaseMessage):
+        """Message sent when the date range has changed."""
+
         widget: DateRangePicker
         start: Date | None
         end: Date | None
@@ -325,6 +327,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     @dataclass
     class DTRangeChanged(BaseMessage):
+        """Message sent when the datetime range has changed."""
+
         widget: DateTimeRangePicker
         start: LocalDateTime | None
         end: LocalDateTime | None
