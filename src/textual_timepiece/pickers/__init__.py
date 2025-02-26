@@ -4,6 +4,7 @@ from ._date_picker import DatePicker
 from ._date_picker import DateSelect
 from ._date_picker import EndDateOverlay
 from ._date_picker import EndDateSelect
+from ._datetime_picker import DateTimeInput
 from ._datetime_picker import DateTimeOverlay
 from ._datetime_picker import DateTimePicker
 from ._time_picker import DurationInput
@@ -25,6 +26,7 @@ __all__ = [
     "DateRangePicker",
     "DateSelect",
     "DateTimeDurationPicker",
+    "DateTimeInput",
     "DateTimeOverlay",
     "DateTimePicker",
     "DateTimeRangePicker",
