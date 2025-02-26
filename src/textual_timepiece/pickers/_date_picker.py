@@ -81,6 +81,11 @@ class DateCursor(NamedTuple):
 class DateSelect(BaseOverlayWidget):
     """Date selection widget for selecting dates and date-ranges visually.
 
+    Supports mouse and keyboard navigation with arrow keys.
+
+    INFO:
+        Control+Click/Enter will go back in scope with the top header.
+
     Params:
         start: Initial start date for the widget.
         end: Initial end date for the widget.
