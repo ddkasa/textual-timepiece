@@ -72,6 +72,8 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
 
     @dataclass
     class DateTimeChanged(BaseMessage):
+        """Sent when the datetime is changed."""
+
         widget: DateTimeInput
         datetime: LocalDateTime | None
 
@@ -80,6 +82,7 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
     ALIAS = "datetime"
 
     datetime = var[LocalDateTime | None](None, init=False)
+    """Current datetime or none if nothing is set."""
 
     def __init__(
         self,
@@ -222,6 +225,9 @@ class DateTimePicker(
 
     @dataclass
     class DateTimeChanged(BaseMessage):
+        """Message sent when the datetime is updated."""
+
+        widget: DateTimePicker
         datetime: LocalDateTime | None
 
     INPUT = DateTimeInput
