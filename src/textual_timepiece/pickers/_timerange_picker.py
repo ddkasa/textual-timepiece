@@ -610,7 +610,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
     duration = var[TimeDelta | None](None, init=False)
     """Duration between start and end datetimes. Computed dynamically."""
 
-    async def on_mount(self) -> None:
+    async def _on_mount(self) -> None:  # type: ignore[override] # NOTE: Need to mount extra widget
         """Overrides the compose method in order to a duration input."""
         await self.query_exactly_one("#input-control", Horizontal).mount(
             DurationInput(self.duration, id="duration-input").data_bind(
