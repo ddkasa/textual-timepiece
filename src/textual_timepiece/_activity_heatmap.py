@@ -834,7 +834,7 @@ class HeatmapManager(BaseWidget):
             yield Center(ActivityHeatmap().data_bind(HeatmapManager.day))
 
     def _watch_day(self, day: Date) -> None:
-        for button in self.query_one("#navigation").query(Button):
+        for button in self.navigation.query(Button):
             if button.id in {"prev-year-5", "prev-year"}:
                 button.disabled = day.year <= 1
             elif button.id in {"next-year", "next-year-5"}:
@@ -844,10 +844,10 @@ class HeatmapManager(BaseWidget):
         self.post_message(self.YearChanged(self, day.year))
 
     def _on_descendant_focus(self) -> None:
-        self.query_one("#navigation").refresh()
+        self.navigation.refresh()
 
     def _on_descendant_blur(self) -> None:
-        self.query_one("#navigation").refresh()
+        self.navigation.refresh()
 
     @on(Input.Submitted)
     @on(DescendantBlur)
@@ -878,6 +878,9 @@ class HeatmapManager(BaseWidget):
 
         with self.year_input.prevent(Input.Changed):
             self.year_input.value = str(self.day.year)
+    @cached_property
+    def navigation(self) -> Horizontal:
+        return self.query_one("#navigation", Horizontal)
 
     @cached_property
     def year_input(self) -> Input:
