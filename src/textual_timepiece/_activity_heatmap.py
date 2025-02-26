@@ -883,8 +883,8 @@ class HeatmapManager(BaseWidget):
         return self.query_one("#navigation", Horizontal)
 
     @cached_property
-    def year_input(self) -> Input:
-        return self.query_exactly_one(Input)
+    def year_input(self) -> MaskedInput:
+        return self.query_exactly_one(MaskedInput)
 
     @cached_property
     def heatmap(self) -> ActivityHeatmap:
