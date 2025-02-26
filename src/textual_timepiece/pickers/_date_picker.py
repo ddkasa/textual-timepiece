@@ -1030,7 +1030,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         message.stop()
         self.date = message.date
 
-    def watch_date(self, new: Date) -> None:
+    def _watch_date(self, new: Date) -> None:
         self.query_exactly_one("#target-default", Button).disabled = (
             new == Date.today_in_system_tz()
         )
