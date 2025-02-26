@@ -234,7 +234,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
         )
         self.alias = value
         self._sbox_sensitivity = max(1, spinbox_sensitivity)
-        self.disable_messages(Input.Changed, Input.Submitted)
+        self.disable_messages(Input.Changed, Input.Submitted, Input.Blurred)
 
     def watch_updated(self, value: bool) -> None:
         self.set_class(value, "updated")
