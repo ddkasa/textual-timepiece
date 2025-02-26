@@ -119,6 +119,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     """Base renderable widget for an activity heatmap.
 
     Params:
+        year: Year for verifying dates.
         name: The name of the widget.
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
@@ -249,7 +250,9 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     data = reactive[ActivityData](list, init=False, layout=True)
     """Two dimensional data that should be normalized between 0 and 1."""
 
-    day = var[Date](Date.today_in_system_tz, init=False)
+    year = var[int](lambda: Date.today_in_system_tz().year, init=False)
+    """Current year for calculating dates."""
+
     values = var[defaultdict[date, int]](
         lambda: defaultdict(lambda: 0), init=False
     )
@@ -265,6 +268,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     def __init__(
         self,
+        year: int | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -275,18 +279,11 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         can_focus_children: bool | None = None,
         can_maximize: bool | None = None,
     ) -> None:
-        super().__init__(
-            name=name,
-            id=id,
-            classes=classes,
-            disabled=disabled,
-            can_focus=can_focus,
-            can_focus_children=can_focus_children,
-            can_maximize=can_maximize,
-        )
-
+        super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self.select_on_focus = select_on_focus
         self.virtual_size = Size(163, 18)
+        if year:
+            self.set_reactive(ActivityHeatmap.year, year)
 
     def _get_color_strength(
         self,
@@ -520,7 +517,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             if month is not None:
                 return month == self.cursor.month
             elif day is not None and week is not None:
-                year = self.day.year
+                year = self.year
                 if week == 52:
                     week = 0
                     year += 1
@@ -528,10 +525,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
                     cal = date.fromisocalendar(year, week + 1, day + 1)
                 except ValueError:
                     return False
-                return (
-                    cal.month == self.cursor.month
-                    and cal.year == self.day.year
-                )
+                return cal.month == self.cursor.month and cal.year == self.year
 
         if day is None or week is None:
             return False
@@ -552,13 +546,13 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             self.cursor = HeatmapCursor(1, 1)
 
         elif direction == "right":
-            self.cursor = self.cursor.move(self.day.year, week_delta=1)
+            self.cursor = self.cursor.move(self.year, week_delta=1)
         elif direction == "down":
-            self.cursor = self.cursor.move(self.day.year, day_delta=1)
+            self.cursor = self.cursor.move(self.year, day_delta=1)
         elif direction == "left":
-            self.cursor = self.cursor.move(self.day.year, week_delta=-1)
+            self.cursor = self.cursor.move(self.year, week_delta=-1)
         elif direction == "up":
-            self.cursor = self.cursor.move(self.day.year, day_delta=-1)
+            self.cursor = self.cursor.move(self.year, day_delta=-1)
 
     def action_clear_cursor(self) -> None:
         """Clear the navigation cursor."""
@@ -630,21 +624,21 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     def _date_lookup(self) -> Date | None:
         if self.cursor is not None and self.cursor.is_day:
             if (
-                day := self.cursor.to_date(self.day.year)
-            ) is not None and day.year == self.day.year:
+                day := self.cursor.to_date(self.year)
+            ) is not None and day.year == self.year:
                 return day
 
         return None
 
     def _week_lookup(self) -> Date | None:
         if self.cursor is not None and self.cursor.is_week:
-            return self.cursor.to_date(self.day.year)
+            return self.cursor.to_date(self.year)
 
         return None
 
     def _month_lookup(self) -> Date | None:
         if self.cursor is not None and self.cursor.is_month:
-            return self.cursor.to_date(self.day.year)
+            return self.cursor.to_date(self.year)
 
         return None
 
@@ -720,7 +714,7 @@ class HeatmapManager(BaseWidget):
     """Composite widget that manages navigating a heatmap.
 
     Params:
-        date: Initial value for the year.
+        year: Initial value for the year.
         name: The name of the widget.
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
@@ -774,7 +768,10 @@ class HeatmapManager(BaseWidget):
     }
     """
 
-    day = var[Date](Date.today_in_system_tz, init=False, bindings=True)
+    year = var[int](
+        lambda: Date.today_in_system_tz().year, init=False, bindings=True
+    )
+    """Current year that the widget is set to. Max is 9999 and minimum 1"""
 
     def __init__(
         self,
@@ -786,7 +783,10 @@ class HeatmapManager(BaseWidget):
     ) -> None:
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         if year:
-            self.set_reactive(HeatmapManager.day, Date(year, 1, 1))
+            self.set_reactive(HeatmapManager.year, year)
+
+    def _validate_year(self, year: int) -> int:
+        return max(0, min(year, 9999))
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="navigation"):
@@ -804,7 +804,7 @@ class HeatmapManager(BaseWidget):
             )
             yield MaskedInput(
                 "9999",
-                str(self.day.year),
+                str(self.year),
                 classes="nav",
                 valid_empty=False,
                 validators=[Integer(minimum=1, maximum=9998)],
@@ -831,17 +831,17 @@ class HeatmapManager(BaseWidget):
             )
 
         with Horizontal():
-            yield Center(ActivityHeatmap().data_bind(HeatmapManager.day))
+            yield Center(ActivityHeatmap().data_bind(HeatmapManager.year))
 
-    def _watch_day(self, day: Date) -> None:
+    def _watch_year(self, year: int) -> None:
         for button in self.navigation.query(Button):
             if button.id in {"prev-year-5", "prev-year"}:
-                button.disabled = day.year <= 1
+                button.disabled = year <= 1
             elif button.id in {"next-year", "next-year-5"}:
-                button.disabled = day.year >= 9998
+                button.disabled = year >= 9998
             elif button.id == "today-button":
-                button.disabled = day == Date.today_in_system_tz()
-        self.post_message(self.YearChanged(self, day.year))
+                button.disabled = year == Date.today_in_system_tz().year
+        self.post_message(self.YearChanged(self, year))
 
     def _on_descendant_focus(self) -> None:
         self.navigation.refresh()
@@ -861,23 +861,24 @@ class HeatmapManager(BaseWidget):
                 year = int(message.control.value)
             except ValueError:
                 return
-            self.day = Date(year, 1, 1)
+            self.year = year
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
         if message.button.id == "prev-year-5":
-            self.day = self.day.replace(year=max(self.day.year - 5, 1))
+            self.year -= 5
         elif message.button.id == "prev-year":
-            self.day = self.day.replace(year=max(self.day.year - 1, 1))
+            self.year -= 1
         elif message.button.id == "next-year":
-            self.day = self.day.replace(year=min(self.day.year + 1, 9998))
+            self.year += 1
         elif message.button.id == "next-year-5":
-            self.day = self.day.replace(year=min(self.day.year + 5, 9998))
+            self.year += 5
         elif message.button.id == "today-button":
-            self.day = Date.today_in_system_tz()
+            self.year = Date.today_in_system_tz().year
 
         with self.year_input.prevent(Input.Changed):
-            self.year_input.value = str(self.day.year)
+            self.year_input.value = str(self.year)
+
     @cached_property
     def navigation(self) -> Horizontal:
         return self.query_one("#navigation", Horizontal)
