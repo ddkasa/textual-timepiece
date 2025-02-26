@@ -471,7 +471,7 @@ class TimeInput(AbstractInput[Time]):
     time = var[Time | None](None, init=False)
     """Currently set time or none if its empty."""
 
-    def watch_time(self, time: Time | None) -> None:
+    def _watch_time(self, time: Time | None) -> None:
         with self.prevent(Input.Changed), suppress(ValueError):
             if time:
                 self.value = time.format_common_iso()
