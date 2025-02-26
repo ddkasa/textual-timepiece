@@ -67,7 +67,7 @@ class DateTimeOverlay(BaseOverlay):
         return cast(DateSelect, self.query_one(DateSelect))
 
 
-class DateTimeInput(AbstractInput):
+class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
     @dataclass
