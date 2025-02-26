@@ -1,0 +1,144 @@
+site_name: Textual Timepiece
+site_url: https://ddkasa.github.io/textual-timepiece/
+site_description: Documentation for Textual Timepiece a datetime widget library for Textual.
+site_author: David Kasakaitis
+copyright: Copyright &copy; 2025 David Kasakaitis
+docs_dir: "docs/"
+repo_name: ddkasa/textual-timepiece
+repo_url: https://www.github.com/ddkasa/textual-timepiece
+
+theme:
+  name: material
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme)"
+      primary: blue-grey
+      accent: amber
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue-grey
+      accent: amber
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: blue-grey
+      scheme: slate
+      accent: amber
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  font:
+    text: Victor
+    code: Victor Mono
+  icon:
+    logo: fontawesome/solid/stopwatch
+    favicon: fontawesome/solid/stopwatch
+
+plugins:
+  - search
+  - autorefs
+  - include_dir_to_nav
+  - macros
+  - mkdocstrings:
+      custom_templates: docs/templates
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_section_style: spacy
+            members_order: source
+            show_root_heading: true
+            show_source: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            inherited_members:
+              - "BINDINGS"
+              - "COMPONENT_CLASSES"
+              - "DEFAULT_CSS"
+            show_signature_annotations: true
+            separate_signature: true
+            summary: true
+            line_length: 79
+            load_external_modules: true
+            group_by_category: true
+            filters:
+              - "!^_"
+              - "^__init__$"
+              - "!^can_replace$"
+              - "!^compose$"
+              - "!^render$"
+              - "!^render_line$"
+              - "!^render_lines$"
+              - "!^get_content_width$"
+              - "!^get_content_height$"
+              - "!^compose_add_child$"
+            docstring_options:
+              ignore_init_summary: false
+              trim_doctest_flags: true
+            extensions:
+              - docs/scripts/griffe_css_path.py
+
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://rich.readthedocs.io/en/stable/objects.inv
+            - https://whenever.readthedocs.io/en/latest/objects.inv
+            - https://textual.textualize.io/objects.inv
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - def_list
+  - tables
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: textual
+          class: textual
+          format: !!python/name:textual._doc.format_svg
+        - name: rich
+          class: rich
+          format: !!python/name:textual._doc.rich
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - css/stylesheet.css
+
+watch:
+  - src/textual_timepiece
+
+nav:
+  - Home: index.md
+  - "examples.md"
+  - Reference:
+      - "reference/"
+  - About:
+      - "CHANGELOG.md"
+      - "LICENSE.md"
