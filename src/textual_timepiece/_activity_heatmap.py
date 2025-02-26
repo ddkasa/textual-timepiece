@@ -124,10 +124,6 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         classes: The CSS classes for the widget.
         select_on_focus: Whether to setup a keyboard cursor on focus.
         disabled: Whether the widget is disabled or not.
-        can_focus: Can this container be focused?
-        can_focus_children: Can this container's children be focused?
-        can_maximized: Allow this container to maximize?
-            `None` to use default logic.
 
     Examples:
         >>> def compose(self) -> ComposeResult:
@@ -274,11 +270,9 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         *,
         select_on_focus: bool = True,
         disabled: bool = False,
-        can_focus: bool | None = None,
-        can_focus_children: bool | None = None,
-        can_maximize: bool | None = None,
     ) -> None:
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
+
         self.select_on_focus = select_on_focus
         self.virtual_size = Size(163, 18)
         if year:
