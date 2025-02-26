@@ -490,6 +490,7 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
         self.to_default()
 
     def action_clear(self) -> None:
+        """Clear the input value."""
         self.input_widget.clear()
 
     @abstractmethod
