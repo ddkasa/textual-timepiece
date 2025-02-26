@@ -7,28 +7,28 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["textual>=2.1.0", "whenever>=0.7.1"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "License :: OSI Approved :: MIT License",
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Natural Language :: English",
-    "Typing :: Typed",
-    "Topic :: Terminals",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "License :: OSI Approved :: MIT License",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Typing :: Typed",
+  "Topic :: Terminals",
 ]
 keywords = [
-    "textual",
-    "tui",
-    "time",
-    "date",
-    "whenever",
-    "heatmap",
-    "activity",
-    "widget",
+  "textual",
+  "tui",
+  "time",
+  "date",
+  "whenever",
+  "heatmap",
+  "activity",
+  "widget",
 ]
 license = "MIT"
 license-files = ["LICENSE.md"]
@@ -43,11 +43,11 @@ Coverage = "https://app.codecov.io/gh/ddkasa/textual-timepiece"
 dev = ["nox>=2024.10.9", "textual-dev>=1.7.0"]
 type = ["mypy>=1.15.0"]
 test = [
-    "pytest>=8.3.4",
-    "pytest-asyncio>=0.25.2",
-    "pytest-cov>=6.0.0",
-    "pytest-textual-snapshot>=1.0.0",
-    "pytest-xdist>=3.6.1",
+  "pytest>=8.3.4",
+  "pytest-asyncio>=0.25.2",
+  "pytest-cov>=6.0.0",
+  "pytest-textual-snapshot>=1.0.0",
+  "pytest-xdist>=3.6.1",
 ]
 lint = ["ruff>=0.9.5"]
 docs = [
@@ -76,27 +76,27 @@ extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]
 select = [
-    "E401",
-    "E",
-    "F",
-    "W",    # flake8
-    "C",    # mccabe
-    "I",    # isort
-    "N",    # pep8-naming
-    # "D",   # flake8-docstrings
-    "ANN", # flake8-annotations
-    "S",   # flake8-bandit
-    "BLE", # flake8-blind-except
-    "B",   # flake8-bugbear
-    "A",   # flake8-builtins
-    "G",   # flake8-logging-format
-    "ERA", # eradicate
-    "ISC", # flake8-implicit-str-concat
-    "RUF", # Ruff-specific rules
+  "E401",
+  "E",
+  "F",
+  "W",    # flake8
+  "C",    # mccabe
+  "I",    # isort
+  "N",    # pep8-naming
+  # "D",   # flake8-docstrings
+  "ANN", # flake8-annotations
+  "S",   # flake8-bandit
+  "BLE", # flake8-blind-except
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "G",   # flake8-logging-format
+  "ERA", # eradicate
+  "ISC", # flake8-implicit-str-concat
+  "RUF", # Ruff-specific rules
 ]
 ignore = ["ANN101", "ANN401", "D107", "ANN102", "A002", "A001"]
 unfixable = [
-    "ERA", # Don't remove commented-out code
+  "ERA", # Don't remove commented-out code
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -117,9 +117,9 @@ warn_unused_configs = true
 
 [tool.pytest.ini_options]
 markers = [
-    "unit: basic unit tests with no special properties.",
-    "snapshot: tests that take visual snapshots.",
-    "slow: tests that are slow to run or have delays included.",
+  "unit: basic unit tests with no special properties.",
+  "snapshot: tests that take visual snapshots.",
+  "slow: tests that are slow to run or have delays included.",
 ]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -129,28 +129,30 @@ asyncio_default_fixture_loop_scope = "function"
 [tool.coverage.report]
 fail_under = 80
 exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug",
-    "if settings.DEBUG:",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == __main__:",
+  "pragma: no cover",
+  "def __repr__",
+  "if self.debug",
+  "if settings.DEBUG:",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if 0:",
+  "if __name__ == __main__:",
 ]
 
 
 [tool.git-cliff.changelog]
 # template for the changelog header
 header = """
+---
+title: Changelog
+---
+
 # Changelog\n
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n
 """
-# template for the changelog body
-# https://keats.github.io/tera/docs/#introduction
 body = """
 {%- macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
@@ -164,8 +166,13 @@ body = """
 
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group | upper_first }}
+    
     {%- for commit in commits %}
-        - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+        - \
+        {% if commit.breaking %}**Breaking**{% if not commit.scope %}: {% else %} {% endif %}{% endif %}\
+        {% if commit.scope %}`{{ commit.scope | trim }}`: {% endif %}\
+
+        {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
             {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
             {% if commit.remote.pr_number %} in \
             [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
@@ -183,7 +190,8 @@ body = """
       [#{{ contributor.pr_number }}]({{ self::remote_url() }}/pull/{{ contributor.pr_number }}) \
     {%- endif %}
 {%- endfor %}\n
-"""
+""" # template for the changelog body
+# https://keats.github.io/tera/docs/#introduction
 # template for the changelog footer
 footer = """
 {%- macro remote_url() -%}
@@ -212,11 +220,14 @@ conventional_commits = true
 filter_unconventional = false
 # regex for preprocessing the commit messages
 commit_preprocessors = [
-    # remove issue numbers from commits
-    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+  # remove issue numbers from commits
+  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
+    { message = "^ci*", skip = true },
+    { message = "^chore*", skip = true },
+    { message = "^docs*", skip = true },
     { message = "^[a|A]dd", group = "Added" },
     { message = "^[s|S]upport", group = "Added" },
     { message = "^[r|R]emove", group = "Removed" },
