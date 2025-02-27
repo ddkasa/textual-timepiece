@@ -42,7 +42,7 @@ from ._time_picker import DurationSelect
 class DateRangeOverlay(BaseOverlay):
     """Simple date range dialog with to date selects combined."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateRangeOverlay {
         layout: horizontal;
 
@@ -69,6 +69,10 @@ class DateRangeOverlay(BaseOverlay):
 class DateRangePicker(AbstractPicker[DateRangeOverlay]):
     """Date range picker for picking inclusive date ranges.
 
+    Composed with two [DateInput][textual_timepiece.pickers.DateInput](s) and
+    [DateSelect][textual_timepiece.pickers.DateSelect](s) in order to create a
+    range.
+
     Params:
         start: Initial start date for the picker.
         end: Initial end date for the picker.
@@ -92,8 +96,13 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     BINDING_GROUP_TITLE = "Date Range Picker"
 
-    BINDINGS: ClassVar = [
-        Binding("ctrl+shift+d", "clear", "Clear Dates"),
+    BINDINGS: ClassVar[list[Binding]] = [
+        Binding(
+            "ctrl+shift+d",
+            "clear",
+            "Clear Dates",
+            tooltip="Clear both the start and end date.",
+        ),
         Binding(
             "ctrl+t",
             "target_default_start",
@@ -107,11 +116,19 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
             tooltip="Set the end date to today or the start date.",
         ),
     ]
+    """All bindings for DateTimeRangePicker
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+shift+d | Clear end and start datetime. |
+    | ctrl+t | Set the start date to todays date. |
+    | alt+ctrl+t | Set the end date to today or the start date. |
+    """
 
     start_date = var[Date | None](None, init=False)
-    """Picker start date. Bound to sub widgets"""
+    """Picker start date. Bound to sub widgets."""
     end_date = var[Date | None](None, init=False)
-    """Picker end date. Bound to sub widgets"""
+    """Picker end date. Bound to sub widgets."""
 
     def __init__(
         self,
@@ -274,7 +291,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
 
 class DateTimeRangeOverlay(BaseOverlay):
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateTimeRangeOverlay {
         layout: horizontal !important;
         width: auto;
@@ -335,7 +352,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[Binding]] = [
         Binding(
             "ctrl+shift+d",
             "clear",
@@ -346,15 +363,23 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             "ctrl+t",
             "target_default_start",
             "Start To Today",
-            tooltip="Set the start date to todays date.",
+            tooltip="Set the start datetime to now.",
         ),
         Binding(
             "alt+ctrl+t",
             "target_default_end",
             "End To Today",
-            tooltip="Set the end date to today or the start date.",
+            tooltip="Set the end datetime to now or the start datetime.",
         ),
     ]
+    """All bindings for `DateTimeRangePicker`.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+shift+d | Clear end and start datetime. |
+    | ctrl+t | Set the start datetime to now. |
+    | alt+ctrl+t | Set the end datetime to now or the start datetime. |
+    """
 
     start_dt = var[LocalDateTime | None](None, init=False)
     """Picker start datetime. Bound to all the parent widgets."""
