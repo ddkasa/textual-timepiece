@@ -114,7 +114,7 @@ class DateSelect(BaseOverlayWidget):
         widget: DateSelect
         date: Date | None
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
         DateSelect {
             background: $surface;
             width: auto;

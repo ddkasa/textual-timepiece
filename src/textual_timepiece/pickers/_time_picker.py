@@ -388,7 +388,7 @@ class DurationInput(AbstractInput[TimeDelta]):
 class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
     """Picker widget for picking durations.
 
-    Maxes out duration at *99:99:99*.
+    Duration is limited 99 hours, 59 minutes and 59 seconds.
 
     Params:
         value: Initial duration value for the widget.
