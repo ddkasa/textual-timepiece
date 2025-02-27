@@ -164,7 +164,7 @@ class TimeSelect(BaseOverlayWidget):
         widget: TimeSelect
         target: Time
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     TimeSelect {
         layout: grid !important;
         grid-size: 4;
@@ -192,12 +192,45 @@ class TimeSelect(BaseOverlayWidget):
     }
     """
 
-    BINDINGS: ClassVar = [
-        Binding("up", "focus_neighbor('up')"),
-        Binding("right", "focus_neighbor('right')"),
-        Binding("down", "focus_neighbor('down')"),
-        Binding("left", "focus_neighbor('left')"),
+    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+        Binding(
+            "up",
+            "focus_neighbor('up')",
+            "Go Up",
+            tooltip="Focus the neighbor above.",
+            show=False,
+        ),
+        Binding(
+            "right",
+            "focus_neighbor('right')",
+            "Go Right",
+            tooltip="Focus the neighbor to the right.",
+            show=False,
+        ),
+        Binding(
+            "down",
+            "focus_neighbor('down')",
+            "Go Down",
+            tooltip="Focus the neighbor below.",
+            show=False,
+        ),
+        Binding(
+            "left",
+            "focus_neighbor('left')",
+            "Go Left",
+            tooltip="Focus the neighbor to the left.",
+            show=False,
+        ),
     ]
+    """All bindings for TimeSelect
+
+    | Key(s) | Description |
+    | :- | :- |
+    | up | Focus the neighbor above. |
+    | right | Focus the neighbor to the right. |
+    | down | Focus the neighbor below. |
+    | left | Focus the neighbor to the left. |
+    """
 
     def compose(self) -> ComposeResult:
         start = Time()
@@ -216,6 +249,7 @@ class TimeSelect(BaseOverlayWidget):
         self.post_message(self.TimeSelected(self, time))
 
     def action_focus_neighbor(self, direction: Directions) -> None:
+        """Focus a nearby member. It will mirror back if going past an edge."""
         if not self.has_focus_within:
             widget = self.query_one("#time-0", Button)
         else:
@@ -298,7 +332,7 @@ class DurationInput(AbstractInput[TimeDelta]):
     PATTERN = "99:99:99"
 
     duration = var[TimeDelta | None](None, init=False)
-    """Current duration in a TimeDelta or none if empty.
+    """Current duration in a `TimeDelta` or None if empty.
 
     This value is capped at 99 hours, 59 minutes and 59 seconds.
     """

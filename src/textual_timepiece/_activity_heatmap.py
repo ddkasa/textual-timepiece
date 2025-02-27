@@ -5,6 +5,7 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
@@ -127,7 +128,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     Examples:
         >>> def compose(self) -> ComposeResult:
-        >>>     yield ActivityHeatmap()
+        >>>     yield ActivityHeatmap(2025)
 
         >>> def on_mount(self) -> None:
         >>>     activity = generate_activity()
@@ -163,48 +164,64 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[Sequence[Binding]] = [  # type: ignore[assignment]
         Binding(
             "right",
             "move_cursor('right')",
-            "Move Cursor Right",
+            "Move Right",
+            tooltip="Move the keyboard cursor right.",
             show=False,
             priority=True,
         ),
         Binding(
             "down",
             "move_cursor('down')",
-            "Move Cursor Down",
+            "Move Down",
+            tooltip="Move the keyboard cursor down.",
             show=False,
             priority=True,
         ),
         Binding(
             "left",
             "move_cursor('left')",
-            "Move Cursor Left",
+            tooltip="Move the keyboard cursor left.",
             show=False,
             priority=True,
         ),
         Binding(
             "up",
             "move_cursor('up')",
-            "Move Cursor Up",
+            "Move Up",
+            tooltip="Move the keyboard cursor up.",
             show=False,
             priority=True,
         ),
         Binding(
             "enter",
             "select_tile",
-            "Select Highlighted Day",
+            "Select",
+            tooltip="Select the highlighted day.",
             show=False,
         ),
         Binding(
             "escape",
             "clear_cursor",
-            "Clear Any Cursor Selection.",
+            "Clear Cursor",
+            tooltip="Clear the cursor selection.",
             show=False,
         ),
     ]
+    """All bindings for the `ActivityHeatmap`.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | right | Move Cursor Right |
+    | down | Move Cursor Down |
+    | left | Move Cursor Left |
+    | up | Move Cursor Up |
+    | enter | Select Highlighted Day |
+    | escape | Clear Any Cursor Selection. |
+    """
 
     DEFAULT_CSS = """
     ActivityHeatmap {
@@ -236,12 +253,21 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     }
     """
 
-    COMPONENT_CLASSES: ClassVar = {
+    COMPONENT_CLASSES: ClassVar[set[str]] = {
         "activityheatmap--color",
         "activityheatmap--empty",
         "activityheatmap--empty-alt",
         "activityheatmap--hover",
     }
+    """All component classes that the `ActivityHeatmap` uses.
+
+    | Class | Description |
+    | :- | :- |
+    | `activityheatmap--color` | Base color of the tiles |
+    | `activityheatmap--empty` | Empty tile color for navigation. |
+    | `activityheatmap--empty-alt` | Alternative empty tile color for navigation. |
+    | `activityheatmap--hover` | Color when something is hovered. |
+    """  # noqa: E501
     data = reactive[ActivityData](list, init=False, layout=True)
     """Two dimensional data that should be normalized between 0 and 1."""
 
@@ -254,12 +280,10 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     """Original pre normalized values for tooltips."""
 
     mouse_offset = var[Offset](Offset, init=False)
-    """Current mouse_offfset for tracking the cursor."""
+    """Current mouse offfset for tracking the cursor."""
 
     cursor = reactive[HeatmapCursor | None](None, init=False)
-    """Widget logic checks against this reactive to see where to highlight or
-    what was clicked/hovered.
-    """
+    """Current hovered day, week or month."""
 
     def __init__(
         self,
@@ -874,13 +898,15 @@ class HeatmapManager(BaseWidget):
 
     @cached_property
     def navigation(self) -> Horizontal:
+        """`Horizonal` bar holding all navigation widgets."""
         return self.query_one("#navigation", Horizontal)
 
     @cached_property
     def year_input(self) -> MaskedInput:
+        """Input widget showing the selected year."""
         return self.query_exactly_one(MaskedInput)
 
     @cached_property
     def heatmap(self) -> ActivityHeatmap:
-        """Direct access to the underlying heatmap."""
+        """Underlying `ActivityHeatmap` displaying data."""
         return self.query_exactly_one(ActivityHeatmap)

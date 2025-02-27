@@ -156,7 +156,7 @@ class DateSelect(BaseOverlayWidget):
 
     BINDING_GROUP_TITLE = "Date Select"
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
         Binding(
             "up",
             "move_cursor('up')",
@@ -188,8 +188,19 @@ class DateSelect(BaseOverlayWidget):
             tooltip="Reverse Navigate or select to the hovered part.",
         ),
     ]
+    """All bindings for DateSelect
 
-    COMPONENT_CLASSES: ClassVar = {
+    | Key(s) | Description |
+    | :- | :- |
+    | up | Move the cursor up. |
+    | right | Move cursor to the right. |
+    | down | Move the cursor down. |
+    | left | Move the cursor to the left. |
+    | enter | Navigate or select to the hovered part. |
+    | ctrl+enter | Reverse Navigate or select to the hovered part. |
+    """
+
+    COMPONENT_CLASSES: ClassVar[set[str]] = {
         "dateselect--start-date",
         "dateselect--end-date",
         "dateselect--cursor-date",
@@ -198,6 +209,19 @@ class DateSelect(BaseOverlayWidget):
         "dateselect--primary-date",
         "dateselect--range-date",  # NOTE: Only affects the background.
     }
+    """All component classes for DateSelect.
+
+    | Class | Description |
+    | :- | :- |
+    | `dateselect--cursor-date` | Color of label under the keyboard cursor. |
+    | `dateselect--end-date` | Color of the selected end date if enabled. |
+    | `dateselect--hovered-date` | Color of the mouse hovered date. |
+    | `dateselect--primary-date` | Standard color of unselected dates. |
+    | `dateselect--range-date` | Color of any dates if both end and start date\
+            are selected |
+    | `dateselect--secondary-date` | Color of weekdays labels in month view. |
+    | `dateselect--start-date` | Color of selected start date. |
+    """
 
     date = reactive[Date | None](None, init=False)
     """Start date. Bound to base dialog if using with a prebuilt picker."""
@@ -955,8 +979,12 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         >>>     if date is None:
         >>>         return None
         >>>     return min(Date(2025, 2, 20), max(Date(2025, 2, 6), date))
-
         >>> yield DatePicker(validator=limit_dates)
+
+        >>> yield DatePicker(
+        >>>     Date.today_in_system_tz(),
+        >>>     date_range=DateDelta(days=5),
+        >>> )
     """
 
     @dataclass
@@ -966,11 +994,11 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         widget: DatePicker
         date: Date | None
 
-    DateValidator: TypeAlias = Callable[[Date | None], Date | None]
-
     BINDING_GROUP_TITLE = "Date Picker"
-
     ALIAS = "date"
+
+    DateValidator: TypeAlias = Callable[[Date | None], Date | None]
+    """Callable type for validating date types."""
 
     date = var[Date | None](None, init=False)
     """Current date for the picker. This is bound to every other subwidget."""
