@@ -69,10 +69,6 @@ class DateRangeOverlay(BaseOverlay):
 class DateRangePicker(AbstractPicker[DateRangeOverlay]):
     """Date range picker for picking inclusive date ranges.
 
-    Composed with two [DateInput][textual_timepiece.pickers.DateInput](s) and
-    [DateSelect][textual_timepiece.pickers.DateSelect](s) in order to create a
-    range.
-
     Params:
         start: Initial start date for the picker.
         end: Initial end date for the picker.
@@ -84,6 +80,22 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
             re-enabled programmatically.
         disabled: Whether to disable the widget
         tooltip: Tooltip to show on hover.
+
+    Examples:
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateRangePicker(Date(2025, 2, 1), Date(2025, 3, 1))
+        ```
+
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateRangePicker(Date.today_in_system_tz()).disable_end()
+
+            def action_stop(self) -> None:
+                pick = self.query_one(DateRangePicker)
+                pick.disable_end(disable=False)
+                pick.end_date = Date.today_in_system_tz()
+        ```
     """
 
     @dataclass
@@ -116,7 +128,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
             tooltip="Set the end date to today or the start date.",
         ),
     ]
-    """All bindings for DateTimeRangePicker
+    """All bindings for `DateTimeRangePicker`.
 
     | Key(s) | Description |
     | :- | :- |
@@ -340,6 +352,22 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             re-enabled programmatically.
         disabled: Whether to disable the widget
         tooltip: Tooltip to show on hover.
+
+    Examples:
+        ```python
+            def compose(self) -> ComposeResult:
+                now = SystemDateTime.now().local()
+                yield DateTimeRangePicker(now, time_range=TimeDelta(hours=5))
+        ```
+
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateTimeRangePicker(SystemDateTime.now().local())
+
+            def action_stop(self) -> None:
+                pick = self.query_one(DateTimeRangePicker)
+                pick.end_dt = SystemDateTime.now().local()
+        ```
     """
 
     @dataclass
