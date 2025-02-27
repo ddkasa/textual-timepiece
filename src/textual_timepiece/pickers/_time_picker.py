@@ -426,7 +426,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
 
         yield DurationOverlay().data_bind(show=DurationPicker.expanded)
 
-    def on_mount(self) -> None:
+    def _on_mount(self) -> None:
         self.query_exactly_one("#target-default", Button).disabled = (
             self.duration is None or self.duration.in_seconds() == 0
         )
