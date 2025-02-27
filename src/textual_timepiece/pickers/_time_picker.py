@@ -60,6 +60,7 @@ class DurationSelect(BaseOverlayWidget):
     DurationSelect {
         height: 3;
         layout: horizontal;
+        width: 38;
 
         Grid {
             height: 3;
@@ -148,8 +149,6 @@ class TimeSelect(BaseOverlayWidget):
         grid-size: 4;
         grid-gutter: 0;
         grid-rows: 1;
-        height: auto;
-        width: auto;
         & > Button {
             border: none;
             min-width: 5;

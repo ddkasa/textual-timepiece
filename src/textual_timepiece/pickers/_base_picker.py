@@ -33,6 +33,13 @@ from textual_timepiece._extra import ExpandButton
 class BaseOverlayWidget(BaseWidget):
     """Base Class that defines the internal widgets of the dialog."""
 
+    DEFAULT_CSS = """
+    BaseOverlayWidget {
+        width: 40;
+        height: auto;
+    }
+    """
+
     can_focus = True
 
     def __init__(
@@ -55,8 +62,8 @@ class BaseOverlay(BaseWidget):
     DEFAULT_CSS = """
     BaseOverlay {
         overlay: screen !important;
-        constrain: inside !important;
-        position: absolute !important;
+        constrain: inflect;
+        position: absolute;
         height: auto;
         width: auto;
         background: $surface;
@@ -71,9 +78,10 @@ class BaseOverlay(BaseWidget):
         }
 
         BaseOverlayWidget {
-            width: 40;
-            height: auto;
+            background: transparent;
+            border: none;
         }
+
     }
     """
 

@@ -240,8 +240,6 @@ class DateSelect(BaseOverlayWidget):
         self.set_reactive(DateSelect.date, start)
         self.set_reactive(DateSelect.end_date, end)
         self.set_reactive(DateSelect.date_range, date_range)
-        self.set_reactive(DateSelect.shrink, False)
-        self.set_reactive(DateSelect.expand, False)
 
     def _validate_date_range(
         self,
@@ -858,6 +856,7 @@ class DateInput(AbstractInput[Date]):
         )
 
     def watch_date(self, new: Date | None) -> None:
+        # FIX: probably should prevent date changes
         with self.prevent(Input.Changed):
             self.value = (
                 new.py_date().strftime(self.DATE_FORMAT) if new else ""

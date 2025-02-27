@@ -35,9 +35,10 @@ class DateTimeOverlay(BaseOverlay):
     DEFAULT_CSS = """
     DateTimeOverlay {
         layout: horizontal;
-        max-width: 78;
+        max-width: 76;
         height: auto;
         Vertical {
+            width: auto;
             height: auto;
         }
     }
@@ -303,5 +304,6 @@ class DateTimePicker(
             self.datetime = message.datetime
 
     def to_default(self) -> None:
+        """Reset the picker datetime to the current time."""
         self.datetime = SystemDateTime.now().local()
         self.overlay.date_select.scope = DateScope.MONTH
