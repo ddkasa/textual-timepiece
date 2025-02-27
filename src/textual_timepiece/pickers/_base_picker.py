@@ -437,7 +437,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         if not self.has_focus_within:
             self.expanded = False
 
-    def watch_expanded(self, expanded: bool) -> None:
+    def _watch_expanded(self, expanded: bool) -> None:
         if expanded:
             self.query_one(BaseOverlay).focus()
 
