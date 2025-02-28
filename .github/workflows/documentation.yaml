@@ -1,0 +1,29 @@
+name: Documentation
+
+env:
+  PYTHON_VERSION: "3.12"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install Dependencies
+        run: uv sync --group=docs
+
+      - name: Deploy website
+        run: uv run mkdocs gh-deploy --strict --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

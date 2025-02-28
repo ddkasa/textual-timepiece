@@ -5,8 +5,8 @@ from textual.pilot import Pilot
 from whenever import Date
 from whenever import DateDelta
 
-from textual_timepiece import DatePicker
-from textual_timepiece.pickers._date_picker import DateSelect
+from textual_timepiece.pickers import DatePicker
+from textual_timepiece.pickers import DateSelect
 
 
 @pytest.fixture
@@ -29,6 +29,17 @@ async def test_picker_dialog(date_app):
 @pytest.mark.snapshot
 def test_date_dialog(date_app, snap_compare, freeze_time):
     async def run_before(pilot: Pilot):
+        date_app.action_focus_next()
+        date_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(date_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
+def test_mini_date_dialog(date_app, snap_compare, freeze_time):
+    async def run_before(pilot: Pilot):
+        date_app.widget.add_class("mini")
         date_app.action_focus_next()
         date_app.widget.query_one("#target-default").press()
         await pilot.press("shift+enter")

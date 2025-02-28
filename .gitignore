@@ -9,6 +9,11 @@ wheels/
 # Virtual environments
 .venv
 .envrc
+
+# Screenshots
 snapshot_report.html
+.screenshot_cache/
+
+# Coverage
 .coverage
 coverage.xml

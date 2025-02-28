@@ -32,12 +32,13 @@ from ._time_picker import TimeSelect
 class DateTimeOverlay(BaseOverlay):
     date = var[Date | None](None, init=False)
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateTimeOverlay {
         layout: horizontal;
-        max-width: 78;
+        max-width: 76;
         height: auto;
         Vertical {
+            width: auto;
             height: auto;
         }
     }
@@ -66,11 +67,13 @@ class DateTimeOverlay(BaseOverlay):
         return cast(DateSelect, self.query_one(DateSelect))
 
 
-class DateTimeInput(AbstractInput):
+class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
     @dataclass
     class DateTimeChanged(BaseMessage):
+        """Sent when the datetime is changed."""
+
         widget: DateTimeInput
         datetime: LocalDateTime | None
 
@@ -79,6 +82,7 @@ class DateTimeInput(AbstractInput):
     ALIAS = "datetime"
 
     datetime = var[LocalDateTime | None](None, init=False)
+    """Current datetime or none if nothing is set."""
 
     def __init__(
         self,
@@ -210,6 +214,7 @@ class DateTimePicker(
 ):
     """Datetime picker with a date and time in one input.
 
+
     Params:
         value: Initial datetime value for the widget.
         name: Name for the widget.
@@ -221,6 +226,9 @@ class DateTimePicker(
 
     @dataclass
     class DateTimeChanged(BaseMessage):
+        """Message sent when the datetime is updated."""
+
+        widget: DateTimePicker
         datetime: LocalDateTime | None
 
     INPUT = DateTimeInput
@@ -303,5 +311,6 @@ class DateTimePicker(
             self.datetime = message.datetime
 
     def to_default(self) -> None:
+        """Reset the picker datetime to the current time."""
         self.datetime = SystemDateTime.now().local()
         self.overlay.date_select.scope = DateScope.MONTH

@@ -42,7 +42,7 @@ from ._time_picker import DurationSelect
 class DateRangeOverlay(BaseOverlay):
     """Simple date range dialog with to date selects combined."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateRangeOverlay {
         layout: horizontal;
 
@@ -80,18 +80,41 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
             re-enabled programmatically.
         disabled: Whether to disable the widget
         tooltip: Tooltip to show on hover.
+
+    Examples:
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateRangePicker(Date(2025, 2, 1), Date(2025, 3, 1))
+        ```
+
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateRangePicker(Date.today_in_system_tz()).disable_end()
+
+            def action_stop(self) -> None:
+                pick = self.query_one(DateRangePicker)
+                pick.disable_end(disable=False)
+                pick.end_date = Date.today_in_system_tz()
+        ```
     """
 
     @dataclass
     class DateRangeChanged(BaseMessage):
+        """Message sent when the date range has changed."""
+
         widget: DateRangePicker
         start: Date | None
         end: Date | None
 
     BINDING_GROUP_TITLE = "Date Range Picker"
 
-    BINDINGS: ClassVar = [
-        Binding("ctrl+shift+d", "clear", "Clear Dates"),
+    BINDINGS: ClassVar[list[Binding]] = [
+        Binding(
+            "ctrl+shift+d",
+            "clear",
+            "Clear Dates",
+            tooltip="Clear both the start and end date.",
+        ),
         Binding(
             "ctrl+t",
             "target_default_start",
@@ -105,11 +128,19 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
             tooltip="Set the end date to today or the start date.",
         ),
     ]
+    """All bindings for `DateTimeRangePicker`.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+shift+d | Clear end and start datetime. |
+    | ctrl+t | Set the start date to todays date. |
+    | alt+ctrl+t | Set the end date to today or the start date. |
+    """
 
     start_date = var[Date | None](None, init=False)
-    """Picker start date. Bound to sub widgets"""
+    """Picker start date. Bound to sub widgets."""
     end_date = var[Date | None](None, init=False)
-    """Picker end date. Bound to sub widgets"""
+    """Picker end date. Bound to sub widgets."""
 
     def __init__(
         self,
@@ -260,11 +291,11 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     @cached_property
     def start_input(self) -> DateInput:
-        return self.query_exactly_one("#start-input", DateInput)
+        return self.query_exactly_one("#start-date-input", DateInput)
 
     @cached_property
     def end_input(self) -> DateInput:
-        return self.query_exactly_one("#end-input", DateInput)
+        return self.query_exactly_one("#stop-date-input", DateInput)
 
     @cached_property
     def lock_button(self) -> LockButton:
@@ -272,7 +303,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
 
 class DateTimeRangeOverlay(BaseOverlay):
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateTimeRangeOverlay {
         layout: horizontal !important;
         width: auto;
@@ -287,6 +318,7 @@ class DateTimeRangeOverlay(BaseOverlay):
         }
     }
     """
+    """Default CSS for the `DateTimeRangeOverlay`."""
 
     start = var[Date | None](None, init=False)
     stop = var[Date | None](None, init=False)
@@ -321,17 +353,35 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             re-enabled programmatically.
         disabled: Whether to disable the widget
         tooltip: Tooltip to show on hover.
+
+    Examples:
+        ```python
+            def compose(self) -> ComposeResult:
+                now = SystemDateTime.now().local()
+                yield DateTimeRangePicker(now, time_range=TimeDelta(hours=5))
+        ```
+
+        ```python
+            def compose(self) -> ComposeResult:
+                yield DateTimeRangePicker(SystemDateTime.now().local())
+
+            def action_stop(self) -> None:
+                pick = self.query_one(DateTimeRangePicker)
+                pick.end_dt = SystemDateTime.now().local()
+        ```
     """
 
     @dataclass
     class DTRangeChanged(BaseMessage):
+        """Message sent when the datetime range has changed."""
+
         widget: DateTimeRangePicker
         start: LocalDateTime | None
         end: LocalDateTime | None
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[Binding]] = [
         Binding(
             "ctrl+shift+d",
             "clear",
@@ -342,15 +392,23 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             "ctrl+t",
             "target_default_start",
             "Start To Today",
-            tooltip="Set the start date to todays date.",
+            tooltip="Set the start datetime to now.",
         ),
         Binding(
             "alt+ctrl+t",
             "target_default_end",
             "End To Today",
-            tooltip="Set the end date to today or the start date.",
+            tooltip="Set the end datetime to now or the start datetime.",
         ),
     ]
+    """All bindings for `DateTimeRangePicker`.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+shift+d | Clear end and start datetime. |
+    | ctrl+t | Set the start datetime to now. |
+    | alt+ctrl+t | Set the end datetime to now or the start datetime. |
+    """
 
     start_dt = var[LocalDateTime | None](None, init=False)
     """Picker start datetime. Bound to all the parent widgets."""
@@ -388,7 +446,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
-            yield DateTimeInput(id="start-input").data_bind(
+            yield DateTimeInput(id="start-dt-input").data_bind(
                 datetime=DateTimeRangePicker.start_dt,
             )
 
@@ -403,7 +461,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
                 disabled=self._time_range is not None,
             )
 
-            yield DateTimeInput(id="end-input").data_bind(
+            yield DateTimeInput(id="end-dt-input").data_bind(
                 datetime=DateTimeRangePicker.end_dt,
             )
             yield TargetButton(
@@ -522,7 +580,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         elif self.start_dt:
             self.end_dt = self.start_dt.add(message.delta, ignore_dst=True)
 
-    @on(DateTimeInput.DateTimeChanged, "#start-input")
+    @on(DateTimeInput.DateTimeChanged, "#start-dt-input")
     def _start_dt_input_changed(
         self,
         message: DateTimeInput.DateTimeChanged,
@@ -531,7 +589,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         with message.control.prevent(DateTimeInput.DateTimeChanged):
             self.start_dt = message.datetime
 
-    @on(DateTimeInput.DateTimeChanged, "#end-input")
+    @on(DateTimeInput.DateTimeChanged, "#end-dt-input")
     def _end_dt_input_changed(
         self, message: DateTimeInput.DateTimeChanged
     ) -> None:
@@ -577,11 +635,11 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     @cached_property
     def start_input(self) -> DateTimeInput:
-        return self.query_exactly_one("#start-input", DateTimeInput)
+        return self.query_exactly_one("#start-dt-input", DateTimeInput)
 
     @cached_property
     def end_input(self) -> DateTimeInput:
-        return self.query_exactly_one("#end-input", DateTimeInput)
+        return self.query_exactly_one("#end-dt-input", DateTimeInput)
 
     @cached_property
     def lock_button(self) -> LockButton:
@@ -610,7 +668,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
     duration = var[TimeDelta | None](None, init=False)
     """Duration between start and end datetimes. Computed dynamically."""
 
-    async def on_mount(self) -> None:
+    async def _on_mount(self) -> None:  # type: ignore[override] # NOTE: Need to mount extra widget
         """Overrides the compose method in order to a duration input."""
         await self.query_exactly_one("#input-control", Horizontal).mount(
             DurationInput(self.duration, id="duration-input").data_bind(

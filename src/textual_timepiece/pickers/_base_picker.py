@@ -33,6 +33,13 @@ from textual_timepiece._extra import ExpandButton
 class BaseOverlayWidget(BaseWidget):
     """Base Class that defines the internal widgets of the dialog."""
 
+    DEFAULT_CSS: ClassVar[str] = """
+    BaseOverlayWidget {
+        width: 40;
+        height: auto;
+    }
+    """
+
     can_focus = True
 
     def __init__(
@@ -52,11 +59,11 @@ class BaseOverlay(BaseWidget):
     class Close(BaseMessage):
         widget: BaseOverlay
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     BaseOverlay {
         overlay: screen !important;
-        constrain: inside !important;
-        position: absolute !important;
+        constrain: inflect;
+        position: absolute;
         height: auto;
         width: auto;
         background: $surface;
@@ -71,9 +78,10 @@ class BaseOverlay(BaseWidget):
         }
 
         BaseOverlayWidget {
-            width: 40;
-            height: auto;
+            background: transparent;
+            border: none;
         }
+
     }
     """
 
@@ -170,7 +178,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
 
     can_focus = True
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     AbstractInput {
         background: transparent;
         width: auto;
@@ -179,8 +187,8 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
     """
 
     BINDING_GROUP_TITLE = "Datetime Picker"
-    BINDINGS: ClassVar = [
-        Binding("escape", "leave", tooltip="Defocus the input."),
+    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+        Binding("escape", "leave", "Defocus", tooltip="Defocus the input."),
         Binding(
             "up",
             "adjust_time(1)",
@@ -196,6 +204,14 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
             priority=True,
         ),
     ]
+    """All bindings for an `AbstractInput`.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | escape | Defocus the input. |
+    | up | Increment value depending on keyboard cursor location. |
+    | down | Decrement value depending on keyboard cursor location. |
+    """
 
     ALIAS: ClassVar[str]
     PATTERN: ClassVar[str]
@@ -226,7 +242,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
         )
         self.alias = value
         self._sbox_sensitivity = max(1, spinbox_sensitivity)
-        self.disable_messages(Input.Changed, Input.Submitted)
+        self.disable_messages(Input.Changed, Input.Submitted, Input.Blurred)
 
     def watch_updated(self, value: bool) -> None:
         self.set_class(value, "updated")
@@ -282,7 +298,7 @@ Overlay = TypeVar("Overlay", bound=BaseOverlay)
 class AbstractPicker(BaseWidget, Generic[Overlay]):
     """Abstract Picker class that defines most of the base behaviour."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     AbstractPicker {
         layers: base dialog;
         layout: vertical;
@@ -421,7 +437,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         if not self.has_focus_within:
             self.expanded = False
 
-    def watch_expanded(self, expanded: bool) -> None:
+    def _watch_expanded(self, expanded: bool) -> None:
         if expanded:
             self.query_one(BaseOverlay).focus()
 
@@ -439,7 +455,7 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
     ALIAS: str
     INPUT: type[TI]
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[Binding]] = [
         Binding(
             "ctrl+shift+d",
             "clear",
@@ -450,9 +466,16 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
             "ctrl+t",
             "target_default",
             "To Default Value",
-            tooltip="Set the default value.",
+            tooltip="Reset to the default value.",
         ),
     ]
+    """All bindings for `BasePicker` classes.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+shift+d | Clear the current value. |
+    | ctrl+t | Reset to the default value. |
+    """
 
     def __init__(
         self,
@@ -482,6 +505,7 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
         self.to_default()
 
     def action_clear(self) -> None:
+        """Clear the input value."""
         self.input_widget.clear()
 
     @abstractmethod

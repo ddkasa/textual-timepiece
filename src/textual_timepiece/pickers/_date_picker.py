@@ -41,6 +41,9 @@ from textual_timepiece._types import Directions
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
+from textual_timepiece.constants import LEFT_ARROW
+from textual_timepiece.constants import RIGHT_ARROW
+from textual_timepiece.constants import TARGET_ICON
 
 from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
@@ -55,6 +58,7 @@ DisplayData: TypeAlias = Scope
 
 
 # TODO: Month and year picker
+# PERF: Region refreshing
 
 
 class DateCursor(NamedTuple):
@@ -77,12 +81,17 @@ class DateCursor(NamedTuple):
 class DateSelect(BaseOverlayWidget):
     """Date selection widget for selecting dates and date-ranges visually.
 
+    Supports mouse and keyboard navigation with arrow keys.
+
+    INFO:
+        Control+Click/Enter will go back in scope with the top header.
+
     Params:
         start: Initial start date for the widget.
         end: Initial end date for the widget.
         name: Name of the widget.
         id: Unique dom id for the widget
-        classes: Any dom classes that should be added to the widget.
+        classes: Any CSS classes that should be added to the widget.
         is_range: Whether the selection is a range. Automatically true if an
             'end_date' or 'date_range' parameter is supplied.
         disabled: Whether to disable the widget.
@@ -93,61 +102,62 @@ class DateSelect(BaseOverlayWidget):
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the start date changed."""
+
         widget: DateSelect
         date: Date | None
 
     @dataclass
     class EndDateChanged(BaseMessage):
+        """Message sent when the end date changed."""
+
         widget: DateSelect
         date: Date | None
 
-    LEFT_ARROW: str = "←"
-    """Arrow used for navigating backwards in time."""
-    TARGET_ICON: str = "◎"
-    """Return to default location icon."""
-    RIGHT_ARROW: str = "→"
-    """Arrow use for navigating forward in time."""
+    DEFAULT_CSS: ClassVar[str] = """
+    DateSelect {
+        background: $surface;
+        width: auto;
+        border: round $secondary;
 
-    DEFAULT_CSS = """
-        DateSelect {
-            width: auto;
-            .dateselect--primary-date {
-                color: $primary;
-            }
-
-            .dateselect--secondary-date {
-                color: $secondary;
-            }
-
-            .dateselect--range-date {
-                background: $panel-darken-3;
-            }
-
-            .dateselect--hovered-date {
-                color: $accent;
-                text-style: bold;
-            }
-
-            .dateselect--cursor-date {
-                color: $accent;
-                text-style: reverse bold;
-            }
-
-            .dateselect--start-date {
-                color: $accent-lighten-3;
-                text-style: italic;
-            }
-
-            .dateselect--end-date {
-                color: $accent-lighten-3;
-                text-style: italic;
-            }
+        .dateselect--primary-date {
+            color: $primary;
         }
+
+        .dateselect--secondary-date {
+            color: $secondary;
+        }
+
+        .dateselect--range-date {
+            background: $panel-darken-3;
+        }
+
+        .dateselect--hovered-date {
+            color: $accent;
+            text-style: bold;
+        }
+
+        .dateselect--cursor-date {
+            color: $accent;
+            text-style: reverse bold;
+        }
+
+        .dateselect--start-date {
+            color: $accent-lighten-3;
+            text-style: italic;
+        }
+
+        .dateselect--end-date {
+            color: $accent-lighten-3;
+            text-style: italic;
+        }
+    }
     """
+    """Default CSS for the `DateSelect` widget."""
 
     BINDING_GROUP_TITLE = "Date Select"
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
         Binding(
             "up",
             "move_cursor('up')",
@@ -179,25 +189,52 @@ class DateSelect(BaseOverlayWidget):
             tooltip="Reverse Navigate or select to the hovered part.",
         ),
     ]
+    """All bindings for DateSelect
 
-    COMPONENT_CLASSES: ClassVar = {
+    | Key(s) | Description |
+    | :- | :- |
+    | up | Move the cursor up. |
+    | right | Move cursor to the right. |
+    | down | Move the cursor down. |
+    | left | Move the cursor to the left. |
+    | enter | Navigate or select to the hovered part. |
+    | ctrl+enter | Reverse Navigate or select to the hovered part. |
+    """
+
+    COMPONENT_CLASSES: ClassVar[set[str]] = {
         "dateselect--start-date",
         "dateselect--end-date",
         "dateselect--cursor-date",
-        "dateselect--hovered-date",  # NOTE: Only affect the foreground
+        "dateselect--hovered-date",  # NOTE: Only affects the foreground
         "dateselect--secondary-date",
         "dateselect--primary-date",
-        "dateselect--range-date",  # NOTE: Only affect the background.
+        "dateselect--range-date",  # NOTE: Only affects the background.
     }
+    """All component classes for DateSelect.
+
+    | Class | Description |
+    | :- | :- |
+    | `dateselect--cursor-date` | Color of label under the keyboard cursor. |
+    | `dateselect--end-date` | Color of the selected end date if enabled. |
+    | `dateselect--hovered-date` | Color of the mouse hovered date. |
+    | `dateselect--primary-date` | Standard color of unselected dates. |
+    | `dateselect--range-date` | Color of any dates if both end and start date\
+            are selected |
+    | `dateselect--secondary-date` | Color of weekdays labels in month view. |
+    | `dateselect--start-date` | Color of selected start date. |
+    """
 
     date = reactive[Date | None](None, init=False)
-    """(Start) date. Bound to parent dialog."""
+    """Start date. Bound to base dialog if using with a prebuilt picker."""
 
     date_range = var[DateDelta | None](None, init=False)
     """Constant date range in between the start and end dates."""
 
     end_date = reactive[Date | None](None, init=False)
-    """(Stop) date. Bound to parent dialog."""
+    """End date for date ranges.
+
+    Bound to base dialog if using with a prebuilt picker.
+    """
 
     scope = var[DateScope](DateScope.MONTH)
     """Scope of the current date picker view."""
@@ -235,13 +272,26 @@ class DateSelect(BaseOverlayWidget):
     ) -> None:
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self._is_range = is_range or bool(end) or bool(date_range)
+
         self._select_on_focus = select_on_focus
 
         self.set_reactive(DateSelect.date, start)
         self.set_reactive(DateSelect.end_date, end)
         self.set_reactive(DateSelect.date_range, date_range)
-        self.set_reactive(DateSelect.shrink, False)
-        self.set_reactive(DateSelect.expand, False)
+
+    def _compute_header(self) -> str:
+        if self.scope == DateScope.YEAR:
+            return str(self.loc.year)
+
+        elif self.scope == DateScope.DECADE:
+            start = math.floor(self.loc.year / 10) * 10
+            return f"{start} <-> {start + 9}"
+
+        elif self.scope == DateScope.CENTURY:
+            start = math.floor(self.loc.year / 100) * 100
+            return f"{start} <-> {start + 99}"
+
+        return f"{month_name[self.loc.month]} {self.loc.year}"
 
     def _validate_date_range(
         self,
@@ -256,30 +306,61 @@ class DateSelect(BaseOverlayWidget):
             return
         self._is_range = True
         if self.date:
-            self.end_date = self.date + new
+            self.end_date = self.date.add(new)
         elif self.end_date:
-            self.date = self.end_date - new
+            self.date = self.end_date.subtract(new)
 
     def _watch_scope(self, scope: DateScope) -> None:
         self.data = get_scope(scope, self.loc)
         if self.cursor:
             self._find_move()
 
+    def _watch_date(self, date: Date | None) -> None:
+        self.scope = DateScope.MONTH
+        if date:
+            if self.date_range:
+                self.end_date = date.add(self.date_range)
+
+            self.loc = date
+
+    def _watch_loc(self, loc: Date) -> None:
+        self.data = get_scope(self.scope, loc)
+
+        if self.cursor:
+            self.cursor = self.cursor.confine(self.data)
+
     async def _on_mouse_move(self, event: MouseMove) -> None:
         self.cursor_offset = event.offset
 
     def _on_leave(self, event: Leave) -> None:
-        super()._on_leave(event)
         self.cursor_offset = None
 
     def _on_blur(self, event: Blur) -> None:
-        super()._on_blur(event)
         self.cursor = None
 
     def _on_focus(self, event: Focus) -> None:
-        super()._on_focus(event)
         if self._select_on_focus:
             self.cursor = DateCursor()
+
+    def _on_date_select_date_changed(
+        self,
+        message: DateSelect.DateChanged,
+    ) -> None:
+        self.date = message.date
+        if self.date_range and message.date:
+            self.end_date = message.date.add(self.date_range)
+
+    def _on_date_select_end_date_changed(
+        self,
+        message: DateSelect.EndDateChanged,
+    ) -> None:
+        self.end_date = message.date
+        if self.date_range and message.date:
+            self.date = message.date.subtract(self.date_range)
+
+    async def _on_click(self, event: Click) -> None:
+        target = self.get_line_offset(event.offset)
+        self._navigate_picker(target, ctrl=event.ctrl)
 
     def action_move_cursor(self, direction: Directions) -> None:
         """Move cursor to the next spot depending on direction."""
@@ -327,22 +408,6 @@ class DateSelect(BaseOverlayWidget):
         else:
             self.post_message(self.DateChanged(self, date))
 
-    def _on_date_select_date_changed(
-        self,
-        message: DateSelect.DateChanged,
-    ) -> None:
-        self.date = message.date
-        if self.date_range and message.date:
-            self.end_date = message.date + self.date_range
-
-    def _on_date_select_end_date_changed(
-        self,
-        message: DateSelect.EndDateChanged,
-    ) -> None:
-        self.end_date = message.date
-        if self.date_range and message.date:
-            self.date = message.date - self.date_range
-
     def _set_month(self, target: str) -> None:
         try:
             month_no = list(month_name).index(target)
@@ -387,21 +452,21 @@ class DateSelect(BaseOverlayWidget):
         cursor = cast(DateCursor, self.cursor)
         if cursor.y == 0:
             nav = (
-                self.LEFT_ARROW,
+                LEFT_ARROW,
                 self.header,
-                self.TARGET_ICON,
-                self.RIGHT_ARROW,
+                TARGET_ICON,
+                RIGHT_ARROW,
             )
             self._navigate_picker(nav[cursor.x], ctrl=ctrl)
         else:
             self._navigate_picker(self.data[cursor.y - 1][cursor.x], ctrl=ctrl)
 
     def _navigate_picker(self, target: str | int, *, ctrl: bool) -> None:
-        if target == self.LEFT_ARROW:
+        if target == LEFT_ARROW:
             self._crement_scope(-1)
-        elif target == self.TARGET_ICON:
+        elif target == TARGET_ICON:
             self._set_current_scope()
-        elif target == self.RIGHT_ARROW:
+        elif target == RIGHT_ARROW:
             self._crement_scope(1)
         elif target == self.header:
             if ctrl:
@@ -411,17 +476,12 @@ class DateSelect(BaseOverlayWidget):
         elif target or isinstance(target, int):
             self._set_target(target, ctrl=ctrl and self._is_range)
 
-    async def _on_click(self, event: Click) -> None:
-        await super()._on_click(event)
-        target = self.get_line_offset(event.offset)
-        self._navigate_picker(target, ctrl=event.ctrl)
-
     def _set_current_scope(self) -> None:
         self.scope = DateScope.MONTH
         self.loc = self.date or self.end_date or Date.today_in_system_tz()
 
     def _crement_scope(self, value: int) -> None:
-        with suppress(ValueError):
+        with suppress(ValueError):  # NOTE: Preventing out of range values.
             if self.scope == DateScope.MONTH:
                 self.loc = self.loc.add(months=value)
             elif self.scope == DateScope.YEAR:
@@ -484,7 +544,14 @@ class DateSelect(BaseOverlayWidget):
         return Style.combine(styles)
 
     def is_day_in_range(self, day: Date) -> bool:
-        """Checks if a given date is within the range of the selection."""
+        """Checks if a given date is within selected the date range(inclusive).
+
+        Args:
+            day: Date to check against.
+
+        Returns:
+            True if in the range else false.
+        """
         return bool(
             self._is_range
             and self.date
@@ -492,47 +559,19 @@ class DateSelect(BaseOverlayWidget):
             and self.date <= day <= self.end_date
         )
 
-    def _watch_date(self, date: Date | None) -> None:
-        self.scope = DateScope.MONTH
-        if date:
-            if self.date_range:
-                self.end_date = date + self.date_range
-
-            self.loc = date
-
-    def _watch_loc(self, loc: Date) -> None:
-        self.data = get_scope(self.scope, loc)
-
-        if self.cursor:
-            self.cursor = self.cursor.confine(self.data)
-
-    def _compute_header(self) -> str:
-        if self.scope == DateScope.YEAR:
-            return str(self.loc.year)
-
-        elif self.scope == DateScope.DECADE:
-            start = math.floor(self.loc.year / 10) * 10
-            return f"{start} <-> {start + 9}"
-
-        elif self.scope == DateScope.CENTURY:
-            start = math.floor(self.loc.year / 100) * 100
-            return f"{start} <-> {start + 99}"
-
-        return f"{month_name[self.loc.month]} {self.loc.year}"
-
     def _render_header(self, y: int) -> list[Segment]:
         header_len = len(self.header)
         rem = self.size.width - (header_len + 10)
         blank, blank_extra = divmod(rem, 2)
         header_start = 5 + blank + blank_extra
         header_end = header_start + header_len
-        next_start = header_end + (blank - blank_extra)
+        right_nav_start = header_end + (blank - blank_extra) + len(TARGET_ICON)
 
         y += self._top_border_offset()
         return [
             Segment("   ", self.rich_style),
             Segment(
-                self.LEFT_ARROW,
+                LEFT_ARROW,
                 self._filter_style(
                     y,
                     range(4, 5),
@@ -550,7 +589,7 @@ class DateSelect(BaseOverlayWidget):
             ),
             Segment("   ", self.rich_style),
             Segment(
-                self.TARGET_ICON,
+                TARGET_ICON,
                 style=self._filter_style(
                     y,
                     range(header_end + 1, header_end + 3),
@@ -559,54 +598,49 @@ class DateSelect(BaseOverlayWidget):
             ),
             Segment(" " * (blank - (3 - blank_extra)), self.rich_style),
             Segment(
-                self.RIGHT_ARROW,
+                RIGHT_ARROW,
                 style=self._filter_style(
                     y,
-                    range(next_start, next_start + 2),
+                    range(right_nav_start, right_nav_start + 2),
                     log_idx=DateCursor(0, 3),
                 ),
             ),
         ]
 
     def _render_weekdays(self) -> list[Segment]:
-        empty = Segment(" ", style=self.rich_style)
-        segs: list[Segment] = [empty]
-        secondary = self.get_component_rich_style("dateselect--secondary-date")
-        for i in range(14):
-            index, rem = divmod(i, 2)
-            if not rem:
-                segs.extend([empty] * 2)
-            else:
-                segs.append(Segment(day_abbr[index], secondary))
+        day_style = self.get_component_rich_style("dateselect--secondary-date")
+        empty = Segment("  ", style=self.rich_style)
+        segs = [Segment(" ", style=self.rich_style)]
+        for i in range(7):
+            segs.append(empty)
+            segs.append(Segment(day_abbr[i], day_style))
         return segs
 
     def _render_month(self, y: int) -> list[Segment]:
-        y += self._top_border_offset()
-
-        if y == (3 + self._top_border_offset()):
+        border_offset = self._top_border_offset()
+        y += border_offset
+        if y == (3 + border_offset):
             return self._render_weekdays()
 
-        month = (y - (4 + self._top_border_offset())) // 2
-        date = None
-        segments: list[Segment] = [Segment(" ", style=self.rich_style)]
-        subtotal = 1
-        for i in range(14):
-            index, rem = divmod(i, 2)
-            if not rem:
-                segments.append(
-                    Segment(
-                        "  ",
-                        self._filter_style(
-                            y,
-                            range(subtotal, subtotal + 3),
-                            date=date,
-                        ),
-                    )
-                )
+        month = (y - (4 + border_offset)) // 2
+        # NOTE: Removing nav header + weekdays
 
-                subtotal += 2
-                date = None
-            elif not (day := self.data[month][index]):
+        date = None
+        segments = [Segment(" ", style=self.rich_style)]
+        subtotal = int(self.styles.border_left[0] != "")
+        for i in range(7):
+            segments.append(
+                Segment(
+                    "  ",
+                    self._filter_style(
+                        y,
+                        range(subtotal, subtotal + 3),
+                        date=date,
+                    ),
+                )
+            )
+            subtotal += 2
+            if not (day := self.data[month][i]):
                 segments.append(
                     Segment(
                         "   ",
@@ -614,11 +648,10 @@ class DateSelect(BaseOverlayWidget):
                             y,
                             range(subtotal, subtotal + 4),
                             date=date,
-                            log_idx=DateCursor(month + 1, index),
+                            log_idx=DateCursor(month + 1, i),
                         ),
                     )
                 )
-                subtotal += 3
                 date = None
             else:
                 date = self.loc.replace(day=cast(int, day))
@@ -629,11 +662,11 @@ class DateSelect(BaseOverlayWidget):
                             y,
                             range(subtotal, subtotal + 4),
                             date=date,
-                            log_idx=DateCursor(month + 1, index),
+                            log_idx=DateCursor(month + 1, i),
                         ),
                     )
                 )
-                subtotal += 3
+            subtotal += 3
 
         return segments
 
@@ -641,20 +674,22 @@ class DateSelect(BaseOverlayWidget):
         if (row := (y - 2) // 2) > 3:
             return []
 
-        segs: list[Segment] = []
-        values = self.data[row]
-        v_max_width = self.size.width // len(values)
         y += self._top_border_offset()
+
+        values = self.data[row]
+        value_max_width = self.size.width // len(values)
+
+        segs = list[Segment]()
         for i, value in enumerate(values):
             if self.scope == DateScope.CENTURY:
                 value = f"{value}-{cast(int, value) + 9}"
             else:
                 value = str(value)
             n = len(value)
-            start = (i * v_max_width) + (abs(v_max_width - n) // 2)
+            start = (i * value_max_width) + (abs(value_max_width - n) // 2)
             end = start + n + 1
 
-            value = value.center(v_max_width)
+            value = value.center(value_max_width)
             segs.append(
                 Segment(
                     value,
@@ -825,6 +860,8 @@ class DateInput(AbstractInput[Date]):
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the date changed."""
+
         widget: DateInput
         date: Date | None
 
@@ -858,6 +895,7 @@ class DateInput(AbstractInput[Date]):
         )
 
     def watch_date(self, new: Date | None) -> None:
+        # FIX: probably should prevent date changes
         with self.prevent(Input.Changed):
             self.value = (
                 new.py_date().strftime(self.DATE_FORMAT) if new else ""
@@ -942,20 +980,26 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         >>>     if date is None:
         >>>         return None
         >>>     return min(Date(2025, 2, 20), max(Date(2025, 2, 6), date))
-
         >>> yield DatePicker(validator=limit_dates)
+
+        >>> yield DatePicker(
+        >>>     Date.today_in_system_tz(),
+        >>>     date_range=DateDelta(days=5),
+        >>> )
     """
 
     @dataclass
     class DateChanged(BaseMessage):
+        """Message sent when the date changed."""
+
         widget: DatePicker
         date: Date | None
 
-    DateValidator: TypeAlias = Callable[[Date | None], Date | None]
-
     BINDING_GROUP_TITLE = "Date Picker"
-
     ALIAS = "date"
+
+    DateValidator: TypeAlias = Callable[[Date | None], Date | None]
+    """Callable type for validating date types."""
 
     date = var[Date | None](None, init=False)
     """Current date for the picker. This is bound to every other subwidget."""
@@ -983,7 +1027,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         self._date_range = date_range
         self.validator = validator
 
-    def validate_date(self, date: Date | None) -> Date | None:
+    def _validate_date(self, date: Date | None) -> Date | None:
         if self.validator is None:
             return date
 
@@ -1020,7 +1064,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         message.stop()
         self.date = message.date
 
-    def watch_date(self, new: Date) -> None:
+    def _watch_date(self, new: Date) -> None:
         self.query_exactly_one("#target-default", Button).disabled = (
             new == Date.today_in_system_tz()
         )

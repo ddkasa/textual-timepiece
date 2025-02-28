@@ -2,9 +2,9 @@ from functools import partial
 
 import pytest
 
-from textual_timepiece._activity_heatmap import ActivityHeatmap
 from textual_timepiece._activity_heatmap import HeatmapCursor
-from textual_timepiece._activity_heatmap import HeatmapManager
+from textual_timepiece.activity_heatmap import ActivityHeatmap
+from textual_timepiece.activity_heatmap import HeatmapManager
 
 
 @pytest.fixture
@@ -89,21 +89,21 @@ async def test_heatmap_navigation(
         heatmap_manager_app.widget.heatmap.process_data(heatmap_data)
         heatmap_manager_app.widget.focus()
         await pilot.press("enter", "tab")
-        assert heatmap_manager_app.widget.day.year == freeze_time.year - 5
+        assert heatmap_manager_app.widget.year == freeze_time.year - 5
 
         await pilot.press("enter", "tab")
-        assert heatmap_manager_app.widget.day.year == freeze_time.year - 6
+        assert heatmap_manager_app.widget.year == freeze_time.year - 6
 
         await pilot.press(
             *["backspace"] * 5, "2", "0", "3", "4", "enter", "tab"
         )
-        assert heatmap_manager_app.widget.day.year == 2034
+        assert heatmap_manager_app.widget.year == 2034
 
         await pilot.press("enter", *["tab"] * 3)
-        assert heatmap_manager_app.widget.day.year == freeze_time.year
+        assert heatmap_manager_app.widget.year == freeze_time.year
 
         await pilot.press("enter", "tab")
-        assert heatmap_manager_app.widget.day.year == freeze_time.year + 1
+        assert heatmap_manager_app.widget.year == freeze_time.year + 1
 
         await pilot.press("enter")
-        assert heatmap_manager_app.widget.day.year == freeze_time.year + 6
+        assert heatmap_manager_app.widget.year == freeze_time.year + 6

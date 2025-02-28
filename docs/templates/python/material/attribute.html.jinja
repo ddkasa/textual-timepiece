@@ -1,0 +1,12 @@
+{% extends "_base/attribute.html.jinja" %}
+{% block signature scoped %}
+  {% if config.separate_signature %}
+    {% if attribute.path.endswith("DEFAULT_CSS") %}
+      {{ attribute.value | highlight(language="css") }}
+    {% else %}
+      {% filter format_attribute(attribute, config.line_length, crossrefs=config.signature_crossrefs) %}
+        {{ attribute.name }}
+      {% endfilter %}
+    {% endif %}
+  {% endif %}
+{% endblock signature %}

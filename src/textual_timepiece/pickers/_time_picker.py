@@ -13,6 +13,7 @@ from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Grid
 from textual.containers import Horizontal
+from textual.events import Mount
 from textual.reactive import var
 from textual.validation import Failure
 from textual.validation import ValidationResult
@@ -41,25 +42,39 @@ from ._base_picker import BasePicker
 
 
 class DurationSelect(BaseOverlayWidget):
-    """Duration picker with various buttons in order to set time."""
+    """Duration picker with various buttons in order to set time.
+
+    Params:
+        name: Name of the widget.
+        id: Unique dom id for the widget
+        classes: Any CSS classes that should be added to the widget.
+        disabled: Whether to disable the widget.
+    """
 
     @dataclass
     class DurationAdjusted(BaseMessage):
+        """Message sent when duration is added or subtracted."""
+
         widget: DurationSelect
         delta: TimeDelta
 
     @dataclass
     class DurationRounded(BaseMessage):
+        """Sent when one of the headers are clicked in order to round the
+        value.
+        """
+
         widget: DurationSelect
         value: int
+        """Value used as a rounding factor."""
         scope: Literal["hours", "minutes", "seconds"]
+        """Which subunit to round the duration to."""
 
-    can_focus_children = True
-
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DurationSelect {
         height: 3;
         layout: horizontal;
+        width: 38;
 
         Grid {
             height: 3;
@@ -67,7 +82,7 @@ class DurationSelect(BaseOverlayWidget):
             grid-gutter: 0;
             grid-rows: 1;
 
-            &>Button:first-of-type {
+            & > Button:first-of-type {
                 column-span: 2;
                 text-style: bold;
                 background-tint: $background 50%;
@@ -86,6 +101,7 @@ class DurationSelect(BaseOverlayWidget):
         }
     }
     """
+    """Default CSS for the `DurationSelect` widget."""
 
     GRID_TEMPLATE: ClassVar[dict[str, tuple[str, ...]]] = {
         "hour-grid": ("Hours", "+1", "+4", "-1", "-4"),
@@ -100,6 +116,7 @@ class DurationSelect(BaseOverlayWidget):
                     yield Button(button, classes=grid)
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
+        message.stop()
         label = str(message.button.label)
         try:
             value = int(label[1:])
@@ -131,53 +148,89 @@ class DurationSelect(BaseOverlayWidget):
             else:
                 self.post_message(self.DurationRounded(self, 60, "seconds"))
 
-        message.stop()
-
 
 class TimeSelect(BaseOverlayWidget):
-    """Time selection interface."""
+    """Time selection interface.
+
+    Params:
+        name: Name of the widget.
+        id: Unique dom id for the widget
+        classes: Any CSS classes that should be added to the widget.
+        disabled: Whether to disable the widget.
+    """
 
     @dataclass
     class TimeSelected(BaseMessage):
+        """Message sent when a value is picked out of the time grid."""
+
         widget: TimeSelect
         target: Time
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     TimeSelect {
         layout: grid !important;
         grid-size: 4;
         grid-gutter: 0;
         grid-rows: 1;
-        height: auto;
-        width: auto;
         & > Button {
             border: none;
             min-width: 5;
             width: 100%;
             text-style: italic;
-
             &.dual-hour {
                 background: $panel;
             }
-
             &:focus {
                 text-style: bold;
                 color: $primary;
             }
-
             &:hover {
                 border: none;
             }
         }
     }
     """
+    """Default CSS for the `TimeSelect` widget."""
 
-    BINDINGS: ClassVar = [
-        Binding("up", "focus_neighbor('up')"),
-        Binding("right", "focus_neighbor('right')"),
-        Binding("down", "focus_neighbor('down')"),
-        Binding("left", "focus_neighbor('left')"),
+    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+        Binding(
+            "up",
+            "focus_neighbor('up')",
+            "Go Up",
+            tooltip="Focus the neighbor above.",
+            show=False,
+        ),
+        Binding(
+            "right",
+            "focus_neighbor('right')",
+            "Go Right",
+            tooltip="Focus the neighbor to the right.",
+            show=False,
+        ),
+        Binding(
+            "down",
+            "focus_neighbor('down')",
+            "Go Down",
+            tooltip="Focus the neighbor below.",
+            show=False,
+        ),
+        Binding(
+            "left",
+            "focus_neighbor('left')",
+            "Go Left",
+            tooltip="Focus the neighbor to the left.",
+            show=False,
+        ),
     ]
+    """All bindings for TimeSelect
+
+    | Key(s) | Description |
+    | :- | :- |
+    | up | Focus the neighbor above. |
+    | right | Focus the neighbor to the right. |
+    | down | Focus the neighbor below. |
+    | left | Focus the neighbor to the left. |
+    """
 
     def compose(self) -> ComposeResult:
         start = Time()
@@ -196,6 +249,7 @@ class TimeSelect(BaseOverlayWidget):
         self.post_message(self.TimeSelected(self, time))
 
     def action_focus_neighbor(self, direction: Directions) -> None:
+        """Focus a nearby member. It will mirror back if going past an edge."""
         if not self.has_focus_within:
             widget = self.query_one("#time-0", Button)
         else:
@@ -244,7 +298,7 @@ class DurationOverlay(BaseOverlay):
 class TimeOverlay(BaseOverlay):
     """Time dialog which include a time matrix as well."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     TimeOverlay {
         max-width: 40;
 
@@ -266,6 +320,9 @@ class DurationInput(AbstractInput[TimeDelta]):
 
     @dataclass
     class DurationChanged(BaseMessage):
+        """Message sent when the duration changes through input or spinbox."""
+
+        widget: DurationInput
         duration: TimeDelta | None
 
     ALIAS = "duration"
@@ -275,9 +332,14 @@ class DurationInput(AbstractInput[TimeDelta]):
     PATTERN = "99:99:99"
 
     duration = var[TimeDelta | None](None, init=False)
+    """Current duration in a `TimeDelta` or None if empty.
+
+    This value is capped at 99 hours, 59 minutes and 59 seconds.
+    """
 
     def _validate_duration(
-        self, duration: TimeDelta | None
+        self,
+        duration: TimeDelta | None,
     ) -> TimeDelta | None:
         if duration is None:
             return None
@@ -325,7 +387,7 @@ class DurationInput(AbstractInput[TimeDelta]):
 class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
     """Picker widget for picking durations.
 
-    Maxes out duration at *99:99:99*.
+    Duration is limited 99 hours, 59 minutes and 59 seconds.
 
     Params:
         value: Initial duration value for the widget.
@@ -338,6 +400,8 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
 
     @dataclass
     class DurationChanged(BaseMessage):
+        """Message sent when the duration changes."""
+
         widget: DurationPicker
         duration: TimeDelta | None
 
@@ -362,7 +426,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
 
         yield DurationOverlay().data_bind(show=DurationPicker.expanded)
 
-    def on_mount(self) -> None:
+    def _on_mount(self, event: Mount) -> None:
         self.query_exactly_one("#target-default", Button).disabled = (
             self.duration is None or self.duration.in_seconds() == 0
         )
@@ -403,6 +467,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
             self.duration = message.duration
 
     def to_default(self) -> None:
+        """Reset the duration to 00:00:00."""
         self.duration = TimeDelta()
 
 
@@ -429,13 +494,18 @@ class TimeInput(AbstractInput[Time]):
 
     @dataclass
     class TimeChanged(BaseMessage):
+        """Message sent when the time is updated."""
+
+        widget: TimeInput
         new_time: Time | None
 
     PATTERN = "00:00:00"
     ALIAS = "time"
-    time = var[Time | None](None, init=False)
 
-    def watch_time(self, time: Time | None) -> None:
+    time = var[Time | None](None, init=False)
+    """Currently set time or none if its empty."""
+
+    def _watch_time(self, time: Time | None) -> None:
         with self.prevent(Input.Changed), suppress(ValueError):
             if time:
                 self.value = time.format_common_iso()
@@ -523,14 +593,16 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
 
     @dataclass
     class TimeChanged(BaseMessage):
+        """Sent when the time is changed with the overlay or other means."""
+
         widget: TimePicker
         new_time: Time
 
     INPUT = TimeInput
-
     ALIAS = "time"
 
     time = var[Time | None](None, init=False)
+    """Currently set time that is bound to the subwidgets. None if empty."""
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="input-control"):
@@ -566,4 +638,5 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
             self.time = message.new_time
 
     def to_default(self) -> None:
+        """Reset time to the local current time."""
         self.time = SystemDateTime.now().time()

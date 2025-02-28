@@ -5,7 +5,7 @@ authors = [{ name = "David Kasakaitis", email = "davidkasakaitis@proton.me" }]
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["textual>=1.0.0", "whenever>=0.6.16"]
+dependencies = ["textual>=2.1.0", "whenever>=0.7.1"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -38,6 +38,8 @@ Repository = "https://github.com/ddkasa/textual-timepiece"
 Issues = "https://github.com/ddkasa/textual-timepiece/issues"
 Changelog = "https://github.com/ddkasa/textual-timepiece/tree/main/docs/CHANGELOG.md"
 Coverage = "https://app.codecov.io/gh/ddkasa/textual-timepiece"
+Documentation = "https://ddkasa.github.io/textual-timepiece/"
+releasenotes = "https://ddkasa.github.io/textual-timepiece/CHANGELOG"
 
 [dependency-groups]
 dev = ["nox>=2024.10.9", "textual-dev>=1.7.0"]
@@ -50,6 +52,14 @@ test = [
     "pytest-xdist>=3.6.1",
 ]
 lint = ["ruff>=0.9.5"]
+docs = [
+    "mkdocs-autorefs>=1.4.0",
+    "mkdocs-include-dir-to-nav>=1.2.0",
+    "mkdocs-macros-plugin>=1.3.7",
+    "mkdocs-material>=9.6.5",
+    "mkdocstrings[python]>=0.28.2",
+    "ruff>=0.9.7",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -135,14 +145,16 @@ exclude_lines = [
 [tool.git-cliff.changelog]
 # template for the changelog header
 header = """
+---
+title: Changelog
+---
+
 # Changelog\n
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n
 """
-# template for the changelog body
-# https://keats.github.io/tera/docs/#introduction
 body = """
 {%- macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
@@ -156,8 +168,13 @@ body = """
 
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group | upper_first }}
+    
     {%- for commit in commits %}
-        - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+        - \
+        {% if commit.breaking %}**Breaking**{% if not commit.scope %}: {% else %} {% endif %}{% endif %}\
+        {% if commit.scope %}`{{ commit.scope | trim }}`: {% endif %}\
+
+        {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
             {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
             {% if commit.remote.pr_number %} in \
             [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
@@ -175,7 +192,8 @@ body = """
       [#{{ contributor.pr_number }}]({{ self::remote_url() }}/pull/{{ contributor.pr_number }}) \
     {%- endif %}
 {%- endfor %}\n
-"""
+""" # template for the changelog body
+# https://keats.github.io/tera/docs/#introduction
 # template for the changelog footer
 footer = """
 {%- macro remote_url() -%}
@@ -209,6 +227,9 @@ commit_preprocessors = [
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
+    { message = "^ci*", skip = true },
+    { message = "^chore*", skip = true },
+    { message = "^docs*", skip = true },
     { message = "^[a|A]dd", group = "Added" },
     { message = "^[s|S]upport", group = "Added" },
     { message = "^[r|R]emove", group = "Removed" },

@@ -2,9 +2,9 @@ import pytest
 from whenever import Time
 from whenever import TimeDelta
 
-from textual_timepiece import DurationPicker
-from textual_timepiece import TimePicker
-from textual_timepiece.pickers._time_picker import TimeSelect
+from textual_timepiece.pickers import DurationPicker
+from textual_timepiece.pickers import TimePicker
+from textual_timepiece.pickers import TimeSelect
 
 
 @pytest.fixture
@@ -20,6 +20,17 @@ def time_app(create_app):
 @pytest.mark.snapshot
 def test_duration_dialog(duration_app, snap_compare, freeze_time):
     async def run_before(pilot):
+        duration_app.action_focus_next()
+        duration_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(duration_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
+def test_mini_duration_dialog(duration_app, snap_compare, freeze_time):
+    async def run_before(pilot):
+        duration_app.widget.add_class("mini")
         duration_app.action_focus_next()
         duration_app.widget.query_one("#target-default").press()
         await pilot.press("shift+enter")
@@ -53,6 +64,17 @@ async def test_duration_pick_spinbox(duration_app, freeze_time):
 @pytest.mark.snapshot
 def test_time_dialog(time_app, snap_compare, freeze_time):
     async def run_before(pilot):
+        time_app.action_focus_next()
+        time_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(time_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
+def test_mini_time_dialog(time_app, snap_compare, freeze_time):
+    async def run_before(pilot):
+        time_app.widget.add_class("mini")
         time_app.action_focus_next()
         time_app.widget.query_one("#target-default").press()
         await pilot.press("shift+enter")

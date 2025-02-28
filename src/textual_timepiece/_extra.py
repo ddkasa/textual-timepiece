@@ -18,6 +18,10 @@ from textual.reactive import var
 from textual.widget import Widget
 from textual.widgets import Button
 
+from textual_timepiece.constants import LOCKED_ICON
+from textual_timepiece.constants import TARGET_ICON
+from textual_timepiece.constants import UNLOCKED_ICON
+
 
 class BaseWidget(Widget):
     """Base class with a bunch of utility methods."""
@@ -38,14 +42,15 @@ class BaseWidget(Widget):
                 yield n
 
     def get_line_offset(self, offset: Offset) -> str:
+        x = offset.x - int(self.styles.border_left[0] != "")
         index = 0
 
         for seg in self.render_line(
             offset.y - self._top_border_offset()
         )._segments:
-            # NOTE: Probably should look for a public method for this.
+            # REFACTOR: Look for a public method for this.
             index += len(seg.text)
-            if index > offset.x:
+            if index > x:
                 return str(seg.text.strip())
 
         return ""
@@ -66,11 +71,6 @@ class BaseWidget(Widget):
 
 
 class LockButton(Button, BaseWidget):
-    LOCKED_ICON: str = "🔒"
-    """Icon the button renders when the widget is locked."""
-    UNLOCKED_ICON: str = "🔓"
-    """Icon the button renders when the widget is unlocked."""
-
     DEFAULT_CSS: ClassVar[str] = """
     LockButton {
         background: transparent;
@@ -116,7 +116,7 @@ class LockButton(Button, BaseWidget):
 
     def compute_icon(self) -> Text:
         return Text(
-            self.LOCKED_ICON if self.locked else self.UNLOCKED_ICON,
+            LOCKED_ICON if self.locked else UNLOCKED_ICON,
             self.rich_style,
         )
 
@@ -147,7 +147,7 @@ class ExpandButton(Button):
     """
 
     expanded = var[bool](False, init=False)
-    icon = reactive[Text](Text(), init=False)
+    icon = reactive[Text](Text, init=False)
 
     def __init__(
         self,
@@ -176,8 +176,6 @@ class ExpandButton(Button):
 
 
 class TargetButton(Button):
-    TARGET_ICON: str = "◎"
-
     def __init__(
         self,
         name: str | None = None,
@@ -198,7 +196,7 @@ class TargetButton(Button):
         )
 
     def render(self) -> RenderResult:
-        return Text(self.TARGET_ICON, self.rich_style)
+        return Text(TARGET_ICON, self.rich_style)
 
 
 @dataclass

@@ -36,6 +36,9 @@ from textual_timepiece.pickers import DateTimePicker
 from textual_timepiece.pickers import DateTimeRangePicker
 from textual_timepiece.pickers import DurationPicker
 from textual_timepiece.pickers import TimePicker
+from textual_timepiece.pickers._date_picker import DateSelect
+from textual_timepiece.pickers._time_picker import DurationSelect
+from textual_timepiece.pickers._time_picker import TimeSelect
 
 
 class DemoWidget(Widget):
@@ -149,7 +152,86 @@ class PreviewScreen(ModalScreen[None]):
 class TimepieceDemo(App[None]):
     font: bool = True
 
-    CSS_PATH = "main.tcss"
+    CSS = """
+    Screen {
+        layout: horizontal;
+        align: center middle;
+
+        TabbedContent {
+            padding: 1 0;
+            min-width: 135;
+            width: 65%;
+
+            TabPane {
+                height: auto;
+            }
+
+            Container.previews {
+                layout: vertical;
+                overflow-y: auto;
+                content-align-horizontal: center;
+                align-horizontal: center;
+            }
+        }
+    }
+
+    .title {
+        background: $panel;
+        content-align-horizontal: center;
+        text-align: center;
+        width: 1fr;
+        text-style: bold;
+    }
+
+    DemoWidget {
+        height: auto;
+        margin: 2 0;
+        padding: 0 2;
+
+        Horizontal#navigation {
+            height: auto;
+            margin-bottom: 1;
+        }
+    }
+
+    Button.nav {
+        border: none;
+        height: 1;
+        width: 10%;
+        min-width: 13;
+    }
+
+    .widget_container {
+        height: auto;
+        width: 100%;
+        align: center middle;
+    }
+
+    PreviewScreen {
+        align: center middle;
+
+        Container {
+            border: round $primary;
+            width: 50%;
+            min-width: 125;
+            height: 90%;
+
+            ScrollableContainer {
+                Static#preview {
+                    margin: 1 2;
+                }
+            }
+
+            Horizontal {
+                height: 1;
+                margin-top: 1;
+                align-horizontal: center;
+            }
+
+        }
+    }
+
+    """
 
     TITLE = "Textual Timepiece"
     SUB_TITLE = __version__
@@ -170,6 +252,16 @@ class TimepieceDemo(App[None]):
                         DateTimeDurationPicker,
                     ):
                         yield DemoWidget(item)
+
+            with TabPane("Select"):
+                with Container(id="Pickers", classes="previews"):
+                    for select in (
+                        DateSelect,
+                        TimeSelect,
+                        DurationSelect,
+                    ):
+                        yield DemoWidget(select)
+
             with TabPane("Heatmap"):
                 with Container(id="heatmap", classes="previews"):
                     for i in (ActivityHeatmap, HeatmapManager):
