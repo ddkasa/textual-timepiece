@@ -70,7 +70,7 @@ class DurationSelect(BaseOverlayWidget):
         scope: Literal["hours", "minutes", "seconds"]
         """Which subunit to round the duration to."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DurationSelect {
         height: 3;
         layout: horizontal;
@@ -101,6 +101,7 @@ class DurationSelect(BaseOverlayWidget):
         }
     }
     """
+    """Default CSS for the `DurationSelect` widget."""
 
     GRID_TEMPLATE: ClassVar[dict[str, tuple[str, ...]]] = {
         "hour-grid": ("Hours", "+1", "+4", "-1", "-4"),
@@ -176,22 +177,20 @@ class TimeSelect(BaseOverlayWidget):
             min-width: 5;
             width: 100%;
             text-style: italic;
-
             &.dual-hour {
                 background: $panel;
             }
-
             &:focus {
                 text-style: bold;
                 color: $primary;
             }
-
             &:hover {
                 border: none;
             }
         }
     }
     """
+    """Default CSS for the `TimeSelect` widget."""
 
     BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
         Binding(
@@ -299,7 +298,7 @@ class DurationOverlay(BaseOverlay):
 class TimeOverlay(BaseOverlay):
     """Time dialog which include a time matrix as well."""
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     TimeOverlay {
         max-width: 40;
 

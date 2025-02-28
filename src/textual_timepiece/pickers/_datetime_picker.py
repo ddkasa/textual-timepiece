@@ -32,7 +32,7 @@ from ._time_picker import TimeSelect
 class DateTimeOverlay(BaseOverlay):
     date = var[Date | None](None, init=False)
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     DateTimeOverlay {
         layout: horizontal;
         max-width: 76;

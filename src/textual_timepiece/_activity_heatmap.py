@@ -223,7 +223,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     | escape | Clear Any Cursor Selection. |
     """
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     ActivityHeatmap {
         background: transparent;
         height: auto;
@@ -252,6 +252,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         text-align: center;
     }
     """
+    """Default CSS Styling for the `ActivityHeatmap`"""
 
     COMPONENT_CLASSES: ClassVar[set[str]] = {
         "activityheatmap--color",
@@ -745,7 +746,7 @@ class HeatmapManager(BaseWidget):
         widget: HeatmapManager
         year: int
 
-    DEFAULT_CSS = """
+    DEFAULT_CSS: ClassVar[str] = """
     HeatmapManager {
         layout: vertical;
         align: center middle;
@@ -784,6 +785,7 @@ class HeatmapManager(BaseWidget):
         }
     }
     """
+    """Default CSS for the `HeatmapManager`."""
 
     year = var[int](
         lambda: Date.today_in_system_tz().year, init=False, bindings=True

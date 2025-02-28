@@ -115,44 +115,45 @@ class DateSelect(BaseOverlayWidget):
         date: Date | None
 
     DEFAULT_CSS: ClassVar[str] = """
-        DateSelect {
-            background: $surface;
-            width: auto;
-            border: round $secondary;
+    DateSelect {
+        background: $surface;
+        width: auto;
+        border: round $secondary;
 
-            .dateselect--primary-date {
-                color: $primary;
-            }
-
-            .dateselect--secondary-date {
-                color: $secondary;
-            }
-
-            .dateselect--range-date {
-                background: $panel-darken-3;
-            }
-
-            .dateselect--hovered-date {
-                color: $accent;
-                text-style: bold;
-            }
-
-            .dateselect--cursor-date {
-                color: $accent;
-                text-style: reverse bold;
-            }
-
-            .dateselect--start-date {
-                color: $accent-lighten-3;
-                text-style: italic;
-            }
-
-            .dateselect--end-date {
-                color: $accent-lighten-3;
-                text-style: italic;
-            }
+        .dateselect--primary-date {
+            color: $primary;
         }
+
+        .dateselect--secondary-date {
+            color: $secondary;
+        }
+
+        .dateselect--range-date {
+            background: $panel-darken-3;
+        }
+
+        .dateselect--hovered-date {
+            color: $accent;
+            text-style: bold;
+        }
+
+        .dateselect--cursor-date {
+            color: $accent;
+            text-style: reverse bold;
+        }
+
+        .dateselect--start-date {
+            color: $accent-lighten-3;
+            text-style: italic;
+        }
+
+        .dateselect--end-date {
+            color: $accent-lighten-3;
+            text-style: italic;
+        }
+    }
     """
+    """Default CSS for the `DateSelect` widget."""
 
     BINDING_GROUP_TITLE = "Date Select"
 

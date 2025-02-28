@@ -318,6 +318,7 @@ class DateTimeRangeOverlay(BaseOverlay):
         }
     }
     """
+    """Default CSS for the `DateTimeRangeOverlay`."""
 
     start = var[Date | None](None, init=False)
     stop = var[Date | None](None, init=False)
