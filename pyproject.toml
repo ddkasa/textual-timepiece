@@ -39,7 +39,6 @@ Issues = "https://github.com/ddkasa/textual-timepiece/issues"
 Changelog = "https://github.com/ddkasa/textual-timepiece/tree/main/docs/CHANGELOG.md"
 Coverage = "https://app.codecov.io/gh/ddkasa/textual-timepiece"
 Documentation = "https://ddkasa.github.io/textual-timepiece/"
-releasenotes = "https://ddkasa.github.io/textual-timepiece/CHANGELOG"
 
 [dependency-groups]
 dev = ["nox>=2024.10.9", "textual-dev>=1.7.0"]
