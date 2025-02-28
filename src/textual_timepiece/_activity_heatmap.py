@@ -662,23 +662,21 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     def sum_week(self, week: Date) -> float:
         """Get the total for a week for any specified date."""
-        total = 0
-        for day in iterate_timespan(week, days(1), 7):
-            total += self.values[day.py_date()]
-
-        return total
+        return sum(
+            self.values[day.py_date()]
+            for day in iterate_timespan(week, days(1), 7)
+        )
 
     def sum_month(self, month: Date) -> float:
         """Get the total for a month for any specified date."""
-        total = 0
-        for day in iterate_timespan(
-            month,
-            days(1),
-            monthrange(month.year, month.month)[1],
-        ):
-            total += self.values[day.py_date()]
-
-        return total
+        return sum(
+            self.values[day.py_date()]
+            for day in iterate_timespan(
+                month,
+                days(1),
+                monthrange(month.year, month.month)[1],
+            )
+        )
 
     @staticmethod
     def generate_empty_activity(year: int) -> list[list[date | None]]:
