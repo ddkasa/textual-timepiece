@@ -366,16 +366,13 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             empty_seg,
         ]
         empty_bg = empty_bg.background_style
-        for i in range(len(self.data) * 2):
-            week, empty = divmod(i, 2)
-            if empty:
-                segs.append(empty_seg)
-            else:
-                segs.append(
-                    self._get_segment(
-                        day, week, background, color, hover_color, empty_bg
-                    )
+        for week in range(len(self.data)):
+            segs.append(empty_seg)
+            segs.append(
+                self._get_segment(
+                    day, week, background, color, hover_color, empty_bg
                 )
+            )
 
         return Strip(segs)
 
