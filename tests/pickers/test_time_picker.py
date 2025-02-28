@@ -27,6 +27,17 @@ def test_duration_dialog(duration_app, snap_compare, freeze_time):
     assert snap_compare(duration_app, run_before=run_before)
 
 
+@pytest.mark.snapshot
+def test_mini_duration_dialog(duration_app, snap_compare, freeze_time):
+    async def run_before(pilot):
+        duration_app.widget.add_class("mini")
+        duration_app.action_focus_next()
+        duration_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(duration_app, run_before=run_before)
+
+
 @pytest.mark.unit
 async def test_duration_dialog_messages(duration_app, freeze_time):
     async with duration_app.run_test() as pilot:
@@ -53,6 +64,17 @@ async def test_duration_pick_spinbox(duration_app, freeze_time):
 @pytest.mark.snapshot
 def test_time_dialog(time_app, snap_compare, freeze_time):
     async def run_before(pilot):
+        time_app.action_focus_next()
+        time_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(time_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
+def test_mini_time_dialog(time_app, snap_compare, freeze_time):
+    async def run_before(pilot):
+        time_app.widget.add_class("mini")
         time_app.action_focus_next()
         time_app.widget.query_one("#target-default").press()
         await pilot.press("shift+enter")

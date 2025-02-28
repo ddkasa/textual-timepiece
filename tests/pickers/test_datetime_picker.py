@@ -32,6 +32,17 @@ def test_datetime_dialog(datetime_app, snap_compare, freeze_time):
     assert snap_compare(datetime_app, run_before=run_before)
 
 
+@pytest.mark.snapshot
+def test_mini_datetime_dialog(datetime_app, snap_compare, freeze_time):
+    async def run_before(pilot):
+        datetime_app.widget.add_class("mini")
+        datetime_app.action_focus_next()
+        datetime_app.widget.query_one("#target-default").press()
+        await pilot.press("shift+enter")
+
+    assert snap_compare(datetime_app, run_before=run_before)
+
+
 @pytest.mark.unit
 async def test_datetime_dialog_messages(datetime_app, freeze_time):
     async with datetime_app.run_test() as pilot:

@@ -43,6 +43,21 @@ def test_date_range_dialog(date_range_app, range_snap_compare, freeze_time):
     assert range_snap_compare(date_range_app, run_before=run_before)
 
 
+@pytest.mark.snapshot
+def test_mini_date_range_dialog(
+    date_range_app,
+    range_snap_compare,
+    freeze_time,
+):
+    async def run_before(pilot):
+        date_range_app.widget.add_class("mini")
+        date_range_app.action_focus_next()
+        date_range_app.widget.query_one("#target-default-start").press()
+        await pilot.press("shift+enter")
+
+    assert range_snap_compare(date_range_app, run_before=run_before)
+
+
 @pytest.mark.unit
 async def test_date_range_lock(create_app, freeze_time):
     date_range_app = create_app(DateRangePicker(date_range=DateDelta(days=5)))
@@ -98,6 +113,20 @@ def test_dt_range_dialog(datetime_range_app, range_snap_compare, freeze_time):
 
 
 @pytest.mark.snapshot
+def test_mini_dt_range_dialog(
+    datetime_range_app, range_snap_compare, freeze_time
+):
+    async def run_before(pilot):
+        datetime_range_app.add_class("mini")
+        datetime_range_app.action_focus_next()
+        datetime_range_app.widget.query_one("#target-default-start").press()
+
+        await pilot.press("shift+enter")
+
+    assert range_snap_compare(datetime_range_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
 def test_dt_dur_range_dialog(
     datetime_dur_range_app, range_snap_compare, freeze_time
 ):
@@ -112,6 +141,18 @@ def test_dt_dur_range_dialog(
             datetime_dur_range_app.widget.end_dt.add(weeks=2)
         )
         await pilot.press("shift+enter")
+        await pilot.pause()
+
+    assert range_snap_compare(datetime_dur_range_app, run_before=run_before)
+
+
+@pytest.mark.snapshot
+def test_mini_dt_dur_range_dialog(
+    datetime_dur_range_app, range_snap_compare, freeze_time
+):
+    async def run_before(pilot):
+        datetime_dur_range_app.widget.add_class("mini")
+        datetime_dur_range_app.action_focus_next()
         await pilot.pause()
 
     assert range_snap_compare(datetime_dur_range_app, run_before=run_before)
