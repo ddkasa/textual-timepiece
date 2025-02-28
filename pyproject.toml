@@ -1,6 +1,6 @@
 [project]
 name = "textual-timepiece"
-version = "0.2.0"
+version = "0.3.0"
 authors = [{ name = "David Kasakaitis", email = "davidkasakaitis@proton.me" }]
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
