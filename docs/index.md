@@ -24,6 +24,14 @@ uvx --from textual-timepiece demo
 ```
 ///
 
+
+/// tab | PIPX
+
+```sh
+pipx run textual-timepiece
+```
+///
+
 /// tab | PIP
 ```sh
 pip install textual-timepiece && demo
@@ -57,7 +65,7 @@ poetry add textual-timepiece
 
 ## Quick Start
 
-#### DatePicker
+### DatePicker
 
 
 /// tab | Result
@@ -82,7 +90,7 @@ if __name__ == "__main__":
 ```
 ///
 
-#### DateTimePicker
+### DateTimePicker
 
 /// tab | Result
     new: true

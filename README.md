@@ -10,21 +10,33 @@
 
 ## Demo
 
-Try the widgets out beforehand with [uv](https://docs.astral.sh/uv/):
+### [UVX](https://docs.astral.sh/uv/)
 
 ```sh
 uvx --from textual-timepiece demo
 ```
 
+### [PIPX](https://github.com/pypa/pipx)
+
+```sh
+pipx run textual-timepiece
+```
+
 ## Install
+
+### Pip
 
 ```sh
 pip install textual-timepiece
 ```
 
+### [UV](https://docs.astral.sh/uv/)
+
 ```sh
 uv add textual-timepiece
 ```
+
+### [Poetry](https://python-poetry.org)
 
 ```sh
 poetry add textual-timepiece
