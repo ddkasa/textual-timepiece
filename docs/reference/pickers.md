@@ -16,13 +16,11 @@
 
 ---
 
-
 ## DurationPicker
 
 ```{.textual path="docs/examples/screenshot/duration_picker_example.py"}
 
 ```
-
 
 ::: textual_timepiece.pickers.DurationPicker
 
@@ -40,14 +38,13 @@
 
 ## DateTimePicker
 
-```{.textual path="docs/examples/screenshot/date_picker_example.py"}
+```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
 
 ```
 
 ::: textual_timepiece.pickers.DateTimePicker
 
 ---
-
 
 ## DateRangePicker
 
