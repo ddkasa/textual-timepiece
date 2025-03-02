@@ -1,8 +1,8 @@
 !!! note
-    These pickers are built through a combination of [selectors](selectors.md) & [input](input.md) widgets, so in order to get a full understanding of the widgets functionality its recommend to the read aforementioned pages.
+    These widgets are composed through a combination of [selector](selectors.md) and [input](input.md) widgets. To fully understand the picker functionality, it is recommended to read aforementioned pages.
 
 !!! info
-    All pickers have a `.mini` CSS class which you can assign to these widgets, to convert them to a single line.
+    All widgets have a `.mini` CSS class which you can assign to these widgets, to convert them to a single line.
 
 ---
 
