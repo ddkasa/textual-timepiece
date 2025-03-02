@@ -12,37 +12,45 @@ Textual Timepiece is a collection of widgets related to time management and mani
 
 ## Demo
 
-=== "UV"
-    !!! note
-        Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
+/// tab | UV
+    new: true
 
-    ```sh
-    uvx --from textual-timepiece demo
-    ```
+!!! note
+    Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
-=== "PIP"
-    ```sh
-    pip install textual-timepiece && demo
-    ```
+```sh
+uvx --from textual-timepiece demo
+```
+///
+
+/// tab | PIP
+```sh
+pip install textual-timepiece && demo
+```
+///
 
 
 ## Installation
 
-===! "PIP"
-    ```sh
-    pip install textual-timepiece
-    ```
+/// tab | PIP
+    new: true
+```sh
+pip install textual-timepiece
+```
+///
 
-=== "UV"
-    ```sh
-    uv add textual-timepiece
-    ```
+/// tab | UV
+```sh
+uv add textual-timepiece
+```
+///
 
-=== "Poetry"
-    ```sh
-    poetry add textual-timepiece
-    ```
+/// tab | Poetry
+```sh
+poetry add textual-timepiece
+```
+///
 
 !!! info
     Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
@@ -52,45 +60,47 @@ Textual Timepiece is a collection of widgets related to time management and mani
 #### DatePicker
 
 
-===! "Result"
+/// tab | Result
+    new: true
 
-    ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
-    ```
+```{.textual path="docs/examples/screenshot/date_picker_example.py"}
+```
+///
+/// tab | Source
 
-=== "Source"
+```py
+from textual.app import App, ComposeResult
+from textual_timepiece.pickers import DatePicker
+from whenever import Date
 
-    ```py
-    from textual.app import App, ComposeResult
-    from textual_timepiece.pickers import DatePicker
-    from whenever import Date
+class DatePickerApp(App[None]):
+    def compose(self) -> ComposeResult:
+        yield DatePicker(Date.today_in_system_tz())
 
-    class DatePickerApp(App[None]):
-        def compose(self) -> ComposeResult:
-            yield DatePicker(Date.today_in_system_tz())
-
-    if __name__ == "__main__":
-        DatePickerApp().run()
-    ```
-
+if __name__ == "__main__":
+    DatePickerApp().run()
+```
+///
 
 #### DateTimePicker
 
-===! "Result"
+/// tab | Result
+    new: true
+```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
+```
+/// 
+/// tab | Source
 
-    ```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
-    ```
-    
-=== "Source"
+```py
+from textual.app import App, ComposeResult
+from textual_timepiece.pickers import DateTimePicker
+from whenever import SystemDateTime
 
-    ```py
-    from textual.app import App, ComposeResult
-    from textual_timepiece.pickers import DateTimePicker
-    from whenever import SystemDateTime
+class DateTimePickerApp(App[None]):
+    def compose(self) -> ComposeResult:
+        yield DateTimePicker()
 
-    class DateTimePickerApp(App[None]):
-        def compose(self) -> ComposeResult:
-            yield DateTimePicker(SystemDateTime.now().local())
-
-    if __name__ == "__main__":
-        DateTimePickerApp().run()
-    ```
+if __name__ == "__main__":
+    DateTimePickerApp().run()
+```
+///

@@ -16,7 +16,6 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.code.select
-    - content.tabs.link
     - content.tooltips
     - navigation.indexes
     - navigation.sections
@@ -107,13 +106,13 @@ plugins:
 
 markdown_extensions:
   - admonition
-  - pymdownx.details
   - attr_list
   - def_list
   - tables
   - md_in_html
   - toc:
       permalink: true
+  - pymdownx.details
   - pymdownx.snippets
   - pymdownx.highlight:
       use_pygments: true
@@ -125,8 +124,9 @@ markdown_extensions:
         - name: rich
           class: rich
           format: !!python/name:textual._doc.rich
-  - pymdownx.tabbed:
+  - pymdownx.blocks.tab:
       alternate_style: true
+      combine_header_slug: true
 
 extra_css:
   - css/stylesheet.css
