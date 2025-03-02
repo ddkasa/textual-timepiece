@@ -51,30 +51,46 @@ Textual Timepiece is a collection of widgets related to time management and mani
 
 #### DatePicker
 
-```py
-from textual.app import App, ComposeResult
-from textual_timepiece.pickers import DatePicker
-from whenever import Date
 
-class DatePickerApp(App[None]):
-    def compose(self) -> ComposeResult:
-        yield DatePicker(Date.today_in_system_tz())
+===! "Result"
 
-if __name__ == "__main__":
-    DatePickerApp().run()
-```
+    ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
+    ```
+
+=== "Source"
+
+    ```py
+    from textual.app import App, ComposeResult
+    from textual_timepiece.pickers import DatePicker
+    from whenever import Date
+
+    class DatePickerApp(App[None]):
+        def compose(self) -> ComposeResult:
+            yield DatePicker(Date.today_in_system_tz())
+
+    if __name__ == "__main__":
+        DatePickerApp().run()
+    ```
+
 
 #### DateTimePicker
 
-```py
-from textual.app import App, ComposeResult
-from textual_timepiece.pickers import DateTimePicker
-from whenever import SystemDateTime
+===! "Result"
 
-class DateTimePickerApp(App[None]):
-    def compose(self) -> ComposeResult:
-        yield DateTimePicker(SystemDateTime.now().local())
+    ```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
+    ```
+    
+=== "Source"
 
-if __name__ == "__main__":
-    DateTimePickerApp().run()
-```
+    ```py
+    from textual.app import App, ComposeResult
+    from textual_timepiece.pickers import DateTimePicker
+    from whenever import SystemDateTime
+
+    class DateTimePickerApp(App[None]):
+        def compose(self) -> ComposeResult:
+            yield DateTimePicker(SystemDateTime.now().local())
+
+    if __name__ == "__main__":
+        DateTimePickerApp().run()
+    ```
