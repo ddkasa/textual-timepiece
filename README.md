@@ -8,6 +8,39 @@
 
 [Documentation](https://ddkasa.github.io/textual-timepiece/) | [Changelog](/docs/CHANGELOG.md) | [PyPi](https://pypi.org/project/textual-timepiece/)
 
+<details>
+<summary>Included Widgets</summary>
+
+| Pickers                                                                     | Description                                                     |
+| :------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| [DatePicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DatePicker)                         | A visual date picker with an input and overlay.                 |
+| [DurationPicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DurationPicker)                 | Visual duration picker with duration up to 99 hours.            |
+| [TimePicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.TimePicker)                         | Visual time picker for setting a time in a 24 hour clock.       |
+| [DateTimePicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DateTimePicker)                 | Datetime picker that combines a date and time.                  |
+| [DateRangePicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DateRangePicker)               | Date range picker for picking an interval between two dates.    |
+| [DateTimeRangePicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DateTimeRangePicker)       | Range picker for picking an interval between two times.         |
+| [DateTimeDurationPicker](https://ddkasa.github.io/textual-timepiece/reference/pickers/#textual_timepiece.pickers.DateTimeDurationPicker) | Pick an interval between two times, including a duration input. |
+
+| Activity Heatmap                                                                | Description                                                                           |
+| :-------------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| [ActivityHeatmap](https://ddkasa.github.io/textual-timepiece/reference/activity_heatmap/#textual_timepiece.activity_heatmap.ActivityHeatmap) | Activity Heatmap for displaying yearly data similar to the GitHub contribution graph. |
+| [HeatmapManager](https://ddkasa.github.io/textual-timepiece/reference/activity_heatmap/#textual_timepiece.activity_heatmap.HeatmapManager)   | Widget for browsing the Activity Heatmap with yearly navigation builtin.              |
+
+| Selector                                                    | Description                                                           |
+| :--------------------------------------------------------- | :-------------------------------------------------------------------- |
+| [DateSelect](https://ddkasa.github.io/textual-timepiece/reference/selectors/#textual_timepiece.pickers.DateSelect)         | Date selection widget with calendar panes.                            |
+| [TimeSelect](https://ddkasa.github.io/textual-timepiece/reference/selectors/#textual_timepiece.pickers.TimeSelect)         | Time selection widget with various times in 30 minute intervals.      |
+| [DurationSelect](https://ddkasa.github.io/textual-timepiece/reference/selectors/#textual_timepiece.pickers.DurationSelect) | Duration selection widget with modifiers for adjust time or duration. |
+
+| Input                                                  | Description                                                    |
+| :------------------------------------------------------- | :------------------------------------------------------------- |
+| [DateInput](https://ddkasa.github.io/textual-timepiece/reference/input/#textual_timepiece.pickers.DateInput)         | Date input which takes in a iso-format date.                   |
+| [TimeInput](https://ddkasa.github.io/textual-timepiece/reference/input/#textual_timepiece.pickers.TimeInput)         | Time input that takes in 24 hour clocked in a HH:MM:SS format. |
+| [DurationInput](https://ddkasa.github.io/textual-timepiece/reference/input/#textual_timepiece.pickers.DurationInput) | Duration input with a duration up to 99 hours.                 |
+| [DateTimeInput](https://ddkasa.github.io/textual-timepiece/reference/input/#textual_timepiece.pickers.DateTimeInput) | An input with a combination of a date and time in iso-format.  |
+
+</details>
+
 ## Demo
 
 ### [UVX](https://docs.astral.sh/uv/)
@@ -78,18 +111,6 @@ if __name__ == "__main__":
 ```
 
 - More examples can be found [here](https://ddkasa.github.io/textual-timepiece/examples).
-
-## Included Widgets
-
-- `DatePicker`
-- `DurationPicker`
-- `TimePicker`
-- `DateTimePicker`
-- `DateRangePicker`
-- `DateTimeRangePicker`
-- `ActivityHeatmap`
-- `HeatmapManager`
-- _And more to come..._
 
 ## License
 
