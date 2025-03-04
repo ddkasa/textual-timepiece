@@ -31,7 +31,7 @@ def heatmap_data(freeze_time):
 def test_heatmap_hover(heatmap_app, heatmap_snap, heatmap_data, freeze_time):
     async def run_before(pilot):
         heatmap_app.widget.process_data(heatmap_data)
-        await pilot.hover(heatmap_app.widget, (16, 1))
+        await pilot.hover(heatmap_app.widget, (17, 1))
 
     assert heatmap_snap(heatmap_app, run_before=run_before)
 

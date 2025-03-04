@@ -551,7 +551,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         return bool(
             4 <= offset.x <= 165
             and 1 <= offset.y <= 14
-            and offset.x % 3 != 0
+            and ((offset.x - 4) % 3 != 0)
             and offset.y % 2 != 0
         )
 
