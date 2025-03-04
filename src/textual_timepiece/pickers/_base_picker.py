@@ -10,6 +10,7 @@ from typing import cast
 
 from textual import on
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.events import DescendantBlur
 from textual.events import MouseDown
 from textual.events import MouseMove
@@ -187,7 +188,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
     """
 
     BINDING_GROUP_TITLE = "Datetime Picker"
-    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding("escape", "leave", "Defocus", tooltip="Defocus the input."),
         Binding(
             "up",
@@ -398,7 +399,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
     }
     """
 
-    BINDINGS: ClassVar = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding("shift+enter", "toggle('expanded')", "Open Overlay."),
     ]
 
@@ -455,7 +456,7 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
     ALIAS: str
     INPUT: type[TI]
 
-    BINDINGS: ClassVar[list[Binding]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "ctrl+shift+d",
             "clear",

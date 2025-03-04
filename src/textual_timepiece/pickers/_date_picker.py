@@ -19,6 +19,7 @@ from rich.style import Style
 from textual import on
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.containers import Horizontal
 from textual.events import Blur
 from textual.events import Click
@@ -157,7 +158,7 @@ class DateSelect(BaseOverlayWidget):
 
     BINDING_GROUP_TITLE = "Date Select"
 
-    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "up",
             "move_cursor('up')",

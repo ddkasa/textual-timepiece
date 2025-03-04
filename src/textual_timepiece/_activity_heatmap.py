@@ -5,7 +5,6 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
-from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
@@ -23,6 +22,7 @@ from textual import on
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.color import Color
 from textual.containers import Center
 from textual.containers import Horizontal
@@ -77,7 +77,7 @@ class HeatmapCursor(NamedTuple):
                     year, week, 1 if self.is_week else self.day
                 )
             )
-        except ValueError:
+        except ValueError:  # NOTE: Deals with far reach edge cases.
             return None
 
     def move(
@@ -167,7 +167,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
 
-    BINDINGS: ClassVar[Sequence[Binding]] = [  # type: ignore[assignment]
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "right",
             "move_cursor('right')",
