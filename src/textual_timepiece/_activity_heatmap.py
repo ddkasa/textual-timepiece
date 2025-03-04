@@ -115,6 +115,9 @@ class HeatmapCursor(NamedTuple):
         return self.month is not None
 
 
+# TODO: Dirty region tracking.
+
+
 class ActivityHeatmap(ScrollView, BaseWidget):
     """Base renderable widget for an activity heatmap.
 
@@ -384,20 +387,17 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         empty_alt = self.get_component_rich_style("activityheatmap--empty-alt")
         hover_color = self.get_component_rich_style("activityheatmap--hover")
 
-        segments = [empty_seg] * 4
-        for i in range(2, 108):
-            value, empty = divmod(i, 2)
-            if empty:
-                segments.append(empty_seg)
-            else:
-                style = (
-                    hover_color
-                    if self._is_tile_hovered(week=value)
-                    else empty_background
-                    if value % 2 != 0
-                    else empty_alt
-                )
-                segments.append(Segment(str(value).rjust(2), style=style))
+        segments = [Segment(" " * 4, style=empty_seg.style)]
+        for i in range(2, 108, 2):
+            segments.append(empty_seg)
+            style = (
+                hover_color
+                if self._is_tile_hovered(week=i // 2)
+                else empty_background
+                if i % 2 != 0
+                else empty_alt
+            )
+            segments.append(Segment(str(i // 2).rjust(2), style=style))
 
         return Strip(segments)
 
