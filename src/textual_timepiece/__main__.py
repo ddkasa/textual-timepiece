@@ -80,18 +80,6 @@ class DemoWidget(Widget):
                 yield Button("Bindings", id="bindings", classes="nav")
 
             yield Button("Code Preview", id="code", classes="nav")
-            yield Button(
-                "Documentation",
-                id="external-documentation",
-                disabled=True,
-                classes="nav",
-            )
-            yield Button(
-                "GitHub Source",
-                id="github",
-                disabled=True,
-                classes="nav",
-            )
 
     def compose(self) -> ComposeResult:
         yield from self._compose_navigation_bar()
