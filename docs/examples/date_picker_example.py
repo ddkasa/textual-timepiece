@@ -1,12 +1,11 @@
 from textual.app import App, ComposeResult
 from textual_timepiece.pickers import DatePicker
-from whenever import Date
 
 
 class DatePickerApp(App[None]):
 
     def compose(self) -> ComposeResult:
-        yield DatePicker(Date.today_in_system_tz())
+        yield DatePicker()
 
     def on_date_picker_date_changed(self, message: DatePicker.DateChanged) -> None:
         message.stop()

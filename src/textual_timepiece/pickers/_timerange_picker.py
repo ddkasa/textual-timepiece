@@ -9,6 +9,7 @@ from typing import cast
 from textual import on
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.containers import Horizontal
 from textual.containers import Vertical
 from textual.reactive import var
@@ -108,7 +109,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     BINDING_GROUP_TITLE = "Date Range Picker"
 
-    BINDINGS: ClassVar[list[Binding]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "ctrl+shift+d",
             "clear",
@@ -381,7 +382,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
-    BINDINGS: ClassVar[list[Binding]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "ctrl+shift+d",
             "clear",

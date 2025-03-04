@@ -5,7 +5,6 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
-from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
@@ -23,6 +22,7 @@ from textual import on
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.color import Color
 from textual.containers import Center
 from textual.containers import Horizontal
@@ -77,7 +77,7 @@ class HeatmapCursor(NamedTuple):
                     year, week, 1 if self.is_week else self.day
                 )
             )
-        except ValueError:
+        except ValueError:  # NOTE: Deals with far reach edge cases.
             return None
 
     def move(
@@ -113,6 +113,9 @@ class HeatmapCursor(NamedTuple):
     @property
     def is_month(self) -> bool:
         return self.month is not None
+
+
+# TODO: Dirty region tracking.
 
 
 class ActivityHeatmap(ScrollView, BaseWidget):
@@ -164,7 +167,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
 
-    BINDINGS: ClassVar[Sequence[Binding]] = [  # type: ignore[assignment]
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "right",
             "move_cursor('right')",
@@ -366,16 +369,13 @@ class ActivityHeatmap(ScrollView, BaseWidget):
             empty_seg,
         ]
         empty_bg = empty_bg.background_style
-        for i in range(len(self.data) * 2):
-            week, empty = divmod(i, 2)
-            if empty:
-                segs.append(empty_seg)
-            else:
-                segs.append(
-                    self._get_segment(
-                        day, week, background, color, hover_color, empty_bg
-                    )
+        for week in range(len(self.data)):
+            segs.append(empty_seg)
+            segs.append(
+                self._get_segment(
+                    day, week, background, color, hover_color, empty_bg
                 )
+            )
 
         return Strip(segs)
 
@@ -387,20 +387,17 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         empty_alt = self.get_component_rich_style("activityheatmap--empty-alt")
         hover_color = self.get_component_rich_style("activityheatmap--hover")
 
-        segments = [empty_seg] * 4
-        for i in range(2, 108):
-            value, empty = divmod(i, 2)
-            if empty:
-                segments.append(empty_seg)
-            else:
-                style = (
-                    hover_color
-                    if self._is_tile_hovered(week=value)
-                    else empty_background
-                    if value % 2 != 0
-                    else empty_alt
-                )
-                segments.append(Segment(str(value).rjust(2), style=style))
+        segments = [Segment(" " * 4, style=empty_seg.style)]
+        for i in range(2, 108, 2):
+            segments.append(empty_seg)
+            style = (
+                hover_color
+                if self._is_tile_hovered(week=i // 2)
+                else empty_background
+                if i % 2 != 0
+                else empty_alt
+            )
+            segments.append(Segment(str(i // 2).rjust(2), style=style))
 
         return Strip(segments)
 
@@ -554,7 +551,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         return bool(
             4 <= offset.x <= 165
             and 1 <= offset.y <= 14
-            and offset.x % 3 != 0
+            and ((offset.x - 4) % 3 != 0)
             and offset.y % 2 != 0
         )
 
@@ -662,23 +659,21 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     def sum_week(self, week: Date) -> float:
         """Get the total for a week for any specified date."""
-        total = 0
-        for day in iterate_timespan(week, days(1), 7):
-            total += self.values[day.py_date()]
-
-        return total
+        return sum(
+            self.values[day.py_date()]
+            for day in iterate_timespan(week, days(1), 7)
+        )
 
     def sum_month(self, month: Date) -> float:
         """Get the total for a month for any specified date."""
-        total = 0
-        for day in iterate_timespan(
-            month,
-            days(1),
-            monthrange(month.year, month.month)[1],
-        ):
-            total += self.values[day.py_date()]
-
-        return total
+        return sum(
+            self.values[day.py_date()]
+            for day in iterate_timespan(
+                month,
+                days(1),
+                monthrange(month.year, month.month)[1],
+            )
+        )
 
     @staticmethod
     def generate_empty_activity(year: int) -> list[list[date | None]]:

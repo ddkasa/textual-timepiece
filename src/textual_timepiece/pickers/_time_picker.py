@@ -11,6 +11,7 @@ from typing import cast
 from textual import on
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.binding import BindingType
 from textual.containers import Grid
 from textual.containers import Horizontal
 from textual.events import Mount
@@ -192,7 +193,7 @@ class TimeSelect(BaseOverlayWidget):
     """
     """Default CSS for the `TimeSelect` widget."""
 
-    BINDINGS: ClassVar[list[Binding]] = [  # type: ignore[assignment]
+    BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "up",
             "focus_neighbor('up')",
