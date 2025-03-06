@@ -57,7 +57,8 @@ plugins:
   - search
   - autorefs
   - include_dir_to_nav
-  - macros
+  - macros:
+      include_dir: .
   - mkdocstrings:
       custom_templates: docs/templates
       default_handler: python
