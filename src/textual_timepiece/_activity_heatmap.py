@@ -761,7 +761,8 @@ class HeatmapManager(BaseWidget):
                 border: none;
             }
 
-            .nav {
+            & > .nav {
+                border: none;
                 &Button {
                     max-width: 4;
                     text-align: center;
