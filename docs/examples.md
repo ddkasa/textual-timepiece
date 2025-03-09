@@ -54,6 +54,22 @@
 ```
 ///
 
+
+ 
+### Activity Heatmap 
+
+/// tab | Result
+    new: true
+```{.textual path="docs/examples/activity_heatmap_example.py"}
+```
+///
+
+/// tab | Source
+```python
+--8<-- "docs/examples/activity_heatmap_example.py"
+```
+///
+
 ### Single Line Picker
 
 /// tab | Result
