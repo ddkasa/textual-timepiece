@@ -100,7 +100,7 @@ if __name__ == "__main__":
 
 ##### Result
 
-![](docs/media/images/date-picker-example.png)
+![DateTimePicker Example](https://github.com/ddkasa/textual-timepiece/blob/main/docs/media/images/date-picker-example.png)
 
 #### DateTimePicker
 
@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
 ##### Result
 
-![](docs/media/images/datetime-picker-example.png)
+![DatePicker Example](https://github.com/ddkasa/textual-timepiece/blob/main/docs/media/images/datetime-picker-example.png)
 
 #### ActivityHeatmap
 
@@ -174,7 +174,7 @@ if __name__ == "__main__":
 
 ##### Result
 
-![](docs/media/images/activity-heatmap-example.png)
+![ActivityHeatmap Example](https://github.com/ddkasa/textual-timepiece/blob/4a5d9439b2ee436e1b89a1e3189c0d6d5bc6f704/docs/media/images/activity-heatmap-example.png)
 
 - More examples can be found [here](https://ddkasa.github.io/textual-timepiece/examples)
 
