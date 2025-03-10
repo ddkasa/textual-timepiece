@@ -122,6 +122,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     """Base renderable widget for an activity heatmap.
 
     Params:
+        values: A dictionary of values for each date.
         year: Year for verifying dates.
         name: The name of the widget.
         id: The ID of the widget in the DOM.
@@ -131,11 +132,11 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     Examples:
         >>> def compose(self) -> ComposeResult:
-        >>>     yield ActivityHeatmap(2025)
+        >>>     yield ActivityHeatmap(year2025)
 
         >>> def on_mount(self) -> None:
         >>>     activity = generate_activity()
-        >>>     self.query_one(ActivityHeatmap).process_data(activity)
+        >>>     self.query_one(ActivityHeatmap).values = activity
     """
 
     @dataclass
@@ -161,7 +162,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     can_focus = True
 
-    ActivityData: TypeAlias = list[list[float | None]]
+    ActivityData: TypeAlias = defaultdict[date, float]
     """Final data type that the heatmap uses."""
 
     BORDER_TITLE = "Activity Heatmap"
@@ -272,16 +273,17 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     | `activityheatmap--empty-alt` | Alternative empty tile color for navigation. |
     | `activityheatmap--hover` | Color when something is hovered. |
     """  # noqa: E501
-    data = reactive[ActivityData](list, init=False, layout=True)
+    data = reactive[list[list[float]]](list, init=False, layout=True)
     """Two dimensional data that should be normalized between 0 and 1."""
 
     year = var[int](lambda: Date.today_in_system_tz().year, init=False)
     """Current year for calculating dates."""
 
-    values = var[defaultdict[date, int]](
-        lambda: defaultdict(lambda: 0), init=False
-    )
-    """Original pre normalized values for tooltips."""
+    values = var[ActivityData](lambda: defaultdict(lambda: 0), init=False)
+    """Original pre normalized values for tooltips.
+
+    Assign data to this reactive to update values.
+    """
 
     mouse_offset = var[Offset](Offset, init=False)
     """Current mouse offfset for tracking the cursor."""
@@ -291,6 +293,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     def __init__(
         self,
+        values: ActivityData | None = None,
         year: int | None = None,
         name: str | None = None,
         id: str | None = None,
@@ -303,6 +306,8 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
         self.select_on_focus = select_on_focus
         self.virtual_size = Size(163, 18)
+        if values:
+            self.set_reactive(ActivityHeatmap.values, values)
         if year:
             self.set_reactive(ActivityHeatmap.year, year)
 
@@ -443,8 +448,11 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
         return strip.crop(scroll_x, scroll_x + self.size.width)
 
+    def _watch_values(self, new: ActivityData) -> None:
+        self._process_data(new, self.year)
+
     @work(name="heatmap", thread=True, exclusive=True)
-    def process_data(self, data: ActivityData) -> None:
+    def _process_data(self, data: ActivityData, year: int) -> None:
         """Entrypoint worker for the heatmap data.
 
         Normalizes & inverts the data into usable values.
@@ -452,12 +460,16 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         Args:
             data: Two dimensional data that is ready to be converted.
         """
-        flat: list[float | None] = list(chain.from_iterable(data))
+        template = ActivityHeatmap.generate_empty_activity(year)
+        values = [
+            [data[day] if day else None for day in week] for week in template
+        ]
+        flat: list[float | None] = list(chain.from_iterable(values))
         normalized = [
             1 - v if v is not None else None for v in normalize_values(flat)
         ]
         self.app.call_from_thread(
-            setattr, self, "data", flat_to_shape(normalized, data)
+            setattr, self, "data", flat_to_shape(normalized, values)
         )
 
     def _on_focus(self, event: Focus) -> None:
@@ -801,7 +813,7 @@ class HeatmapManager(BaseWidget):
             self.set_reactive(HeatmapManager.year, year)
 
     def _validate_year(self, year: int) -> int:
-        return max(0, min(year, 9999))
+        return max(1, min(year, 9999))
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="navigation"):
@@ -873,10 +885,9 @@ class HeatmapManager(BaseWidget):
 
         if message.control.is_valid:
             try:
-                year = int(message.control.value)
+                self.year = int(message.control.value)
             except ValueError:
                 return
-            self.year = year
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()

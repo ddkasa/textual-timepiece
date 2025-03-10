@@ -1,3 +1,5 @@
+import random
+from collections import defaultdict
 from functools import partial
 
 import pytest
@@ -24,13 +26,23 @@ def heatmap_snap(snap_compare):
 
 @pytest.fixture
 def heatmap_data(freeze_time):
-    return ActivityHeatmap.generate_empty_activity(freeze_time.year)
+    random.seed(freeze_time.year)
+    template = ActivityHeatmap.generate_empty_activity(freeze_time.year)
+    return defaultdict(
+        lambda: 0,
+        {
+            day: random.randint(1000, 50000)  # noqa: S311
+            for week in template
+            for day in week
+            if day
+        },
+    )
 
 
 @pytest.mark.snapshot
 def test_heatmap_hover(heatmap_app, heatmap_snap, heatmap_data, freeze_time):
     async def run_before(pilot):
-        heatmap_app.widget.process_data(heatmap_data)
+        heatmap_app.widget.values = heatmap_data
         await pilot.hover(heatmap_app.widget, (17, 1))
 
     assert heatmap_snap(heatmap_app, run_before=run_before)
@@ -41,7 +53,7 @@ def test_heatmap_hover_month(
     heatmap_app, heatmap_snap, heatmap_data, freeze_time
 ):
     async def run_before(pilot):
-        heatmap_app.widget.process_data(heatmap_data)
+        heatmap_app.widget.values = heatmap_data
         await pilot.hover(heatmap_app.widget, (147, 17))
 
     assert heatmap_snap(heatmap_app, run_before=run_before)
@@ -50,7 +62,7 @@ def test_heatmap_hover_month(
 @pytest.mark.unit
 async def test_heatmap_month_nav(heatmap_app, heatmap_data, freeze_time):
     async with heatmap_app.run_test() as pilot:
-        heatmap_app.widget.process_data(heatmap_data)
+        heatmap_app.widget.values = heatmap_data
         heatmap_app.widget.focus()
         heatmap_app.widget.cursor = HeatmapCursor(week=0, day=9, month=1)
         assert heatmap_app.widget.cursor.to_date(
@@ -74,7 +86,7 @@ def test_heatmap_manager(
     heatmap_manager_app, heatmap_snap, heatmap_data, freeze_time
 ):
     async def run_before(pilot):
-        heatmap_manager_app.widget.heatmap.process_data(heatmap_data)
+        heatmap_manager_app.widget.heatmap.values = heatmap_data
         heatmap_manager_app.widget.heatmap.focus()
         await pilot.press("left", "left", "down", "down", "up", "right")
 
@@ -86,7 +98,7 @@ async def test_heatmap_navigation(
     heatmap_manager_app, heatmap_snap, heatmap_data, freeze_time
 ):
     async with heatmap_manager_app.run_test() as pilot:
-        heatmap_manager_app.widget.heatmap.process_data(heatmap_data)
+        heatmap_manager_app.widget.heatmap.values = heatmap_data
         heatmap_manager_app.widget.focus()
         await pilot.press("enter", "tab")
         assert heatmap_manager_app.widget.year == freeze_time.year - 5

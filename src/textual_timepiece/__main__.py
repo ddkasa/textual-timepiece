@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import inspect
+import random
+from collections import defaultdict
 from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
@@ -258,10 +260,8 @@ class TimepieceDemo(App[None]):
         yield Footer()
 
     def on_mount(self) -> None:
-        fake_data = ActivityHeatmap.generate_empty_activity(2025)
-
-        for m in self.query(ActivityHeatmap):
-            m.process_data(fake_data)
+        for widget in self.query(ActivityHeatmap):
+            self._set_data(widget)
 
     @on(DemoWidget.ToggleFeature)
     def open_tab(self, message: DemoWidget.ToggleFeature) -> None:
@@ -285,10 +285,23 @@ class TimepieceDemo(App[None]):
 
         self.app.push_screen(PreviewScreen(data))
 
+    def _set_data(self, widget: ActivityHeatmap) -> None:
+        random.seed(widget.year)
+        template = ActivityHeatmap.generate_empty_activity(widget.year)
+        widget.values = defaultdict(
+            lambda: 0,
+            {
+                day: random.randint(6000, 20000)  # noqa: S311
+                for week in template
+                for day in week
+                if day
+            },
+        )
+
     @on(HeatmapManager.YearChanged)
     def change_heat_year(self, message: HeatmapManager.YearChanged) -> None:
-        fake_data = ActivityHeatmap.generate_empty_activity(message.year)
-        message.widget.heatmap.process_data(fake_data)
+        message.stop()
+        self._set_data(message.widget.heatmap)
 
     @cached_property
     def preview_panel(self) -> Static:
