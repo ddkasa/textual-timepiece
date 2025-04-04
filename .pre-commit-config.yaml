@@ -13,6 +13,7 @@ repos:
     rev: v1.15.0
     hooks:
       - id: mypy
+        additional_dependencies: ["textual>=2.1.0", "whenever>=0.7.1"]
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.5.29
