@@ -11,9 +11,7 @@
 
 Textual Timepiece is a collection of widgets related to time management and manipulation. It includes various time and date [pickers](reference/pickers.md), an [activity heatmap](reference/activity_heatmap.md) for displaying year dates and some extras.
 
-
 ## Demo
-
 
 /// tab | UV
     new: true
@@ -22,28 +20,31 @@ Textual Timepiece is a collection of widgets related to time management and mani
     Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
 ```sh
-uvx --from textual-timepiece demo
+uvx textual-timepiece
 ```
-///
 
+///
 
 /// tab | PIPX
 
 ```sh
 pipx run textual-timepiece
 ```
+
 ///
 
 /// tab | PIP
+
 ```sh
-pip install textual-timepiece && demo
+pip install textual-timepiece && textual-timepiece
 ```
+
 ///
 
-
 ## Included Widgets
+
 /// tab | Pickers
-    new: true 
+    new: true
 | Widget | Description |
 |:-------|:-------|
 |[DatePicker][textual_timepiece.pickers.DatePicker]|A visual date picker with an input and overlay.|
@@ -79,43 +80,47 @@ pip install textual-timepiece && demo
 |[DateTimeInput][textual_timepiece.pickers.DateTimeInput]|An input with a combination of a date and time in iso-format.|
 ///
 
-
-
-
 ## Installation
 
 /// tab | PIP
     new: true
+
 ```sh
 pip install textual-timepiece
 ```
+
 ///
 
 /// tab | UV
+
 ```sh
 uv add textual-timepiece
 ```
+
 ///
 
 /// tab | Poetry
+
 ```sh
 poetry add textual-timepiece
 ```
+
 ///
 
 !!! info
-    Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
+Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
 
 ## Quick Start
 
 ### DatePicker
 
-
 /// tab | Result
     new: true
 
 ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
+
 ```
+
 ///
 /// tab | Source
 
@@ -131,15 +136,19 @@ class DatePickerApp(App[None]):
 if __name__ == "__main__":
     DatePickerApp().run()
 ```
+
 ///
 
 ### DateTimePicker
 
 /// tab | Result
     new: true
+
 ```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
+
 ```
-/// 
+
+///
 /// tab | Source
 
 ```py
@@ -154,4 +163,5 @@ class DateTimePickerApp(App[None]):
 if __name__ == "__main__":
     DateTimePickerApp().run()
 ```
+
 ///
