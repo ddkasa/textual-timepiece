@@ -5,10 +5,7 @@ authors = [{ name = "David Kasakaitis", email = "davidkasakaitis@proton.me" }]
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "textual>=2.1.0",
- "whenever>=0.7.1",
-]
+dependencies = ["textual>=2.1.0", "whenever>=0.7.1"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -68,7 +65,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-demo = "textual_timepiece.__main__:main"
+textual-timepiece = "textual_timepiece.__main__:main"
 
 
 [tool.ruff]
