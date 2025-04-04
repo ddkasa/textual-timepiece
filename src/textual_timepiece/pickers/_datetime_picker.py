@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
-from typing import cast
 
 from textual import on
 from textual.app import ComposeResult
@@ -64,7 +63,7 @@ class DateTimeOverlay(BaseOverlay):
 
     @cached_property
     def date_select(self) -> DateSelect:
-        return cast(DateSelect, self.query_one(DateSelect))
+        return self.query_one(DateSelect)
 
 
 class DateTimeInput(AbstractInput[LocalDateTime]):
