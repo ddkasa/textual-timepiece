@@ -27,6 +27,15 @@ def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:
 
 
 def format_seconds(total_seconds: int, *, include_seconds: bool = True) -> str:
+    """Format total seconds to a time in 24 hour format.
+
+    Args:
+        total_seconds: Total seconds to format.
+        include_seconds: Whether to include seconds on the end of the result.
+
+    Returns:
+        Seconds formatted into a *HH:mm* string.
+    """
     hours, minutes, seconds = breakdown_seconds(total_seconds)
     result = f"{hours:0>2}:{minutes:0>2}"
     if include_seconds:
