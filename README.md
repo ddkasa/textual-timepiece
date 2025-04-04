@@ -47,7 +47,7 @@
 ### [UVX](https://docs.astral.sh/uv/)
 
 ```sh
-uvx --from textual-timepiece demo
+uvx textual-timepiece
 ```
 
 ### [PIPX](https://github.com/pypa/pipx)
