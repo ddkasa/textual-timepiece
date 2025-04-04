@@ -822,7 +822,7 @@ class DateOverlay(BaseOverlay):
 
     @cached_property
     def date_select(self) -> DateSelect:
-        return cast(DateSelect, self.query_one(DateSelect))
+        return self.query_one(DateSelect)
 
 
 class EndDateOverlay(DateOverlay):

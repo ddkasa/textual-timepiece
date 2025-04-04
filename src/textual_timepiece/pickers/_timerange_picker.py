@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
-from typing import Self
 from typing import cast
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 from textual import on
 from textual.app import ComposeResult
@@ -300,7 +305,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     @cached_property
     def lock_button(self) -> LockButton:
-        return cast(LockButton, self.query_exactly_one(LockButton))
+        return self.query_exactly_one(LockButton)
 
 
 class DateTimeRangeOverlay(BaseOverlay):
@@ -644,7 +649,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     @cached_property
     def lock_button(self) -> LockButton:
-        return cast(LockButton, self.query_exactly_one(LockButton))
+        return self.query_exactly_one(LockButton)
 
 
 class DateTimeDurationPicker(DateTimeRangePicker):
@@ -710,4 +715,4 @@ class DateTimeDurationPicker(DateTimeRangePicker):
 
     @cached_property
     def duration_input(self) -> DurationInput:
-        return cast(DurationInput, self.query_exactly_one(DurationInput))
+        return self.query_exactly_one(DurationInput)

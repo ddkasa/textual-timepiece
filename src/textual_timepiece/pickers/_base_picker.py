@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from functools import cached_property
+from typing import Any
+from typing import Awaitable
 from typing import Callable
 from typing import ClassVar
 from typing import Generic
@@ -115,7 +117,11 @@ class BaseOverlay(BaseWidget):
         self.post_message(self.Close(self))
 
     def watch_show(self, show: bool) -> None:
-        def anim(on_complete: Callable | None) -> None:
+        def anim(
+            on_complete: Callable[[], Awaitable[None]]
+            | Callable[[], None]
+            | None,
+        ) -> None:
             self.styles.animate(
                 "opacity",
                 1 if show else 0,
@@ -137,7 +143,7 @@ class BaseOverlay(BaseWidget):
         # NOTE: Might have to set a constant height in a class var
         parent = cast(Widget, self.parent)
         offset = 1 if parent.has_class("mini") else 3
-        bottom = self.app.size.height // 2 > cast(Widget, parent).region.y
+        bottom = self.app.size.height // 2 > parent.region.y
         self.offset = Offset(0, offset if bottom else -(self.size.height + 2))
 
     def on_focus(self) -> None:
@@ -285,7 +291,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
     @property
     def alias(self) -> T | None:
         """Alias for whatever value the input may be holding."""
-        return getattr(self, self.ALIAS)
+        return cast(T | None, getattr(self, self.ALIAS))
 
     @alias.setter
     def alias(self, value: T | None) -> None:
@@ -447,10 +453,10 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         return cast(Overlay, self.query_exactly_one(BaseOverlay))
 
 
-TI = TypeVar("TI", bound=AbstractInput)
+TI = TypeVar("TI", bound=AbstractInput[Any])
 
 
-class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
+class BasePicker(AbstractPicker[Any], Generic[TI, T, Overlay]):
     """Base Picker class for combining various single ended widgets."""
 
     ALIAS: str
@@ -520,7 +526,7 @@ class BasePicker(AbstractPicker, Generic[TI, T, Overlay]):
     @property
     def value(self) -> T | None:
         """Alias for whatever value the picker may be holding."""
-        return getattr(self, self.ALIAS)
+        return cast(T | None, getattr(self, self.ALIAS))
 
     @value.setter
     def value(self, value: T | None) -> None:

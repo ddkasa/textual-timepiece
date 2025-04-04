@@ -1,14 +1,19 @@
 from __future__ import annotations
 
 import inspect
+import sys
 from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 from typing import Iterator
-from typing import Self
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 from rich.console import RenderableType
-from rich.console import Text
+from rich.text import Text
 from textual.app import RenderResult
 from textual.dom import DOMNode
 from textual.geometry import Offset

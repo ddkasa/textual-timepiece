@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from calendar import Calendar
 from calendar import day_abbr
 from calendar import month_abbr
@@ -11,9 +12,14 @@ from functools import cached_property
 from itertools import chain
 from typing import ClassVar
 from typing import NamedTuple
-from typing import Self
 from typing import TypeAlias
 from typing import cast
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
+
 
 from rich.color import Color as RColor
 from rich.segment import Segment
@@ -641,7 +647,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         if offset.y != 17 or not (3 <= offset.x <= 148):
             return 0
 
-        month, rem = divmod(cast(int, offset.x) - 2, 13)
+        month, rem = divmod(offset.x - 2, 13)
 
         if rem not in {0, 1, 2}:
             return 0
