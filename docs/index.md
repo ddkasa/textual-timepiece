@@ -14,10 +14,10 @@ Textual Timepiece is a collection of widgets related to time management and mani
 ## Demo
 
 /// tab | UV
-    new: true
+new: true
 
 !!! note
-    Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
+Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
 ```sh
 uvx textual-timepiece
@@ -115,7 +115,7 @@ Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional 
 ### DatePicker
 
 /// tab | Result
-    new: true
+new: true
 
 ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
 
