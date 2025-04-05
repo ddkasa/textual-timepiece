@@ -41,6 +41,10 @@ from textual_timepiece.pickers import TimePicker
 from textual_timepiece.pickers._date_picker import DateSelect
 from textual_timepiece.pickers._time_picker import DurationSelect
 from textual_timepiece.pickers._time_picker import TimeSelect
+from textual_timepiece.timeline._timeline_manager import (
+    RuledHorizontalTimeline,
+)
+from textual_timepiece.timeline._timeline_manager import RuledVerticalTimeline
 
 
 class DemoWidget(Widget):
@@ -140,9 +144,7 @@ class PreviewScreen(ModalScreen[None]):
 
 
 class TimepieceDemo(App[None]):
-    font: bool = True
-
-    CSS = """
+    CSS: ClassVar[str] = """
     Screen {
         layout: horizontal;
         align: center middle;
@@ -256,6 +258,14 @@ class TimepieceDemo(App[None]):
                 with Container(id="heatmap", classes="previews"):
                     for i in (ActivityHeatmap, HeatmapManager):
                         yield DemoWidget(i)
+
+            with TabPane("Timeline"):
+                with Container(id="timeline", classes="previews"):
+                    for timeline in (
+                        RuledVerticalTimeline,
+                        RuledHorizontalTimeline,
+                    ):
+                        yield DemoWidget(timeline)
 
         yield Footer()
 
