@@ -20,6 +20,15 @@ from whenever import TimeDelta
 
 
 def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:
+    """Breakdown total seconds into hours, minutes and seconds.
+
+    Args:
+        total_seconds: Total seconds in the form of an integer.
+
+    Returns:
+        A tuple of hours, minutes and seconds.
+    """
+
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
 
