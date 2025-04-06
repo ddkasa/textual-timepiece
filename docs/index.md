@@ -14,10 +14,10 @@ Textual Timepiece is a collection of widgets related to time management and mani
 ## Demo
 
 /// tab | UV
-new: true
+    new: true
 
 !!! note
-Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
+    Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
 ```sh
 uvx textual-timepiece
@@ -63,6 +63,23 @@ pip install textual-timepiece && textual-timepiece
 |[HeatmapManager][textual_timepiece.activity_heatmap.HeatmapManager]|Widget for browsing the Activity Heatmap with yearly navigation builtin.|
 ///
 
+
+/// tab | Timeline
+| Widget | Description |
+|:-------|:-------|
+|[HorizontalEntry][textual_timepiece.timeline.HorizontalEntry]|Horizontal entry for a horizontal timeline layout.|
+|[HorizontalRuler][textual_timepiece.timeline.HorizontalRuler]|Horizontal ruler for marking horizontal timelines.|
+|[HorizontalTimeline][textual_timepiece.timeline.HorizontalTimeline]|Basic timeline widget that displays entries in a horizontal view.|
+|[HorizontalTimelineNavigation][textual_timepiece.timeline.HorizontalTimelineNavigation]|Horizontal widget containing a horizontal timeline and header.|
+|[RuledHorizontalTimeline][textual_timepiece.timeline.RuledHorizontalTimeline]|Ruled horizontal timeline with markers.|
+|[RuledVerticalTimeline][textual_timepiece.timeline.RuledVerticalTimeline]|Ruled vertical timeline with markers.|
+|[VerticalEntry][textual_timepiece.timeline.VerticalEntry]|Vertical entry for a vertical timeline layout.|
+|[VerticalRuler][textual_timepiece.timeline.VerticalRuler]|Vertical ruler for marking vertical timelines.|
+|[VerticalTimeline][textual_timepiece.timeline.VerticalTimeline]|Basic timeline widget that displays entries in a vertical view.|
+|[VerticalTimelineNavigation][textual_timepiece.timeline.VerticalTimelineNavigation]|Vertical widget containing a vertical timeline and header.|
+
+///
+
 /// tab | Selector
 | Widget | Description |
 |:-------|:-------|
@@ -79,6 +96,7 @@ pip install textual-timepiece && textual-timepiece
 |[DurationInput][textual_timepiece.pickers.DurationInput]|Duration input with a duration up to 99 hours.|
 |[DateTimeInput][textual_timepiece.pickers.DateTimeInput]|An input with a combination of a date and time in iso-format.|
 ///
+
 
 ## Installation
 
@@ -108,14 +126,14 @@ poetry add textual-timepiece
 ///
 
 !!! info
-Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
+    Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
 
 ## Quick Start
 
 ### DatePicker
 
 /// tab | Result
-new: true
+    new: true
 
 ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
 
