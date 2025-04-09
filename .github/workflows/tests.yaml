@@ -28,7 +28,7 @@ jobs:
     env:
       TEXTUAL_THEME: tokyo-night
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: wntrblm/nox@main
       - uses: astral-sh/setup-uv@v5
       - run: nox -s "${{ matrix.session }}"
