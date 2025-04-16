@@ -162,7 +162,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     _start: Offset | None = None
     _mime: T | None = None
 
-    length = var[int](96, init=False)
+    length = Reactive[int](96, init=False, layout=True)
     """Actual size of the widget with the direction size of the widget."""
 
     markers = Reactive[Markers](
