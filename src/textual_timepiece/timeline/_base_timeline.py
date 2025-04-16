@@ -201,6 +201,21 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         if event.widget is self._highlighted:
             self._highlighted = None
 
+    def refresh_line(self, y: int) -> None:
+        """Refresh a single line.
+
+        Args:
+            y: Coordinate of line.
+        """
+        self.refresh(
+            Region(
+                0,
+                y - self.scroll_offset.y,
+                max(self.virtual_size.width, self.size.width),
+                1,
+            )
+        )
+
     def mount(  # type: ignore[override] # NOTE: Making sure the user mounts the right widgets.
         self,
         *widgets: T,
