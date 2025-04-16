@@ -314,6 +314,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     def _action_clear_active(self) -> None:
         if self._mime:
             self._mime.remove()
+            self._start = None
             self._mime = None
         else:
             cast(T, self.selected).blur()
