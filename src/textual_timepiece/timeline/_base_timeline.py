@@ -29,6 +29,7 @@ from textual.events import MouseUp
 from textual.geometry import Offset
 from textual.geometry import Region
 from textual.geometry import Size
+from textual.reactive import Reactive
 from textual.reactive import reactive
 from textual.reactive import var
 from textual.strip import Strip
@@ -164,9 +165,13 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     length = var[int](96, init=False)
     """Actual size of the widget with the direction size of the widget."""
 
-    # TODO: Only refresh positions that have changed.
-    markers = reactive[Markers](MappingProxyType({}), init=False)
-    """Custom markers to place in on the timeline."""
+    markers = Reactive[Markers](
+        MappingProxyType({}),
+        init=False,
+        compute=False,
+        repaint=False,
+    )
+    """Custom markers to place on the timeline."""
 
     def __init__(
         self,
@@ -200,6 +205,10 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     async def _on_descendant_blur(self, event: DescendantBlur) -> None:
         if event.widget is self._highlighted:
             self._highlighted = None
+
+    def _watch_markers(self, old: Markers, new: Markers) -> None:
+        for line in old.keys() ^ new.keys():
+            self.refresh_line(line)
 
     def refresh_line(self, y: int) -> None:
         """Refresh a single line.
