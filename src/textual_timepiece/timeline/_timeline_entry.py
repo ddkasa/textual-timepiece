@@ -144,7 +144,6 @@ class AbstractEntry(Static, can_focus=True):
         """Instatiate a mime entry. For previewing resizing visually.
 
         Args:
-            content: A Rich renderable, or string containing console markup.
             offset: Initial offset to use for the entry.
             size: Initial size to use for the entry.
             markup: True if markup should be parsed and rendered.
@@ -155,10 +154,10 @@ class AbstractEntry(Static, can_focus=True):
             Constructed timeline entry.
         """
         return cls(
-            f"id-{uuid4()}",
-            "",
-            offset,
-            size,
+            id=f"id-{uuid4()}",
+            content="",
+            offset=offset,
+            size=size,
             markup=markup,
             name=name,
             classes="-mime",
