@@ -22,12 +22,11 @@ from textual.events import MouseMove
 from textual.events import MouseUp
 from textual.geometry import Offset
 from textual.geometry import Size
+from textual.reactive import var
 from textual.visual import SupportsVisual
 from textual.widgets import Static
 
 from textual_timepiece._extra import BaseMessage
-
-# Simpliefy Methods
 
 
 class AbstractEntry(Static, can_focus=True):
@@ -102,9 +101,11 @@ class AbstractEntry(Static, can_focus=True):
 
     ALLOW_MAXIMIZE = False
 
+    clicked = var[Offset | None](None, init=False)
+    """Initial point where the entry was clicked when moving or resizing."""
+
     offset: Offset
     _is_moving: bool | None = None
-    _clicked: Offset | None = None
     _start_is_hovered: bool | None = None
 
     def __init__(
@@ -170,7 +171,7 @@ class AbstractEntry(Static, can_focus=True):
             self._is_focused(event.offset)
 
     def _on_mouse_move(self, event: MouseMove) -> None:
-        if self._clicked:
+        if self.clicked:
             self._adjust(event)
         elif self.mouse_hover:
             self._add_edge(event.offset)
@@ -183,7 +184,7 @@ class AbstractEntry(Static, can_focus=True):
 
     def _adjust(self, event: MouseMove) -> None:
         if (
-            self._clicked is not None
+            self.clicked is not None
             and event.button != 0
             and self._is_moving is not None
         ):
@@ -205,10 +206,10 @@ class AbstractEntry(Static, can_focus=True):
             self._add_edge(offset)
             self._start_is_hovered = self.is_start(offset)
 
-        self._clicked = offset
+        self.clicked = offset
 
     async def _is_unfocused(self, event: MouseUp) -> None:
-        self._clicked = None
+        self.clicked = None
         self._is_moving = None
         self._start_is_hovered = None
         self.remove_class("moving", "size_start", "size_end")
@@ -299,7 +300,7 @@ class AbstractEntry(Static, can_focus=True):
         """
 
     def _add_edge(self, offset: Offset) -> None:
-        if self._clicked:
+        if self.clicked:
             # NOTE: Making sure the edge doesn't change after locking in.
             return
 
