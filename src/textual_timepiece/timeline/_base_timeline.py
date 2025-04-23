@@ -412,15 +412,26 @@ class VerticalTimeline(AbstractTimeline[VerticalEntry]):
     """
     """Default CSS for `VerticalTimeline` widget."""
 
-    def render_line(self, y: int) -> Strip:
-        style, label = self.markers.get(
-            y,
-            (self.get_component_rich_style("timeline--normal"), ""),
+    def render_lines(self, crop: Region) -> list[Strip]:
+        self._basic_strip = Strip(
+            [
+                Segment(
+                    "─" * self.size.width,
+                    style=self.get_component_rich_style("timeline--normal"),
+                )
+            ]
         )
+        return super().render_lines(crop)
 
-        return Strip(
-            [Segment(label.center(self.size.width, "─"), style=style)]
-        )
+    def render_line(self, y: int) -> Strip:
+        if marker := self.markers.get(y):
+            style, label = marker
+
+            return Strip(
+                [Segment(label.center(self.size.width, "─"), style=style)]
+            )
+
+        return self._basic_strip
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
         start = cast(Offset, self._start)
