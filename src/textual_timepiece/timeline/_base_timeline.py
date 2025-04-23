@@ -552,13 +552,13 @@ class AbstractRuler(Widget):
     Generator gets called this amount of times.
     """
 
-    time_chunk = var[int](3600, init=False)
+    time_chunk = Reactive[int](3600, init=False, compute=False)
     """Time chunk for each subdivision that the ruler creates.
 
     Computed automatically when other reactives change.
     """
 
-    marker_len = var[int](4, init=False)
+    marker_len = Reactive[int](4, init=False, compute=False)
     """The marker length of the each time_chunk."""
 
     def __init__(
