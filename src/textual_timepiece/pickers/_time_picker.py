@@ -59,7 +59,7 @@ class DurationSelect(BaseOverlayWidget):
             super().__init__(widget)
             self.delta = delta
 
-    class DurationRounded(BaseMessage):
+    class Rounded(BaseMessage):
         """Notification message to round a duration based on parameters."""
 
         def __init__(
@@ -135,7 +135,7 @@ class DurationSelect(BaseOverlayWidget):
             if value:
                 self.post_message(self.Adjusted(self, TimeDelta(hours=value)))
             else:
-                self.post_message(self.DurationRounded(self, 21600, "hours"))
+                self.post_message(self.Rounded(self, 21600, "hours"))
 
         elif message.button.has_class("minute-grid"):
             if value:
@@ -143,14 +143,14 @@ class DurationSelect(BaseOverlayWidget):
                     self.Adjusted(self, TimeDelta(minutes=value))
                 )
             else:
-                self.post_message(self.DurationRounded(self, 3600, "minutes"))
+                self.post_message(self.Rounded(self, 3600, "minutes"))
         elif message.button.has_class("second-grid"):
             if value:
                 self.post_message(
                     self.Adjusted(self, TimeDelta(seconds=value))
                 )
             else:
-                self.post_message(self.DurationRounded(self, 60, "seconds"))
+                self.post_message(self.Rounded(self, 60, "seconds"))
 
 
 class TimeSelect(BaseOverlayWidget):
@@ -441,8 +441,8 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         )
         self.post_message(self.DurationChanged(self, delta))
 
-    @on(DurationSelect.DurationRounded)
-    def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_duration(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.duration is None:
             return
@@ -616,8 +616,8 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
 
         yield TimeOverlay().data_bind(show=TimePicker.expanded)
 
-    @on(DurationSelect.DurationRounded)
-    def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_duration(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.time is None:
             return

@@ -289,8 +289,8 @@ class DateTimePicker(
         else:
             self.datetime = message.date.at(Time())
 
-    @on(DurationSelect.DurationRounded)
-    def _round_time(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_time(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.datetime is None:
             return
