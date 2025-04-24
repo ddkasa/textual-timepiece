@@ -586,21 +586,19 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         elif self.start_dt:
             self.end_dt = self.start_dt.add(message.delta, ignore_dst=True)
 
-    @on(DateTimeInput.DateTimeChanged, "#start-dt-input")
+    @on(DateTimeInput.Updated, "#start-dt-input")
     def _start_dt_input_changed(
         self,
-        message: DateTimeInput.DateTimeChanged,
+        message: DateTimeInput.Updated,
     ) -> None:
         message.stop()
-        with message.control.prevent(DateTimeInput.DateTimeChanged):
+        with message.control.prevent(DateTimeInput.Updated):
             self.start_dt = message.datetime
 
-    @on(DateTimeInput.DateTimeChanged, "#end-dt-input")
-    def _end_dt_input_changed(
-        self, message: DateTimeInput.DateTimeChanged
-    ) -> None:
+    @on(DateTimeInput.Updated, "#end-dt-input")
+    def _end_dt_input_changed(self, message: DateTimeInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DateTimeInput.DateTimeChanged):
+        with message.control.prevent(DateTimeInput.Updated):
             self.end_dt = message.datetime
 
     def disable_start(self, *, disable: bool = True) -> Self:

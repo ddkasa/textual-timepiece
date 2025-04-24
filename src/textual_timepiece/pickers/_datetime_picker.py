@@ -69,7 +69,7 @@ class DateTimeOverlay(BaseOverlay):
 class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
-    class DateTimeChanged(BaseMessage):
+    class Updated(BaseMessage):
         """Sent when the datetime is changed."""
 
         def __init__(
@@ -122,7 +122,7 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
             else:
                 self.value = ""
 
-        self.post_message(self.DateTimeChanged(self, self.datetime))
+        self.post_message(self.Updated(self, self.datetime))
 
     def _watch_value(self, value: str) -> None:
         if (dt := self.convert()) is not None:
@@ -310,12 +310,10 @@ class DateTimePicker(
         else:
             self.datetime = self.datetime.replace_time(message.target)
 
-    @on(DateTimeInput.DateTimeChanged)
-    def _dt_input_changed(
-        self, message: DateTimeInput.DateTimeChanged
-    ) -> None:
+    @on(DateTimeInput.Updated)
+    def _dt_input_changed(self, message: DateTimeInput.Updated) -> None:
         message.stop()
-        with self.input_widget.prevent(DateTimeInput.DateTimeChanged):
+        with self.input_widget.prevent(DateTimeInput.Updated):
             self.datetime = message.datetime
 
     def to_default(self) -> None:
