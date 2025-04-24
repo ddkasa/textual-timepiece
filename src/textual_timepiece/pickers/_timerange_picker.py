@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 from typing import cast
@@ -104,13 +103,18 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         ```
     """
 
-    @dataclass
-    class DateRangeChanged(BaseMessage):
+    class Changed(BaseMessage["DateRangePicker"]):
         """Message sent when the date range has changed."""
 
-        widget: DateRangePicker
-        start: Date | None
-        end: Date | None
+        def __init__(
+            self,
+            widget: DateRangePicker,
+            start: Date | None,
+            end: Date | None,
+        ) -> None:
+            super().__init__(widget)
+            self.start = start
+            self.end = end
 
     BINDING_GROUP_TITLE = "Date Range Picker"
 
@@ -199,34 +203,34 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     def _watch_start_date(self, date: Date | None) -> None:
         if date and self._date_range:
-            with self.prevent(self.DateRangeChanged):
+            with self.prevent(self.Changed):
                 self.end_date = date + self._date_range
-        self.post_message(self.DateRangeChanged(self, date, self.end_date))
+        self.post_message(self.Changed(self, date, self.end_date))
 
     def _watch_end_date(self, date: Date | None) -> None:
         if date and self._date_range:
-            with self.prevent(self.DateRangeChanged):
+            with self.prevent(self.Changed):
                 self.start_date = date - self._date_range
-        self.post_message(self.DateRangeChanged(self, self.start_date, date))
+        self.post_message(self.Changed(self, self.start_date, date))
 
-    @on(DateSelect.DateChanged)
-    @on(DateSelect.EndDateChanged)
+    @on(DateSelect.StartChanged)
+    @on(DateSelect.EndChanged)
     def _dialog_date_changed(
         self,
-        message: DateSelect.DateChanged | DateSelect.EndDateChanged,
+        message: DateSelect.StartChanged | DateSelect.EndChanged,
     ) -> None:
         """Handles changes in dates including, keeping dates the same span."""
         message.stop()
-        if isinstance(message, DateSelect.DateChanged):
+        if isinstance(message, DateSelect.StartChanged):
             self.start_date = message.date
         else:
             self.end_date = message.date
 
-    @on(DateInput.DateChanged, "#start-date-input")
-    @on(DateInput.DateChanged, "#stop-date-input")
-    def _date_input_change(self, message: DateInput.DateChanged) -> None:
+    @on(DateInput.Updated, "#start-date-input")
+    @on(DateInput.Updated, "#stop-date-input")
+    def _date_input_change(self, message: DateInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DateInput.DateChanged):
+        with message.control.prevent(DateInput.Updated):
             if message.control.id == "start-date-input":
                 self.start_date = message.date
             else:
@@ -377,13 +381,18 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         ```
     """
 
-    @dataclass
-    class DTRangeChanged(BaseMessage):
+    class Changed(BaseMessage["DateTimeRangePicker"]):
         """Message sent when the datetime range has changed."""
 
-        widget: DateTimeRangePicker
-        start: LocalDateTime | None
-        end: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimeRangePicker,
+            start: LocalDateTime | None,
+            end: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.start = start
+            self.end = end
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
@@ -495,21 +504,21 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     def _watch_start_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
-            with self.prevent(self.DTRangeChanged):
+            with self.prevent(self.Changed):
                 self.end_dt = new.add(
                     seconds=self._time_range.in_seconds(),
                     ignore_dst=True,
                 )
-        self.post_message(self.DTRangeChanged(self, new, self.end_dt))
+        self.post_message(self.Changed(self, new, self.end_dt))
 
     def _watch_end_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
-            with self.prevent(self.DTRangeChanged):
+            with self.prevent(self.Changed):
                 self.start_dt = new.subtract(
                     seconds=self._time_range.in_seconds(),
                     ignore_dst=True,
                 )
-        self.post_message(self.DTRangeChanged(self, self.start_dt, new))
+        self.post_message(self.Changed(self, self.start_dt, new))
 
     @on(Button.Pressed, "#lock-button")
     def _lock_delta(self, message: Button.Pressed) -> None:
@@ -527,11 +536,11 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             self._time_range = None
             cast(LockButton, message.control).locked = False
 
-    @on(DateSelect.DateChanged)
-    @on(DateSelect.EndDateChanged)
-    def _dialog_date_changed(self, message: DateSelect.DateChanged) -> None:
+    @on(DateSelect.StartChanged)
+    @on(DateSelect.EndChanged)
+    def _dialog_date_changed(self, message: DateSelect.StartChanged) -> None:
         message.stop()
-        if isinstance(message, DateSelect.DateChanged):
+        if isinstance(message, DateSelect.StartChanged):
             self.adjust_start_date(message.date)
         else:
             self.adjust_end_date(message.date)
@@ -559,8 +568,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         self.start_dt = None
         self.end_dt = None
 
-    @on(DurationSelect.DurationRounded)
-    def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_duration(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if message.widget.id == "start-time-select":
             if self.start_dt is None:
@@ -572,10 +581,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             time = round_time(self.end_dt.time(), message.value)
             self.end_dt = self.end_dt.replace_time(time)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_duration(
-        self, message: DurationSelect.DurationAdjusted
-    ) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_duration(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         if message.widget.id == "start-time-select":
             if self.start_dt is None:
@@ -586,21 +593,19 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         elif self.start_dt:
             self.end_dt = self.start_dt.add(message.delta, ignore_dst=True)
 
-    @on(DateTimeInput.DateTimeChanged, "#start-dt-input")
+    @on(DateTimeInput.Updated, "#start-dt-input")
     def _start_dt_input_changed(
         self,
-        message: DateTimeInput.DateTimeChanged,
+        message: DateTimeInput.Updated,
     ) -> None:
         message.stop()
-        with message.control.prevent(DateTimeInput.DateTimeChanged):
+        with message.control.prevent(DateTimeInput.Updated):
             self.start_dt = message.datetime
 
-    @on(DateTimeInput.DateTimeChanged, "#end-dt-input")
-    def _end_dt_input_changed(
-        self, message: DateTimeInput.DateTimeChanged
-    ) -> None:
+    @on(DateTimeInput.Updated, "#end-dt-input")
+    def _end_dt_input_changed(self, message: DateTimeInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DateTimeInput.DateTimeChanged):
+        with message.control.prevent(DateTimeInput.Updated):
             self.end_dt = message.datetime
 
     def disable_start(self, *, disable: bool = True) -> Self:
@@ -688,10 +693,10 @@ class DateTimeDurationPicker(DateTimeRangePicker):
             return TimeDelta()
         return self.end_dt.difference(self.start_dt, ignore_dst=True)
 
-    @on(DurationInput.DurationChanged)
-    def _new_duration(self, message: DurationInput.DurationChanged) -> None:
+    @on(DurationInput.Updated)
+    def _new_duration(self, message: DurationInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DurationInput.DurationChanged):
+        with message.control.prevent(DurationInput.Updated):
             if message.duration is None:
                 self.end_dt = None
             elif self.start_dt:

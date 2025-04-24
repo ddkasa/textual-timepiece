@@ -5,7 +5,6 @@ from calendar import day_abbr
 from calendar import month_name
 from collections.abc import Callable
 from contextlib import suppress
-from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING
@@ -101,19 +100,23 @@ class DateSelect(BaseOverlayWidget):
             Will automatically convert to absolute values.
     """
 
-    @dataclass
-    class DateChanged(BaseMessage):
+    class Changed(BaseMessage["DateSelect"]):
+        """Base message for when dates are changed."""
+
+        def __init__(self, widget: DateSelect, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date | None:
+            """Alias for `date` attribute."""
+            return self.date
+
+    class StartChanged(Changed):
         """Message sent when the start date changed."""
 
-        widget: DateSelect
-        date: Date | None
-
-    @dataclass
-    class EndDateChanged(BaseMessage):
+    class EndChanged(Changed):
         """Message sent when the end date changed."""
-
-        widget: DateSelect
-        date: Date | None
 
     DEFAULT_CSS: ClassVar[str] = """
     DateSelect {
@@ -343,17 +346,17 @@ class DateSelect(BaseOverlayWidget):
         if self._select_on_focus:
             self.cursor = DateCursor()
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         self.date = message.date
         if self.date_range and message.date:
             self.end_date = message.date.add(self.date_range)
 
-    def _on_date_select_end_date_changed(
+    def _on_date_select_end_changed(
         self,
-        message: DateSelect.EndDateChanged,
+        message: DateSelect.EndChanged,
     ) -> None:
         self.end_date = message.date
         if self.date_range and message.date:
@@ -405,9 +408,9 @@ class DateSelect(BaseOverlayWidget):
         except ValueError:
             return
         if ctrl:
-            self.post_message(self.EndDateChanged(self, date))
+            self.post_message(self.EndChanged(self, date))
         else:
-            self.post_message(self.DateChanged(self, date))
+            self.post_message(self.StartChanged(self, date))
 
     def _set_month(self, target: str) -> None:
         try:
@@ -788,9 +791,9 @@ class EndDateSelect(DateSelect):
         else:
             date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
             if not ctrl:
-                self.post_message(self.EndDateChanged(self, date))
+                self.post_message(self.EndChanged(self, date))
             else:
-                self.post_message(self.DateChanged(self, date))
+                self.post_message(self.StartChanged(self, date))
 
     def _set_current_scope(self) -> None:
         self.set_reactive(DateSelect.scope, DateScope.MONTH)
@@ -859,12 +862,17 @@ class DateInput(AbstractInput[Date]):
         spinbox_sensitivity: Sensitivity setting for spinbox functionality.
     """
 
-    @dataclass
-    class DateChanged(BaseMessage):
-        """Message sent when the date changed."""
+    class Updated(BaseMessage["DateInput"]):
+        """Message sent when the date is updated."""
 
-        widget: DateInput
-        date: Date | None
+        def __init__(self, widget: DateInput, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date | None:
+            """Alias for `date`."""
+            return self.date
 
     PATTERN: ClassVar[str] = "0009-B9-99"
     DATE_FORMAT: ClassVar[str] = "%Y-%m-%d"
@@ -901,7 +909,7 @@ class DateInput(AbstractInput[Date]):
             self.value = (
                 new.py_date().strftime(self.DATE_FORMAT) if new else ""
             )
-        self.post_message(self.DateChanged(self, new))
+        self.post_message(self.Updated(self, new))
 
     def _watch_value(self, value: str) -> None:
         if date := self.convert():
@@ -989,12 +997,16 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         >>> )
     """
 
-    @dataclass
-    class DateChanged(BaseMessage):
+    class Changed(BaseMessage["DatePicker"]):
         """Message sent when the date changed."""
 
-        widget: DatePicker
-        date: Date | None
+        def __init__(self, widget: DatePicker, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date | None:
+            return self.date
 
     BINDING_GROUP_TITLE = "Date Picker"
     ALIAS = "date"
@@ -1058,9 +1070,9 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
             )
         )
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         message.stop()
         self.date = message.date
@@ -1069,12 +1081,12 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         self.query_exactly_one("#target-default", Button).disabled = (
             new == Date.today_in_system_tz()
         )
-        self.post_message(self.DateChanged(self, new))
+        self.post_message(self.Changed(self, new))
 
-    @on(DateInput.DateChanged)
-    def _input_updated(self, message: DateInput.DateChanged) -> None:
+    @on(DateInput.Updated)
+    def _input_updated(self, message: DateInput.Updated) -> None:
         message.stop()
-        with message.widget.prevent(DateInput.DateChanged):
+        with message.widget.prevent(DateInput.Updated):
             self.date = message.date
 
     def action_clear(self) -> None:

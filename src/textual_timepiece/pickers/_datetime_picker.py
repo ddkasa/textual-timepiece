@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 
@@ -69,12 +68,21 @@ class DateTimeOverlay(BaseOverlay):
 class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
-    @dataclass
-    class DateTimeChanged(BaseMessage):
+    class Updated(BaseMessage["DateTimeInput"]):
         """Sent when the datetime is changed."""
 
-        widget: DateTimeInput
-        datetime: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimeInput,
+            datetime: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.datetime = datetime
+
+        @property
+        def value(self) -> LocalDateTime | None:
+            """Alias for `datetime` property."""
+            return self.datetime
 
     PATTERN: ClassVar[str] = r"0009-B9-99 99:99:99"
     FORMAT: ClassVar[str] = r"%Y-%m-%d %H:%M:%S"
@@ -113,7 +121,7 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
             else:
                 self.value = ""
 
-        self.post_message(self.DateTimeChanged(self, self.datetime))
+        self.post_message(self.Updated(self, self.datetime))
 
     def _watch_value(self, value: str) -> None:
         if (dt := self.convert()) is not None:
@@ -213,7 +221,6 @@ class DateTimePicker(
 ):
     """Datetime picker with a date and time in one input.
 
-
     Params:
         value: Initial datetime value for the widget.
         name: Name for the widget.
@@ -223,12 +230,20 @@ class DateTimePicker(
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
-    class DateTimeChanged(BaseMessage):
+    class Changed(BaseMessage["DateTimePicker"]):
         """Message sent when the datetime is updated."""
 
-        widget: DateTimePicker
-        datetime: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimePicker,
+            datetime: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.datetime = datetime
+
+        @property
+        def value(self) -> LocalDateTime | None:
+            return self.datetime
 
     INPUT = DateTimeInput
     ALIAS = "datetime"
@@ -260,11 +275,11 @@ class DateTimePicker(
         return None
 
     def _watch_datetime(self, datetime: LocalDateTime | None) -> None:
-        self.post_message(self.DateTimeChanged(self, datetime))
+        self.post_message(self.Changed(self, datetime))
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         message.stop()
         if not message.date:
@@ -274,8 +289,8 @@ class DateTimePicker(
         else:
             self.datetime = message.date.at(Time())
 
-    @on(DurationSelect.DurationRounded)
-    def _round_time(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_time(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.datetime is None:
             return
@@ -283,16 +298,16 @@ class DateTimePicker(
         time = round_time(self.datetime.time(), message.value)
         self.datetime = self.datetime.replace_time(time)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_time(self, message: DurationSelect.DurationAdjusted) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_time(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         if self.datetime:
             self.datetime = self.datetime.add(message.delta, ignore_dst=True)
         else:
             self.datetime = SystemDateTime.now().local()
 
-    @on(TimeSelect.TimeSelected)
-    def _set_time(self, message: TimeSelect.TimeSelected) -> None:
+    @on(TimeSelect.Selected)
+    def _set_time(self, message: TimeSelect.Selected) -> None:
         message.stop()
         if self.datetime is None:
             self.datetime = (
@@ -301,12 +316,10 @@ class DateTimePicker(
         else:
             self.datetime = self.datetime.replace_time(message.target)
 
-    @on(DateTimeInput.DateTimeChanged)
-    def _dt_input_changed(
-        self, message: DateTimeInput.DateTimeChanged
-    ) -> None:
+    @on(DateTimeInput.Updated)
+    def _dt_input_changed(self, message: DateTimeInput.Updated) -> None:
         message.stop()
-        with self.input_widget.prevent(DateTimeInput.DateTimeChanged):
+        with self.input_widget.prevent(DateTimeInput.Updated):
             self.datetime = message.datetime
 
     def to_default(self) -> None:

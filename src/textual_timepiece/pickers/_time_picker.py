@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from dataclasses import dataclass
 from string import digits
 from typing import ClassVar
 from typing import Final
@@ -52,24 +51,29 @@ class DurationSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    @dataclass
-    class DurationAdjusted(BaseMessage):
+    class Adjusted(BaseMessage["DurationSelect"]):
         """Message sent when duration is added or subtracted."""
 
-        widget: DurationSelect
-        delta: TimeDelta
+        def __init__(self, widget: DurationSelect, delta: TimeDelta) -> None:
+            super().__init__(widget)
+            self.delta = delta
 
-    @dataclass
-    class DurationRounded(BaseMessage):
-        """Sent when one of the headers are clicked in order to round the
-        value.
-        """
+    class Rounded(BaseMessage["DurationSelect"]):
+        """Notification message to round a duration based on parameters."""
 
-        widget: DurationSelect
-        value: int
-        """Value used as a rounding factor."""
-        scope: Literal["hours", "minutes", "seconds"]
-        """Which subunit to round the duration to."""
+        def __init__(
+            self,
+            widget: DurationSelect,
+            value: int,
+            scope: Literal["hours", "minutes", "seconds"],
+        ) -> None:
+            super().__init__(widget)
+
+            self.value = value
+            """Value used as a rounding factor."""
+
+            self.scope = scope
+            """Which subunit to round the duration to."""
 
     DEFAULT_CSS: ClassVar[str] = """
     DurationSelect {
@@ -128,26 +132,24 @@ class DurationSelect(BaseOverlayWidget):
 
         if message.button.has_class("hour-grid"):
             if value:
-                self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(hours=value))
-                )
+                self.post_message(self.Adjusted(self, TimeDelta(hours=value)))
             else:
-                self.post_message(self.DurationRounded(self, 21600, "hours"))
+                self.post_message(self.Rounded(self, 21600, "hours"))
 
         elif message.button.has_class("minute-grid"):
             if value:
                 self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(minutes=value))
+                    self.Adjusted(self, TimeDelta(minutes=value))
                 )
             else:
-                self.post_message(self.DurationRounded(self, 3600, "minutes"))
+                self.post_message(self.Rounded(self, 3600, "minutes"))
         elif message.button.has_class("second-grid"):
             if value:
                 self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(seconds=value))
+                    self.Adjusted(self, TimeDelta(seconds=value))
                 )
             else:
-                self.post_message(self.DurationRounded(self, 60, "seconds"))
+                self.post_message(self.Rounded(self, 60, "seconds"))
 
 
 class TimeSelect(BaseOverlayWidget):
@@ -160,12 +162,17 @@ class TimeSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    @dataclass
-    class TimeSelected(BaseMessage):
+    class Selected(BaseMessage["TimeSelect"]):
         """Message sent when a value is picked out of the time grid."""
 
-        widget: TimeSelect
-        target: Time
+        def __init__(self, widget: TimeSelect, target: Time) -> None:
+            super().__init__(widget)
+            self.target = target
+
+        @property
+        def value(self) -> Time:
+            """Alias for `target` attribute."""
+            return self.target
 
     DEFAULT_CSS: ClassVar[str] = """
     TimeSelect {
@@ -247,7 +254,7 @@ class TimeSelect(BaseOverlayWidget):
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
         time = Time.parse_common_iso(f"{message.button.label}:00")
-        self.post_message(self.TimeSelected(self, time))
+        self.post_message(self.Selected(self, time))
 
     def action_focus_neighbor(self, direction: Directions) -> None:
         """Focus a nearby member. It will mirror back if going past an edge."""
@@ -319,12 +326,21 @@ class TimeOverlay(BaseOverlay):
 class DurationInput(AbstractInput[TimeDelta]):
     """Duration input for time deltas."""
 
-    @dataclass
-    class DurationChanged(BaseMessage):
+    class Updated(BaseMessage["DurationInput"]):
         """Message sent when the duration changes through input or spinbox."""
 
-        widget: DurationInput
-        duration: TimeDelta | None
+        def __init__(
+            self,
+            widget: DurationInput,
+            duration: TimeDelta | None,
+        ) -> None:
+            super().__init__(widget)
+            self.duration = duration
+
+        @property
+        def value(self) -> TimeDelta | None:
+            """Alias for `duration` attribute."""
+            return self.duration
 
     ALIAS = "duration"
     MIN: Final[TimeDelta] = TimeDelta()
@@ -354,7 +370,7 @@ class DurationInput(AbstractInput[TimeDelta]):
             else:
                 self.value = ""
 
-        self.post_message(self.DurationChanged(self, self.duration))
+        self.post_message(self.Updated(self, self.duration))
 
     def _watch_value(self, value: str) -> None:
         if dur := self.convert():
@@ -399,12 +415,21 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
-    class DurationChanged(BaseMessage):
+    class Changed(BaseMessage["DurationPicker"]):
         """Message sent when the duration changes."""
 
-        widget: DurationPicker
-        duration: TimeDelta | None
+        def __init__(
+            self,
+            widget: DurationPicker,
+            duration: TimeDelta | None,
+        ) -> None:
+            super().__init__(widget)
+            self.duration = duration
+
+        @property
+        def value(self) -> TimeDelta | None:
+            """Alias for `duration` attribute."""
+            return self.duration
 
     INPUT = DurationInput
     ALIAS = "duration"
@@ -436,10 +461,10 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         self.query_exactly_one("#target-default", Button).disabled = (
             delta is None or delta.in_seconds() == 0
         )
-        self.post_message(self.DurationChanged(self, delta))
+        self.post_message(self.Changed(self, delta))
 
-    @on(DurationSelect.DurationRounded)
-    def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_duration(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.duration is None:
             return
@@ -448,10 +473,10 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         )
         self.duration = TimeDelta(seconds=seconds)
 
-    @on(DurationSelect.DurationAdjusted)
+    @on(DurationSelect.Adjusted)
     def _adjust_duration(
         self,
-        message: DurationSelect.DurationAdjusted,
+        message: DurationSelect.Adjusted,
     ) -> None:
         message.stop()
         if message.delta is None:
@@ -461,10 +486,10 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         else:
             self.duration += message.delta
 
-    @on(DurationInput.DurationChanged)
-    def _set_duration(self, message: DurationInput.DurationChanged) -> None:
+    @on(DurationInput.Updated)
+    def _set_duration(self, message: DurationInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DurationInput.DurationChanged):
+        with message.control.prevent(DurationInput.Updated):
             self.duration = message.duration
 
     def to_default(self) -> None:
@@ -493,12 +518,21 @@ class TimeValidator(Validator):
 class TimeInput(AbstractInput[Time]):
     """Time input for a HH:MM:SS format"""
 
-    @dataclass
-    class TimeChanged(BaseMessage):
+    class Updated(BaseMessage["TimeInput"]):
         """Message sent when the time is updated."""
 
-        widget: TimeInput
-        new_time: Time | None
+        def __init__(
+            self,
+            widget: TimeInput,
+            target: Time | None,
+        ) -> None:
+            super().__init__(widget)
+            self.target = target
+
+        @property
+        def value(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
 
     PATTERN = "00:00:00"
     ALIAS = "time"
@@ -513,7 +547,7 @@ class TimeInput(AbstractInput[Time]):
             else:
                 self.value = ""
 
-        self.post_message(self.TimeChanged(self, self.time))
+        self.post_message(self.Updated(self, self.time))
 
     def _watch_value(self, value: str) -> None:
         if (ts := self.convert()) is not None and ts != self.time:
@@ -592,12 +626,26 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
-    class TimeChanged(BaseMessage):
+    class Changed(BaseMessage["TimePicker"]):
         """Sent when the time is changed with the overlay or other means."""
 
-        widget: TimePicker
-        new_time: Time
+        def __init__(
+            self,
+            widget: TimePicker,
+            target: Time | None,
+        ) -> None:
+            super().__init__(widget)
+            self.target = target
+
+        @property
+        def new_time(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
+
+        @property
+        def value(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
 
     INPUT = TimeInput
     ALIAS = "time"
@@ -613,30 +661,28 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
 
         yield TimeOverlay().data_bind(show=TimePicker.expanded)
 
-    @on(DurationSelect.DurationRounded)
-    def _round_duration(self, message: DurationSelect.DurationRounded) -> None:
+    @on(DurationSelect.Rounded)
+    def _round_duration(self, message: DurationSelect.Rounded) -> None:
         message.stop()
         if self.time is None:
             return
         self.time = round_time(self.time, message.value)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_duration(
-        self, message: DurationSelect.DurationAdjusted
-    ) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_duration(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         self.time = add_time(self.time or Time(), message.delta)
 
-    @on(TimeSelect.TimeSelected)
-    def _select_time(self, message: TimeSelect.TimeSelected) -> None:
+    @on(TimeSelect.Selected)
+    def _select_time(self, message: TimeSelect.Selected) -> None:
         message.stop()
         self.time = message.target
 
-    @on(TimeInput.TimeChanged)
-    def _change_time(self, message: TimeInput.TimeChanged) -> None:
+    @on(TimeInput.Updated)
+    def _change_time(self, message: TimeInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(TimeInput.TimeChanged):
-            self.time = message.new_time
+        with message.control.prevent(TimeInput.Updated):
+            self.time = message.target
 
     def to_default(self) -> None:
         """Reset time to the local current time."""

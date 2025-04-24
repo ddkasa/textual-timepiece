@@ -33,7 +33,7 @@ from textual_timepiece._extra import BaseWidget
 from textual_timepiece._extra import ExpandButton
 
 
-class BaseOverlayWidget(BaseWidget):
+class BaseOverlayWidget(BaseWidget, can_focus=True):
     """Base Class that defines the internal widgets of the dialog."""
 
     DEFAULT_CSS: ClassVar[str] = """
@@ -42,8 +42,6 @@ class BaseOverlayWidget(BaseWidget):
         height: auto;
     }
     """
-
-    can_focus = True
 
     def __init__(
         self,
@@ -56,11 +54,11 @@ class BaseOverlayWidget(BaseWidget):
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
 
 
-class BaseOverlay(BaseWidget):
+class BaseOverlay(BaseWidget, can_focus=True):
     """Base class for the widget that drops down for an easier selection."""
 
-    class Close(BaseMessage):
-        widget: BaseOverlay
+    class Closed(BaseMessage["BaseOverlay"]):
+        """Message sent when user closes an overlay."""
 
     DEFAULT_CSS: ClassVar[str] = """
     BaseOverlay {
@@ -88,8 +86,6 @@ class BaseOverlay(BaseWidget):
     }
     """
 
-    can_focus = True
-
     BINDINGS: ClassVar = [
         Binding("escape", "close_dialog", "Close dialog."),
     ]
@@ -114,7 +110,7 @@ class BaseOverlay(BaseWidget):
         self.display = False
 
     def action_close_dialog(self) -> None:
-        self.post_message(self.Close(self))
+        self.post_message(self.Closed(self))
 
     def watch_show(self, show: bool) -> None:
         def anim(
@@ -165,7 +161,7 @@ T = TypeVar("T")
 # NOTE: Current implementation of masked input is highly restrictive. I need
 # a more flexible version in order to allow for different formats to be parsed
 # on the fly.
-class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
+class AbstractInput(MaskedInput, BaseWidget, Generic[T], can_focus=True):
     """Abstract class that defines behaviour for all datetime input widgets.
 
     Default Input messages are disabled and are meant to be replaced by a
@@ -182,8 +178,6 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T]):
         valid_empty: If the widget is valid when empty or not.
         spinbox_sensitivity: How sensitive the spinbox features are.
     """
-
-    can_focus = True
 
     DEFAULT_CSS: ClassVar[str] = """
     AbstractInput {
@@ -424,7 +418,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self.tooltip = tooltip
 
-    def _on_base_overlay_close(self, message: BaseOverlay.Close) -> None:
+    def _on_base_overlay_close(self, message: BaseOverlay.Closed) -> None:
         message.stop()
         self.expanded = False
 

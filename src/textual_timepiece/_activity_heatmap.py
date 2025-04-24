@@ -6,7 +6,6 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
-from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
 from itertools import chain
@@ -124,7 +123,7 @@ class HeatmapCursor(NamedTuple):
 # TODO: Dirty region tracking.
 
 
-class ActivityHeatmap(ScrollView, BaseWidget):
+class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     """Base renderable widget for an activity heatmap.
 
     Params:
@@ -145,28 +144,41 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         >>>     self.query_one(ActivityHeatmap).values = activity
     """
 
-    @dataclass
-    class DateSelected(BaseMessage):
+    class Selected(BaseMessage["ActivityHeatmap"]):
+        """Base message for when something gets selected within the widget."""
+
+        def __init__(self, widget: ActivityHeatmap, date: Date) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
+
+    class DateSelected(Selected):
         """Message sent when a day is selected."""
 
-        widget: ActivityHeatmap
-        day: Date
+        @property
+        def day(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    @dataclass
-    class WeekSelected(BaseMessage):
+    class WeekSelected(Selected):
         """Message sent when a week number is selected."""
 
-        widget: ActivityHeatmap
-        week: Date
+        @property
+        def week(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    @dataclass
-    class MonthSelected(BaseMessage):
+    class MonthSelected(Selected):
         """Message sent when a month label is selected."""
 
-        widget: ActivityHeatmap
-        month: Date
-
-    can_focus = True
+        @property
+        def month(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
     ActivityData: TypeAlias = defaultdict[date, float]
     """Final data type that the heatmap uses."""
@@ -752,12 +764,12 @@ class HeatmapManager(BaseWidget):
         disabled: Whether the widget is disabled or not.
     """
 
-    @dataclass
-    class YearChanged(BaseMessage):
+    class YearChanged(BaseMessage["HeatmapManager"]):
         """Message sent when the year is updated."""
 
-        widget: HeatmapManager
-        year: int
+        def __init__(self, widget: HeatmapManager, year: int) -> None:
+            super().__init__(widget)
+            self.year = year
 
     DEFAULT_CSS: ClassVar[str] = """
     HeatmapManager {

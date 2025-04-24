@@ -11,9 +11,9 @@ class DateSelectApp(App[None]):
         yield DateSelect(Date.today_in_system_tz(), date_range=days(3))
         yield Label(variant="accent")
     
-    @on(DateSelect.DateChanged)
-    @on(DateSelect.EndDateChanged)
-    def on_date_changed(self, message: DateSelect.DateChanged | DateSelect.EndDateChanged) -> None:
+    @on(DateSelect.StartChanged)
+    @on(DateSelect.EndChanged)
+    def on_date_changed(self, message: DateSelect.StartChanged | DateSelect.EndChanged) -> None:
         new_content = f"  {message.widget.date} - {message.widget.end_date}  "
         self.query_one(Label).update(new_content)
 
