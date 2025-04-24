@@ -383,7 +383,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     """
 
     @dataclass
-    class DTRangeChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Message sent when the datetime range has changed."""
 
         widget: DateTimeRangePicker
@@ -500,21 +500,21 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     def _watch_start_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
-            with self.prevent(self.DTRangeChanged):
+            with self.prevent(self.Changed):
                 self.end_dt = new.add(
                     seconds=self._time_range.in_seconds(),
                     ignore_dst=True,
                 )
-        self.post_message(self.DTRangeChanged(self, new, self.end_dt))
+        self.post_message(self.Changed(self, new, self.end_dt))
 
     def _watch_end_dt(self, new: LocalDateTime | None) -> None:
         if new and self._time_range:
-            with self.prevent(self.DTRangeChanged):
+            with self.prevent(self.Changed):
                 self.start_dt = new.subtract(
                     seconds=self._time_range.in_seconds(),
                     ignore_dst=True,
                 )
-        self.post_message(self.DTRangeChanged(self, self.start_dt, new))
+        self.post_message(self.Changed(self, self.start_dt, new))
 
     @on(Button.Pressed, "#lock-button")
     def _lock_delta(self, message: Button.Pressed) -> None:
