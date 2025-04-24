@@ -59,7 +59,7 @@ class BaseOverlayWidget(BaseWidget):
 class BaseOverlay(BaseWidget):
     """Base class for the widget that drops down for an easier selection."""
 
-    class Close(BaseMessage):
+    class Closed(BaseMessage):
         widget: BaseOverlay
 
     DEFAULT_CSS: ClassVar[str] = """
@@ -114,7 +114,7 @@ class BaseOverlay(BaseWidget):
         self.display = False
 
     def action_close_dialog(self) -> None:
-        self.post_message(self.Close(self))
+        self.post_message(self.Closed(self))
 
     def watch_show(self, show: bool) -> None:
         def anim(
@@ -424,7 +424,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
         self.tooltip = tooltip
 
-    def _on_base_overlay_close(self, message: BaseOverlay.Close) -> None:
+    def _on_base_overlay_close(self, message: BaseOverlay.Closed) -> None:
         message.stop()
         self.expanded = False
 
