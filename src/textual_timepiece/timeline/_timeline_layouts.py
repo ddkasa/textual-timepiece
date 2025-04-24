@@ -59,7 +59,7 @@ class AbstractTimelineLayout(Layout, Generic[T]):
                 absolute=True,
             )
             for entry, (region, offset) in zip(
-                entries, self._tile_entries(size, entries)
+                entries, self._tile_entries(size, entries), strict=False
             )
         ]
 
@@ -123,7 +123,7 @@ class VerticalTimelineLayout(AbstractTimelineLayout[VerticalEntry]):
                 ),
                 Offset(col, floor(entry.offset.y)),
             )
-            for entry, (col, tile_width) in zip(entries, tiling)
+            for entry, (col, tile_width) in zip(entries, tiling, strict=False)
         ]
 
 
@@ -167,5 +167,5 @@ class HorizontalTimelineLayout(AbstractTimelineLayout[HorizontalEntry]):
                 ),
                 Offset(floor(entry.offset.x), row),
             )
-            for entry, (row, tile_height) in zip(entries, tiling)
+            for entry, (row, tile_height) in zip(entries, tiling, strict=False)
         ]
