@@ -427,6 +427,11 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
             super().__init__(widget)
             self.duration = duration
 
+        @property
+        def value(self) -> TimeDelta | None:
+            """Alias for `duration` attribute."""
+            return self.duration
+
     INPUT = DurationInput
     ALIAS = "duration"
 
