@@ -327,12 +327,16 @@ class TimeOverlay(BaseOverlay):
 class DurationInput(AbstractInput[TimeDelta]):
     """Duration input for time deltas."""
 
-    @dataclass
     class Updated(BaseMessage):
         """Message sent when the duration changes through input or spinbox."""
 
-        widget: DurationInput
-        duration: TimeDelta | None
+        def __init__(
+            self,
+            widget: DurationInput,
+            duration: TimeDelta | None,
+        ) -> None:
+            super().__init__(widget)
+            self.duration = duration
 
     ALIAS = "duration"
     MIN: Final[TimeDelta] = TimeDelta()
