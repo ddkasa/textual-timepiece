@@ -338,6 +338,11 @@ class DurationInput(AbstractInput[TimeDelta]):
             super().__init__(widget)
             self.duration = duration
 
+        @property
+        def value(self) -> TimeDelta | None:
+            """Alias for `duration` attribute."""
+            return self.duration
+
     ALIAS = "duration"
     MIN: Final[TimeDelta] = TimeDelta()
     MAX: Final[TimeDelta] = TimeDelta(hours=99, minutes=59, seconds=59)
