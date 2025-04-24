@@ -860,8 +860,8 @@ class DateInput(AbstractInput[Date]):
     """
 
     @dataclass
-    class DateChanged(BaseMessage):
-        """Message sent when the date changed."""
+    class Updated(BaseMessage):
+        """Message sent when the date is updated."""
 
         widget: DateInput
         date: Date | None
@@ -901,7 +901,7 @@ class DateInput(AbstractInput[Date]):
             self.value = (
                 new.py_date().strftime(self.DATE_FORMAT) if new else ""
             )
-        self.post_message(self.DateChanged(self, new))
+        self.post_message(self.Updated(self, new))
 
     def _watch_value(self, value: str) -> None:
         if date := self.convert():
@@ -1071,10 +1071,10 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         )
         self.post_message(self.DateChanged(self, new))
 
-    @on(DateInput.DateChanged)
-    def _input_updated(self, message: DateInput.DateChanged) -> None:
+    @on(DateInput.Updated)
+    def _input_updated(self, message: DateInput.Updated) -> None:
         message.stop()
-        with message.widget.prevent(DateInput.DateChanged):
+        with message.widget.prevent(DateInput.Updated):
             self.date = message.date
 
     def action_clear(self) -> None:

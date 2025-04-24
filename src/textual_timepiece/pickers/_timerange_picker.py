@@ -222,11 +222,11 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         else:
             self.end_date = message.date
 
-    @on(DateInput.DateChanged, "#start-date-input")
-    @on(DateInput.DateChanged, "#stop-date-input")
-    def _date_input_change(self, message: DateInput.DateChanged) -> None:
+    @on(DateInput.Updated, "#start-date-input")
+    @on(DateInput.Updated, "#stop-date-input")
+    def _date_input_change(self, message: DateInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DateInput.DateChanged):
+        with message.control.prevent(DateInput.Updated):
             if message.control.id == "start-date-input":
                 self.start_date = message.date
             else:
