@@ -328,7 +328,7 @@ class DurationInput(AbstractInput[TimeDelta]):
     """Duration input for time deltas."""
 
     @dataclass
-    class DurationChanged(BaseMessage):
+    class Updated(BaseMessage):
         """Message sent when the duration changes through input or spinbox."""
 
         widget: DurationInput
@@ -362,7 +362,7 @@ class DurationInput(AbstractInput[TimeDelta]):
             else:
                 self.value = ""
 
-        self.post_message(self.DurationChanged(self, self.duration))
+        self.post_message(self.Updated(self, self.duration))
 
     def _watch_value(self, value: str) -> None:
         if dur := self.convert():
@@ -469,10 +469,10 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         else:
             self.duration += message.delta
 
-    @on(DurationInput.DurationChanged)
-    def _set_duration(self, message: DurationInput.DurationChanged) -> None:
+    @on(DurationInput.Updated)
+    def _set_duration(self, message: DurationInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DurationInput.DurationChanged):
+        with message.control.prevent(DurationInput.Updated):
             self.duration = message.duration
 
     def to_default(self) -> None:

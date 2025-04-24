@@ -684,10 +684,10 @@ class DateTimeDurationPicker(DateTimeRangePicker):
             return TimeDelta()
         return self.end_dt.difference(self.start_dt, ignore_dst=True)
 
-    @on(DurationInput.DurationChanged)
-    def _new_duration(self, message: DurationInput.DurationChanged) -> None:
+    @on(DurationInput.Updated)
+    def _new_duration(self, message: DurationInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(DurationInput.DurationChanged):
+        with message.control.prevent(DurationInput.Updated):
             if message.duration is None:
                 self.end_dt = None
             elif self.start_dt:
