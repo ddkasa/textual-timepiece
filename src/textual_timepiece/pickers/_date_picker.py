@@ -1001,6 +1001,10 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
             super().__init__(widget)
             self.date = date
 
+        @property
+        def value(self) -> Date | None:
+            return self.date
+
     BINDING_GROUP_TITLE = "Date Picker"
     ALIAS = "date"
 
