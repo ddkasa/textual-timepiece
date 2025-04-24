@@ -4,7 +4,9 @@ import inspect
 import sys
 from functools import cached_property
 from typing import ClassVar
+from typing import Generic
 from typing import Iterator
+from typing import TypeVar
 
 if sys.version_info >= (3, 11):
     from typing import Self
@@ -203,13 +205,16 @@ class TargetButton(Button):
         return Text(TARGET_ICON, self.rich_style)
 
 
-class BaseMessage(Message):
+WidgetType = TypeVar("WidgetType", bound=DOMNode)
+
+
+class BaseMessage(Message, Generic[WidgetType]):
     """Generic message that overrides the control method."""
 
-    def __init__(self, widget: DOMNode) -> None:
+    def __init__(self, widget: WidgetType) -> None:
         super().__init__()
         self.widget = widget
 
     @property
-    def control(self) -> DOMNode:
+    def control(self) -> WidgetType:
         return self.widget
