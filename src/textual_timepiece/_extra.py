@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import sys
-from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 from typing import Iterator
@@ -204,11 +203,12 @@ class TargetButton(Button):
         return Text(TARGET_ICON, self.rich_style)
 
 
-@dataclass
 class BaseMessage(Message):
     """Generic message that overrides the control method."""
 
-    widget: DOMNode
+    def __init__(self, widget: DOMNode) -> None:
+        super().__init__()
+        self.widget = widget
 
     @property
     def control(self) -> DOMNode:
