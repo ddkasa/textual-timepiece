@@ -6,7 +6,6 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
-from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
 from itertools import chain
@@ -750,12 +749,12 @@ class HeatmapManager(BaseWidget):
         disabled: Whether the widget is disabled or not.
     """
 
-    @dataclass
     class YearChanged(BaseMessage):
         """Message sent when the year is updated."""
 
-        widget: HeatmapManager
-        year: int
+        def __init__(self, widget: HeatmapManager, year: int) -> None:
+            super().__init__(widget)
+            self.year = year
 
     DEFAULT_CSS: ClassVar[str] = """
     HeatmapManager {
