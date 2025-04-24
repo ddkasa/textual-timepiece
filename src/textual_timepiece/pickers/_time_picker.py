@@ -417,7 +417,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
     """
 
     @dataclass
-    class DurationChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Message sent when the duration changes."""
 
         widget: DurationPicker
@@ -453,7 +453,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         self.query_exactly_one("#target-default", Button).disabled = (
             delta is None or delta.in_seconds() == 0
         )
-        self.post_message(self.DurationChanged(self, delta))
+        self.post_message(self.Changed(self, delta))
 
     @on(DurationSelect.Rounded)
     def _round_duration(self, message: DurationSelect.Rounded) -> None:
