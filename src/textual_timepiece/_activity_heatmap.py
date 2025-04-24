@@ -145,26 +145,26 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         >>>     self.query_one(ActivityHeatmap).values = activity
     """
 
-    @dataclass
     class DateSelected(BaseMessage):
         """Message sent when a day is selected."""
 
-        widget: ActivityHeatmap
-        day: Date
+        def __init__(self, widget: ActivityHeatmap, day: Date) -> None:
+            super().__init__(widget)
+            self.day = day
 
-    @dataclass
     class WeekSelected(BaseMessage):
         """Message sent when a week number is selected."""
 
-        widget: ActivityHeatmap
-        week: Date
+        def __init__(self, widget: ActivityHeatmap, week: Date) -> None:
+            super().__init__(widget)
+            self.week = week
 
-    @dataclass
     class MonthSelected(BaseMessage):
         """Message sent when a month label is selected."""
 
-        widget: ActivityHeatmap
-        month: Date
+        def __init__(self, widget: ActivityHeatmap, month: Date) -> None:
+            super().__init__(widget)
+            self.month = month
 
     can_focus = True
 
