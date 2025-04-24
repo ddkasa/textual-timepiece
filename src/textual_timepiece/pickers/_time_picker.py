@@ -637,6 +637,16 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
             super().__init__(widget)
             self.target = target
 
+        @property
+        def new_time(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
+
+        @property
+        def value(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
+
     INPUT = TimeInput
     ALIAS = "time"
 
