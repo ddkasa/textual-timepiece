@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import sys
 from abc import abstractmethod
-from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing import ClassVar
+from typing import TypeVar
 from typing import cast
 from uuid import uuid4
 
@@ -28,6 +29,14 @@ from textual.widgets import Static
 
 from textual_timepiece._extra import BaseMessage
 
+if TYPE_CHECKING:
+    from textual.dom import DOMNode
+
+    from textual_timepiece.timeline._base_timeline import VerticalTimeline
+
+
+T = TypeVar("T", bound="DOMNode")
+
 
 class AbstractEntry(Static, can_focus=True):
     """Abstract entry widget for visual timeline widgets.
@@ -43,28 +52,27 @@ class AbstractEntry(Static, can_focus=True):
         disabled: Whether the static is disabled or not.
     """
 
-    @dataclass
-    class _EntryMessage(BaseMessage):
+    class Updated(BaseMessage[T]):
         """Base message for all entries."""
 
-        widget: AbstractEntry
-
         @property
-        def entry(self) -> AbstractEntry:
+        def entry(self) -> T:
             return self.widget
 
-    @dataclass
-    class Resize(_EntryMessage):
+    class Resized(Updated[T]):
         """Entry was resized by the user."""
 
-        size: Size
-        delta: int
+        def __init__(self, widget: T, size: Size, delta: int) -> None:
+            super().__init__(widget)
+            self.size = size
+            self.delta = delta
 
-    @dataclass
-    class Moved(_EntryMessage):
+    class Moved(Updated[T]):
         """Entry was moved by the user."""
 
-        delta: int
+        def __init__(self, widget: T, delta: int) -> None:
+            super().__init__(widget)
+            self.delta = delta
 
     DIMENSION: ClassVar[str]
     DEFAULT_CSS: ClassVar[str] = """\
@@ -222,7 +230,7 @@ class AbstractEntry(Static, can_focus=True):
             tail: Whether to adjust the end or the start of the widget.
         """
         delta = self._resize_helper(delta, tail=tail)
-        self.post_message(AbstractEntry.Resize(self, self.size, delta))
+        self.post_message(self.Resized(self, self.size, delta))
 
     @abstractmethod
     def move(self, delta: int) -> None:
@@ -365,6 +373,13 @@ class VerticalEntry(AbstractEntry):
         disabled: Whether the static is disabled or not.
     """
 
+    class Resized(AbstractEntry.Resized["VerticalEntry"]):
+        """Entry was resized by the user."""
+
+    class Moved(AbstractEntry.Moved["VerticalEntry"]):
+        """Entry was moved by the user."""
+
+    parent: VerticalTimeline
     DIMENSION = "height"
     EDGE_MARGIN: ClassVar[int] = 1
     DEFAULT_CSS: ClassVar[str] = """\
@@ -420,7 +435,7 @@ class VerticalEntry(AbstractEntry):
     def move(self, delta: int) -> None:
         offset = Offset(0, delta)
         self.offset = self.offset + offset
-        self.post_message(VerticalEntry.Moved(self, delta))
+        self.post_message(self.Moved(self, delta))
 
     def merge(self, other: VerticalEntry) -> AwaitRemove:
         y1, y2 = self.offset.y, other.offset.y
@@ -470,6 +485,12 @@ class HorizontalEntry(AbstractEntry):
         classes: Space separated list of class names.
         disabled: Whether the static is disabled or not.
     """
+
+    class Resized(AbstractEntry.Resized["HorizontalEntry"]):
+        """Entry was resized by the user."""
+
+    class Moved(AbstractEntry.Moved["HorizontalEntry"]):
+        """Entry was moved by the user."""
 
     DIMENSION = "width"
     EDGE_MARGIN: ClassVar[int] = 2
@@ -526,7 +547,7 @@ class HorizontalEntry(AbstractEntry):
     def move(self, delta: int) -> None:
         offset = Offset(delta, 0)
         self.offset = self.offset + offset
-        self.post_message(HorizontalEntry.Moved(self, delta))
+        self.post_message(self.Moved(self, delta))
 
     def merge(self, other: AbstractEntry) -> AwaitRemove:
         x1, x2 = self.offset.x, other.offset.x
