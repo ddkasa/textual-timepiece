@@ -52,12 +52,12 @@ class DurationSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    @dataclass
     class DurationAdjusted(BaseMessage):
         """Message sent when duration is added or subtracted."""
 
-        widget: DurationSelect
-        delta: TimeDelta
+        def __init__(self, widget: DurationSelect, delta: TimeDelta) -> None:
+            super().__init__(widget)
+            self.delta = delta
 
     @dataclass
     class DurationRounded(BaseMessage):
