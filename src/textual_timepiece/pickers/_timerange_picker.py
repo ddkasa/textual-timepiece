@@ -572,10 +572,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             time = round_time(self.end_dt.time(), message.value)
             self.end_dt = self.end_dt.replace_time(time)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_duration(
-        self, message: DurationSelect.DurationAdjusted
-    ) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_duration(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         if message.widget.id == "start-time-select":
             if self.start_dt is None:

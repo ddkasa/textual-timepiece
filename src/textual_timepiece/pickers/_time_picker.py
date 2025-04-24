@@ -52,7 +52,7 @@ class DurationSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    class DurationAdjusted(BaseMessage):
+    class Adjusted(BaseMessage):
         """Message sent when duration is added or subtracted."""
 
         def __init__(self, widget: DurationSelect, delta: TimeDelta) -> None:
@@ -133,23 +133,21 @@ class DurationSelect(BaseOverlayWidget):
 
         if message.button.has_class("hour-grid"):
             if value:
-                self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(hours=value))
-                )
+                self.post_message(self.Adjusted(self, TimeDelta(hours=value)))
             else:
                 self.post_message(self.DurationRounded(self, 21600, "hours"))
 
         elif message.button.has_class("minute-grid"):
             if value:
                 self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(minutes=value))
+                    self.Adjusted(self, TimeDelta(minutes=value))
                 )
             else:
                 self.post_message(self.DurationRounded(self, 3600, "minutes"))
         elif message.button.has_class("second-grid"):
             if value:
                 self.post_message(
-                    self.DurationAdjusted(self, TimeDelta(seconds=value))
+                    self.Adjusted(self, TimeDelta(seconds=value))
                 )
             else:
                 self.post_message(self.DurationRounded(self, 60, "seconds"))
@@ -453,10 +451,10 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         )
         self.duration = TimeDelta(seconds=seconds)
 
-    @on(DurationSelect.DurationAdjusted)
+    @on(DurationSelect.Adjusted)
     def _adjust_duration(
         self,
-        message: DurationSelect.DurationAdjusted,
+        message: DurationSelect.Adjusted,
     ) -> None:
         message.stop()
         if message.delta is None:
@@ -625,10 +623,8 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
             return
         self.time = round_time(self.time, message.value)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_duration(
-        self, message: DurationSelect.DurationAdjusted
-    ) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_duration(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         self.time = add_time(self.time or Time(), message.delta)
 

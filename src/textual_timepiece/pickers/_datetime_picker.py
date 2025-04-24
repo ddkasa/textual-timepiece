@@ -298,8 +298,8 @@ class DateTimePicker(
         time = round_time(self.datetime.time(), message.value)
         self.datetime = self.datetime.replace_time(time)
 
-    @on(DurationSelect.DurationAdjusted)
-    def _adjust_time(self, message: DurationSelect.DurationAdjusted) -> None:
+    @on(DurationSelect.Adjusted)
+    def _adjust_time(self, message: DurationSelect.Adjusted) -> None:
         message.stop()
         if self.datetime:
             self.datetime = self.datetime.add(message.delta, ignore_dst=True)
