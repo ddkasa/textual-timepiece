@@ -628,7 +628,7 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
     """
 
     @dataclass
-    class TimeChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Sent when the time is changed with the overlay or other means."""
 
         widget: TimePicker
