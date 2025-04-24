@@ -103,6 +103,13 @@ class DateSelect(BaseOverlayWidget):
 
     @dataclass
     class DateChanged(BaseMessage):
+    class Changed(BaseMessage):
+        """Base message for when dates are changed."""
+
+        def __init__(self, widget: DateSelect, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
+
         """Message sent when the start date changed."""
 
         widget: DateSelect
