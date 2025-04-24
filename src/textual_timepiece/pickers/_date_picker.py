@@ -995,7 +995,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
     """
 
     @dataclass
-    class DateChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Message sent when the date changed."""
 
         widget: DatePicker
@@ -1074,7 +1074,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         self.query_exactly_one("#target-default", Button).disabled = (
             new == Date.today_in_system_tz()
         )
-        self.post_message(self.DateChanged(self, new))
+        self.post_message(self.Changed(self, new))
 
     @on(DateInput.Updated)
     def _input_updated(self, message: DateInput.Updated) -> None:
