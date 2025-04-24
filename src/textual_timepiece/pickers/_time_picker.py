@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from dataclasses import dataclass
 from string import digits
 from typing import ClassVar
 from typing import Final
@@ -627,12 +626,16 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Sent when the time is changed with the overlay or other means."""
 
-        widget: TimePicker
-        new_time: Time
+        def __init__(
+            self,
+            widget: TimePicker,
+            target: Time | None,
+        ) -> None:
+            super().__init__(widget)
+            self.target = target
 
     INPUT = TimeInput
     ALIAS = "time"
