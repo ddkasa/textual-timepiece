@@ -866,6 +866,11 @@ class DateInput(AbstractInput[Date]):
             super().__init__(widget)
             self.date = date
 
+        @property
+        def value(self) -> Date | None:
+            """Alias for `date`."""
+            return self.date
+
     PATTERN: ClassVar[str] = "0009-B9-99"
     DATE_FORMAT: ClassVar[str] = "%Y-%m-%d"
     ALIAS = "date"
