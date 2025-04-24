@@ -144,26 +144,41 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         >>>     self.query_one(ActivityHeatmap).values = activity
     """
 
-    class DateSelected(BaseMessage):
+    class Selected(BaseMessage["ActivityHeatmap"]):
+        """Base message for when something gets selected within the widget."""
+
+        def __init__(self, widget: ActivityHeatmap, date: Date) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
+
+    class DateSelected(Selected):
         """Message sent when a day is selected."""
 
-        def __init__(self, widget: ActivityHeatmap, day: Date) -> None:
-            super().__init__(widget)
-            self.day = day
+        @property
+        def day(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    class WeekSelected(BaseMessage):
+    class WeekSelected(Selected):
         """Message sent when a week number is selected."""
 
-        def __init__(self, widget: ActivityHeatmap, week: Date) -> None:
-            super().__init__(widget)
-            self.week = week
+        @property
+        def week(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    class MonthSelected(BaseMessage):
+    class MonthSelected(Selected):
         """Message sent when a month label is selected."""
 
-        def __init__(self, widget: ActivityHeatmap, month: Date) -> None:
-            super().__init__(widget)
-            self.month = month
+        @property
+        def month(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
     ActivityData: TypeAlias = defaultdict[date, float]
     """Final data type that the heatmap uses."""
