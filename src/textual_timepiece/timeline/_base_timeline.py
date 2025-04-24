@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from dataclasses import dataclass
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 from typing import Any
@@ -70,27 +69,29 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         tile: Whether to tile the timeline or not.
     """
 
-    @dataclass
-    class _TimelineUpdate(BaseMessage):
-        """Base message that the timeline sends."""
+    class Update(BaseMessage[TimelineType]):
+        """Base class for all timeline messages."""
 
-        widget: AbstractTimeline[Any]
-        entry: AbstractEntry
+        def __init__(
+            self,
+            widget: AbstractTimeline[Any],
+            entry: AbstractEntry,
+        ) -> None:
+            super().__init__(widget)
+            self.entry = entry
 
         @property
         def timeline(self) -> AbstractTimeline[T]:
+            """Alias for `widget` attribute."""
             return self.widget
 
-    @dataclass
-    class EntryCreated(_TimelineUpdate):
+    class EntryCreated(Update):
         """Sent when a new entry is created."""
 
-    @dataclass
-    class EntryDeleted(_TimelineUpdate):
+    class EntryDeleted(Update):
         """Sent when an entry is deleted."""
 
-    @dataclass
-    class EntrySelected(_TimelineUpdate):
+    class EntrySelected(Update):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]
