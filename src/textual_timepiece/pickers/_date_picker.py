@@ -5,7 +5,6 @@ from calendar import day_abbr
 from calendar import month_name
 from collections.abc import Callable
 from contextlib import suppress
-from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING
@@ -111,12 +110,8 @@ class DateSelect(BaseOverlayWidget):
     class StartChanged(Changed):
         """Message sent when the start date changed."""
 
-    @dataclass
-    class EndDateChanged(BaseMessage):
+    class EndChanged(Changed):
         """Message sent when the end date changed."""
-
-        widget: DateSelect
-        date: Date | None
 
     DEFAULT_CSS: ClassVar[str] = """
     DateSelect {
@@ -408,7 +403,7 @@ class DateSelect(BaseOverlayWidget):
         except ValueError:
             return
         if ctrl:
-            self.post_message(self.EndDateChanged(self, date))
+            self.post_message(self.EndChanged(self, date))
         else:
             self.post_message(self.StartChanged(self, date))
 
@@ -791,7 +786,7 @@ class EndDateSelect(DateSelect):
         else:
             date = min(Date.MAX, max(Date.MIN, self.loc.replace(day=value)))
             if not ctrl:
-                self.post_message(self.EndDateChanged(self, date))
+                self.post_message(self.EndChanged(self, date))
             else:
                 self.post_message(self.StartChanged(self, date))
 
