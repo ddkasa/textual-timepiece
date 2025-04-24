@@ -124,7 +124,7 @@ class HeatmapCursor(NamedTuple):
 # TODO: Dirty region tracking.
 
 
-class ActivityHeatmap(ScrollView, BaseWidget):
+class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     """Base renderable widget for an activity heatmap.
 
     Params:
@@ -165,8 +165,6 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         def __init__(self, widget: ActivityHeatmap, month: Date) -> None:
             super().__init__(widget)
             self.month = month
-
-    can_focus = True
 
     ActivityData: TypeAlias = defaultdict[date, float]
     """Final data type that the heatmap uses."""
