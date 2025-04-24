@@ -107,6 +107,11 @@ class DateSelect(BaseOverlayWidget):
             super().__init__(widget)
             self.date = date
 
+        @property
+        def value(self) -> Date | None:
+            """Alias for `date` attribute."""
+            return self.date
+
     class StartChanged(Changed):
         """Message sent when the start date changed."""
 
