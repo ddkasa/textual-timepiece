@@ -520,7 +520,7 @@ class TimeInput(AbstractInput[Time]):
     """Time input for a HH:MM:SS format"""
 
     @dataclass
-    class TimeChanged(BaseMessage):
+    class Updated(BaseMessage):
         """Message sent when the time is updated."""
 
         widget: TimeInput
@@ -539,7 +539,7 @@ class TimeInput(AbstractInput[Time]):
             else:
                 self.value = ""
 
-        self.post_message(self.TimeChanged(self, self.time))
+        self.post_message(self.Updated(self, self.time))
 
     def _watch_value(self, value: str) -> None:
         if (ts := self.convert()) is not None and ts != self.time:
@@ -656,10 +656,10 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
         message.stop()
         self.time = message.target
 
-    @on(TimeInput.TimeChanged)
-    def _change_time(self, message: TimeInput.TimeChanged) -> None:
+    @on(TimeInput.Updated)
+    def _change_time(self, message: TimeInput.Updated) -> None:
         message.stop()
-        with message.control.prevent(TimeInput.TimeChanged):
+        with message.control.prevent(TimeInput.Updated):
             self.time = message.new_time
 
     def to_default(self) -> None:
