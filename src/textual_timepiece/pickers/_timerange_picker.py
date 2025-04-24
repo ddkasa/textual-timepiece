@@ -105,7 +105,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
     """
 
     @dataclass
-    class DateRangeChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Message sent when the date range has changed."""
 
         widget: DateRangePicker
@@ -199,15 +199,15 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
     def _watch_start_date(self, date: Date | None) -> None:
         if date and self._date_range:
-            with self.prevent(self.DateRangeChanged):
+            with self.prevent(self.Changed):
                 self.end_date = date + self._date_range
-        self.post_message(self.DateRangeChanged(self, date, self.end_date))
+        self.post_message(self.Changed(self, date, self.end_date))
 
     def _watch_end_date(self, date: Date | None) -> None:
         if date and self._date_range:
-            with self.prevent(self.DateRangeChanged):
+            with self.prevent(self.Changed):
                 self.start_date = date - self._date_range
-        self.post_message(self.DateRangeChanged(self, self.start_date, date))
+        self.post_message(self.Changed(self, self.start_date, date))
 
     @on(DateSelect.StartChanged)
     @on(DateSelect.EndChanged)
