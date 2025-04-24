@@ -416,12 +416,16 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Message sent when the duration changes."""
 
-        widget: DurationPicker
-        duration: TimeDelta | None
+        def __init__(
+            self,
+            widget: DurationPicker,
+            duration: TimeDelta | None,
+        ) -> None:
+            super().__init__(widget)
+            self.duration = duration
 
     INPUT = DurationInput
     ALIAS = "duration"
