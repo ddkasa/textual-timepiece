@@ -170,6 +170,11 @@ class TimeSelect(BaseOverlayWidget):
             super().__init__(widget)
             self.target = target
 
+        @property
+        def value(self) -> Time:
+            """Alias for `target` attribute."""
+            return self.target
+
     DEFAULT_CSS: ClassVar[str] = """
     TimeSelect {
         layout: grid !important;
