@@ -859,12 +859,12 @@ class DateInput(AbstractInput[Date]):
         spinbox_sensitivity: Sensitivity setting for spinbox functionality.
     """
 
-    @dataclass
     class Updated(BaseMessage):
         """Message sent when the date is updated."""
 
-        widget: DateInput
-        date: Date | None
+        def __init__(self, widget: DateInput, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
 
     PATTERN: ClassVar[str] = "0009-B9-99"
     DATE_FORMAT: ClassVar[str] = "%Y-%m-%d"
