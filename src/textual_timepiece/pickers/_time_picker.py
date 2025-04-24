@@ -530,6 +530,11 @@ class TimeInput(AbstractInput[Time]):
             super().__init__(widget)
             self.target = target
 
+        @property
+        def value(self) -> Time | None:
+            """Alias for `target` attribute."""
+            return self.target
+
     PATTERN = "00:00:00"
     ALIAS = "time"
 
