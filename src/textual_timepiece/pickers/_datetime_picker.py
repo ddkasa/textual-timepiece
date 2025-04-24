@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 
@@ -222,7 +221,6 @@ class DateTimePicker(
 ):
     """Datetime picker with a date and time in one input.
 
-
     Params:
         value: Initial datetime value for the widget.
         name: Name for the widget.
@@ -232,12 +230,20 @@ class DateTimePicker(
         tooltip: Tooltip to show on hover.
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Message sent when the datetime is updated."""
 
-        widget: DateTimePicker
-        datetime: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimePicker,
+            datetime: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.datetime = datetime
+
+        @property
+        def value(self) -> LocalDateTime | None:
+            return self.datetime
 
     INPUT = DateTimeInput
     ALIAS = "datetime"
