@@ -104,13 +104,18 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         ```
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Message sent when the date range has changed."""
 
-        widget: DateRangePicker
-        start: Date | None
-        end: Date | None
+        def __init__(
+            self,
+            widget: DateRangePicker,
+            start: Date | None,
+            end: Date | None,
+        ) -> None:
+            super().__init__(widget)
+            self.start = start
+            self.end = end
 
     BINDING_GROUP_TITLE = "Date Range Picker"
 
