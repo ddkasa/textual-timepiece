@@ -163,12 +163,12 @@ class TimeSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    @dataclass
     class TimeSelected(BaseMessage):
         """Message sent when a value is picked out of the time grid."""
 
-        widget: TimeSelect
-        target: Time
+        def __init__(self, widget: TimeSelect, target: Time) -> None:
+            super().__init__(widget)
+            self.target = target
 
     DEFAULT_CSS: ClassVar[str] = """
     TimeSelect {
