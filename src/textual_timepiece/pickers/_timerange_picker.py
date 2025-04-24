@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 from typing import cast
@@ -382,13 +381,18 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         ```
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Message sent when the datetime range has changed."""
 
-        widget: DateTimeRangePicker
-        start: LocalDateTime | None
-        end: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimeRangePicker,
+            start: LocalDateTime | None,
+            end: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.start = start
+            self.end = end
 
     BINDING_GROUP_TITLE = "Datetime Range Picker"
 
