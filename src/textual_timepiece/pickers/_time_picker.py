@@ -59,17 +59,22 @@ class DurationSelect(BaseOverlayWidget):
             super().__init__(widget)
             self.delta = delta
 
-    @dataclass
     class DurationRounded(BaseMessage):
-        """Sent when one of the headers are clicked in order to round the
-        value.
-        """
+        """Notification message to round a duration based on parameters."""
 
-        widget: DurationSelect
-        value: int
-        """Value used as a rounding factor."""
-        scope: Literal["hours", "minutes", "seconds"]
-        """Which subunit to round the duration to."""
+        def __init__(
+            self,
+            widget: DurationSelect,
+            value: int,
+            scope: Literal["hours", "minutes", "seconds"],
+        ) -> None:
+            super().__init__(widget)
+
+            self.value = value
+            """Value used as a rounding factor."""
+
+            self.scope = scope
+            """Which subunit to round the duration to."""
 
     DEFAULT_CSS: ClassVar[str] = """
     DurationSelect {
