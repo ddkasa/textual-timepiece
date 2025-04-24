@@ -764,7 +764,7 @@ class HeatmapManager(BaseWidget):
         disabled: Whether the widget is disabled or not.
     """
 
-    class YearChanged(BaseMessage):
+    class YearChanged(BaseMessage["HeatmapManager"]):
         """Message sent when the year is updated."""
 
         def __init__(self, widget: HeatmapManager, year: int) -> None:

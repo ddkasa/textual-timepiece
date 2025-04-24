@@ -57,8 +57,8 @@ class BaseOverlayWidget(BaseWidget, can_focus=True):
 class BaseOverlay(BaseWidget, can_focus=True):
     """Base class for the widget that drops down for an easier selection."""
 
-    class Closed(BaseMessage):
-        widget: BaseOverlay
+    class Closed(BaseMessage["BaseOverlay"]):
+        """Message sent when user closes an overlay."""
 
     DEFAULT_CSS: ClassVar[str] = """
     BaseOverlay {

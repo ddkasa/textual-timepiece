@@ -100,7 +100,7 @@ class DateSelect(BaseOverlayWidget):
             Will automatically convert to absolute values.
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DateSelect"]):
         """Base message for when dates are changed."""
 
         def __init__(self, widget: DateSelect, date: Date | None) -> None:
@@ -862,7 +862,7 @@ class DateInput(AbstractInput[Date]):
         spinbox_sensitivity: Sensitivity setting for spinbox functionality.
     """
 
-    class Updated(BaseMessage):
+    class Updated(BaseMessage["DateInput"]):
         """Message sent when the date is updated."""
 
         def __init__(self, widget: DateInput, date: Date | None) -> None:
@@ -997,7 +997,7 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         >>> )
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DatePicker"]):
         """Message sent when the date changed."""
 
         def __init__(self, widget: DatePicker, date: Date | None) -> None:

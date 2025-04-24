@@ -68,7 +68,7 @@ class DateTimeOverlay(BaseOverlay):
 class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
-    class Updated(BaseMessage):
+    class Updated(BaseMessage["DateTimeInput"]):
         """Sent when the datetime is changed."""
 
         def __init__(
@@ -230,7 +230,7 @@ class DateTimePicker(
         tooltip: Tooltip to show on hover.
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DateTimePicker"]):
         """Message sent when the datetime is updated."""
 
         def __init__(

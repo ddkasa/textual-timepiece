@@ -51,14 +51,14 @@ class DurationSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    class Adjusted(BaseMessage):
+    class Adjusted(BaseMessage["DurationSelect"]):
         """Message sent when duration is added or subtracted."""
 
         def __init__(self, widget: DurationSelect, delta: TimeDelta) -> None:
             super().__init__(widget)
             self.delta = delta
 
-    class Rounded(BaseMessage):
+    class Rounded(BaseMessage["DurationSelect"]):
         """Notification message to round a duration based on parameters."""
 
         def __init__(
@@ -162,7 +162,7 @@ class TimeSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    class Selected(BaseMessage):
+    class Selected(BaseMessage["TimeSelect"]):
         """Message sent when a value is picked out of the time grid."""
 
         def __init__(self, widget: TimeSelect, target: Time) -> None:
@@ -326,7 +326,7 @@ class TimeOverlay(BaseOverlay):
 class DurationInput(AbstractInput[TimeDelta]):
     """Duration input for time deltas."""
 
-    class Updated(BaseMessage):
+    class Updated(BaseMessage["DurationInput"]):
         """Message sent when the duration changes through input or spinbox."""
 
         def __init__(
@@ -415,7 +415,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DurationPicker"]):
         """Message sent when the duration changes."""
 
         def __init__(
@@ -518,7 +518,7 @@ class TimeValidator(Validator):
 class TimeInput(AbstractInput[Time]):
     """Time input for a HH:MM:SS format"""
 
-    class Updated(BaseMessage):
+    class Updated(BaseMessage["TimeInput"]):
         """Message sent when the time is updated."""
 
         def __init__(
@@ -626,7 +626,7 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
         tooltip: Tooltip to show on hover.
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["TimePicker"]):
         """Sent when the time is changed with the overlay or other means."""
 
         def __init__(

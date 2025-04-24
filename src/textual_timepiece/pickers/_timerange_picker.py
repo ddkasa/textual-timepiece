@@ -103,7 +103,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         ```
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DateRangePicker"]):
         """Message sent when the date range has changed."""
 
         def __init__(
@@ -381,7 +381,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         ```
     """
 
-    class Changed(BaseMessage):
+    class Changed(BaseMessage["DateTimeRangePicker"]):
         """Message sent when the datetime range has changed."""
 
         def __init__(
