@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from abc import abstractmethod
 from types import MappingProxyType
 from typing import TYPE_CHECKING
@@ -8,8 +9,12 @@ from typing import Callable
 from typing import ClassVar
 from typing import Generic
 from typing import TypeAlias
-from typing import TypeVar
 from typing import cast
+
+if sys.version_info >= (3, 13):
+    from typing import TypeVar
+else:
+    from typing_extensions import TypeVar
 
 from rich.segment import Segment
 from rich.style import Style as RichStyle
@@ -48,10 +53,11 @@ from ._timeline_layouts import VerticalTimelineLayout
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-T = TypeVar("T", bound=AbstractEntry)
+EntryType = TypeVar("EntryType", bound="AbstractEntry")
+TimelineType = TypeVar("TimelineType", bound="AbstractTimeline[Any]")
 
 
-class AbstractTimeline(Widget, Generic[T], can_focus=True):
+class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     """Abstract timeline implementation with various items.
 
     Describes a few abstract methods for creating entry with user input.
@@ -72,31 +78,27 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     class Update(BaseMessage[TimelineType]):
         """Base class for all timeline messages."""
 
-        def __init__(
-            self,
-            widget: AbstractTimeline[Any],
-            entry: AbstractEntry,
-        ) -> None:
+        def __init__(self, widget: TimelineType, entry: EntryType) -> None:
             super().__init__(widget)
             self.entry = entry
 
         @property
-        def timeline(self) -> AbstractTimeline[T]:
+        def timeline(self) -> TimelineType:
             """Alias for `widget` attribute."""
             return self.widget
 
-    class EntryCreated(Update):
+    class EntryCreated(Update[TimelineType]):
         """Sent when a new entry is created."""
 
-    class EntryDeleted(Update):
+    class EntryDeleted(Update[TimelineType]):
         """Sent when an entry is deleted."""
 
-    class EntrySelected(Update):
+    class EntrySelected(Update[TimelineType]):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]
-    Entry: type[T]
-    Layout: type[AbstractTimelineLayout[T]]
+    Entry: type[EntryType]
+    Layout: type[AbstractTimelineLayout[Any]]
 
     DURATION: ClassVar[str]
     BINDING_GROUP_TITLE: str = "Timeline"
@@ -159,9 +161,9 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
     }
     """
 
-    children: list[T]
+    children: list[EntryType]
     _start: Offset | None = None
-    _mime: T | None = None
+    _mime: EntryType | None = None
 
     length = Reactive[int](96, init=False, layout=True)
     """Actual size of the widget with the direction size of the widget."""
@@ -176,7 +178,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
 
     def __init__(
         self,
-        *children: T,
+        *children: EntryType,
         duration: int | None = None,
         name: str | None = None,
         id: str | None = None,
@@ -192,7 +194,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
             disabled=disabled,
         )
 
-        self._highlighted: T | None = None
+        self._highlighted: EntryType | None = None
         # TODO: Convert to multiple selections.
 
         self._layout = self.Layout(tile=tile)
@@ -200,7 +202,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
             self.length = duration
 
     async def _on_descendant_focus(self, event: DescendantFocus) -> None:
-        self._highlighted = cast(T, event.widget)
+        self._highlighted = cast(EntryType, event.widget)
         self.post_message(self.EntrySelected(self, self._highlighted))
 
     async def _on_descendant_blur(self, event: DescendantBlur) -> None:
@@ -228,18 +230,18 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
 
     def mount(  # type: ignore[override] # NOTE: Making sure the user mounts the right widgets.
         self,
-        *widgets: T,
-        before: str | int | T | None = None,
-        after: str | int | T | None = None,
+        *widgets: EntryType,
+        before: str | int | EntryType | None = None,
+        after: str | int | EntryType | None = None,
     ) -> AwaitMount:
         return super().mount(*widgets, before=before, after=after)
 
     def mount_all(  # type: ignore[override] # NOTE: Making sure the user mounts the right widgets.
         self,
-        widgets: Iterable[T],
+        widgets: Iterable[EntryType],
         *,
-        before: str | int | T | None = None,
-        after: str | int | T | None = None,
+        before: str | int | EntryType | None = None,
+        after: str | int | EntryType | None = None,
     ) -> AwaitMount:
         return super().mount_all(widgets, before=before, after=after)
 
@@ -276,7 +278,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
 
     def remove_children(
         self,
-        selector: str | type[QueryType] | Iterable[T] = "*",  # type: ignore[override] # NOTE: Type should always be an AbstractEntry
+        selector: str | type[QueryType] | Iterable[EntryType] = "*",  # type: ignore[override] # NOTE: Type should always be an AbstractEntry
     ) -> AwaitRemove:
         return super().remove_children(selector)
 
@@ -318,7 +320,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
             self._start = None
             self._mime = None
         else:
-            cast(T, self.selected).blur()
+            cast(EntryType, self.selected).blur()
 
     def action_adjust_tail(
         self,
@@ -333,9 +335,9 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         """
 
         if resize:
-            cast(T, self.selected).resize(1, tail=tail)
+            cast(EntryType, self.selected).resize(1, tail=tail)
         else:
-            cast(T, self.selected).move(1)
+            cast(EntryType, self.selected).move(1)
 
     def action_adjust_head(
         self,
@@ -350,9 +352,9 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         """
 
         if resize:
-            cast(T, self.selected).resize(-1, tail=not tail)
+            cast(EntryType, self.selected).resize(-1, tail=not tail)
         else:
-            cast(T, self.selected).move(-1)
+            cast(EntryType, self.selected).move(-1)
 
     @abstractmethod
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
@@ -371,7 +373,7 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         setattr(self.styles, self.DURATION, value)
 
     @property
-    def layout(self) -> AbstractTimelineLayout[T]:
+    def layout(self) -> AbstractTimelineLayout[EntryType]:
         return self._layout
 
     @property
@@ -385,15 +387,22 @@ class AbstractTimeline(Widget, Generic[T], can_focus=True):
         self.refresh(layout=True)
 
     @property
-    def selected(self) -> T | None:
+    def selected(self) -> EntryType | None:
         """Currently highlighted entry. None if there is nothing selected."""
         return self._highlighted
 
 
-class VerticalTimeline(AbstractTimeline[VerticalEntry]):
+VerticalEntryType = TypeVar(
+    "VerticalEntryType",
+    bound=VerticalEntry,
+    default=VerticalEntry,
+)
+
+
+class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """Basic timeline widget that displays entries in a vertical view."""
 
-    Entry = VerticalEntry
+    Entry = VerticalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
     Layout = VerticalTimelineLayout
     DURATION = "height"
     DEFAULT_CSS: ClassVar[str] = """\
@@ -452,10 +461,17 @@ class VerticalTimeline(AbstractTimeline[VerticalEntry]):
         return self.length
 
 
-class HorizontalTimeline(AbstractTimeline[HorizontalEntry]):
+HorizontalEntryType = TypeVar(
+    "HorizontalEntryType",
+    bound=HorizontalEntry,
+    default=HorizontalEntry,
+)
+
+
+class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """Basic timeline widget that displays entries in a horizontal view."""
 
-    Entry = HorizontalEntry
+    Entry = HorizontalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
     Layout = HorizontalTimelineLayout
     DURATION: ClassVar[str] = "width"
     DEFAULT_CSS: ClassVar[str] = """\
@@ -684,7 +700,7 @@ class HorizontalRuler(AbstractRuler):
         return self.length
 
 
-ChildTimeline = TypeVar("ChildTimeline", bound=AbstractTimeline[Any])
+ChildTimeline = TypeVar("ChildTimeline", bound="AbstractTimeline[Any]")
 
 
 class TimelineNavigation(Widget, Generic[ChildTimeline]):
@@ -734,7 +750,9 @@ class TimelineNavigation(Widget, Generic[ChildTimeline]):
         return self.query_exactly_one(self.Timeline)
 
 
-class VerticalTimelineNavigation(TimelineNavigation[VerticalTimeline]):
+class VerticalTimelineNavigation(
+    TimelineNavigation[VerticalTimeline[VerticalEntry]]
+):
     """Vertical widget containing a vertical timeline and header."""
 
     Timeline = VerticalTimeline
@@ -748,7 +766,9 @@ class VerticalTimelineNavigation(TimelineNavigation[VerticalTimeline]):
     """Default CSS for `VerticalTimelineNavigation` widget."""
 
 
-class HorizontalTimelineNavigation(TimelineNavigation[HorizontalTimeline]):
+class HorizontalTimelineNavigation(
+    TimelineNavigation[HorizontalTimeline[HorizontalEntryType]]
+):
     """Horizontal widget containing a horizontal timeline and header."""
 
     Timeline = HorizontalTimeline
