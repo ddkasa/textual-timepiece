@@ -994,12 +994,12 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
         >>> )
     """
 
-    @dataclass
     class Changed(BaseMessage):
         """Message sent when the date changed."""
 
-        widget: DatePicker
-        date: Date | None
+        def __init__(self, widget: DatePicker, date: Date | None) -> None:
+            super().__init__(widget)
+            self.date = date
 
     BINDING_GROUP_TITLE = "Date Picker"
     ALIAS = "date"
