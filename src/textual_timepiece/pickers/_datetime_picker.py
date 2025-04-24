@@ -233,7 +233,7 @@ class DateTimePicker(
     """
 
     @dataclass
-    class DateTimeChanged(BaseMessage):
+    class Changed(BaseMessage):
         """Message sent when the datetime is updated."""
 
         widget: DateTimePicker
@@ -269,7 +269,7 @@ class DateTimePicker(
         return None
 
     def _watch_datetime(self, datetime: LocalDateTime | None) -> None:
-        self.post_message(self.DateTimeChanged(self, datetime))
+        self.post_message(self.Changed(self, datetime))
 
     def _on_date_select_date_changed(
         self,
