@@ -69,12 +69,16 @@ class DateTimeOverlay(BaseOverlay):
 class DateTimeInput(AbstractInput[LocalDateTime]):
     """Input that combines both date and time into one."""
 
-    @dataclass
     class DateTimeChanged(BaseMessage):
         """Sent when the datetime is changed."""
 
-        widget: DateTimeInput
-        datetime: LocalDateTime | None
+        def __init__(
+            self,
+            widget: DateTimeInput,
+            datetime: LocalDateTime | None,
+        ) -> None:
+            super().__init__(widget)
+            self.datetime = datetime
 
     PATTERN: ClassVar[str] = r"0009-B9-99 99:99:99"
     FORMAT: ClassVar[str] = r"%Y-%m-%d %H:%M:%S"
