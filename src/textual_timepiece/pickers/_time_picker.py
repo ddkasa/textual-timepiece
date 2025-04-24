@@ -519,12 +519,16 @@ class TimeValidator(Validator):
 class TimeInput(AbstractInput[Time]):
     """Time input for a HH:MM:SS format"""
 
-    @dataclass
     class Updated(BaseMessage):
         """Message sent when the time is updated."""
 
-        widget: TimeInput
-        new_time: Time | None
+        def __init__(
+            self,
+            widget: TimeInput,
+            target: Time | None,
+        ) -> None:
+            super().__init__(widget)
+            self.target = target
 
     PATTERN = "00:00:00"
     ALIAS = "time"
@@ -660,7 +664,7 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
     def _change_time(self, message: TimeInput.Updated) -> None:
         message.stop()
         with message.control.prevent(TimeInput.Updated):
-            self.time = message.new_time
+            self.time = message.target
 
     def to_default(self) -> None:
         """Reset time to the local current time."""
