@@ -80,6 +80,11 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
             super().__init__(widget)
             self.datetime = datetime
 
+        @property
+        def value(self) -> LocalDateTime | None:
+            """Alias for `datetime` property."""
+            return self.datetime
+
     PATTERN: ClassVar[str] = r"0009-B9-99 99:99:99"
     FORMAT: ClassVar[str] = r"%Y-%m-%d %H:%M:%S"
     ALIAS = "datetime"
