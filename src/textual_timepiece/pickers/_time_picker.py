@@ -163,7 +163,7 @@ class TimeSelect(BaseOverlayWidget):
         disabled: Whether to disable the widget.
     """
 
-    class TimeSelected(BaseMessage):
+    class Selected(BaseMessage):
         """Message sent when a value is picked out of the time grid."""
 
         def __init__(self, widget: TimeSelect, target: Time) -> None:
@@ -250,7 +250,7 @@ class TimeSelect(BaseOverlayWidget):
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
         time = Time.parse_common_iso(f"{message.button.label}:00")
-        self.post_message(self.TimeSelected(self, time))
+        self.post_message(self.Selected(self, time))
 
     def action_focus_neighbor(self, direction: Directions) -> None:
         """Focus a nearby member. It will mirror back if going past an edge."""
@@ -628,8 +628,8 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
         message.stop()
         self.time = add_time(self.time or Time(), message.delta)
 
-    @on(TimeSelect.TimeSelected)
-    def _select_time(self, message: TimeSelect.TimeSelected) -> None:
+    @on(TimeSelect.Selected)
+    def _select_time(self, message: TimeSelect.Selected) -> None:
         message.stop()
         self.time = message.target
 

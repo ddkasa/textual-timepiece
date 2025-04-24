@@ -306,8 +306,8 @@ class DateTimePicker(
         else:
             self.datetime = SystemDateTime.now().local()
 
-    @on(TimeSelect.TimeSelected)
-    def _set_time(self, message: TimeSelect.TimeSelected) -> None:
+    @on(TimeSelect.Selected)
+    def _set_time(self, message: TimeSelect.Selected) -> None:
         message.stop()
         if self.datetime is None:
             self.datetime = (
