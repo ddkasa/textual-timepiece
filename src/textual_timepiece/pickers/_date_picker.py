@@ -101,8 +101,6 @@ class DateSelect(BaseOverlayWidget):
             Will automatically convert to absolute values.
     """
 
-    @dataclass
-    class DateChanged(BaseMessage):
     class Changed(BaseMessage):
         """Base message for when dates are changed."""
 
@@ -110,10 +108,8 @@ class DateSelect(BaseOverlayWidget):
             super().__init__(widget)
             self.date = date
 
+    class StartChanged(Changed):
         """Message sent when the start date changed."""
-
-        widget: DateSelect
-        date: Date | None
 
     @dataclass
     class EndDateChanged(BaseMessage):
@@ -350,17 +346,17 @@ class DateSelect(BaseOverlayWidget):
         if self._select_on_focus:
             self.cursor = DateCursor()
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         self.date = message.date
         if self.date_range and message.date:
             self.end_date = message.date.add(self.date_range)
 
-    def _on_date_select_end_date_changed(
+    def _on_date_select_end_changed(
         self,
-        message: DateSelect.EndDateChanged,
+        message: DateSelect.EndChanged,
     ) -> None:
         self.end_date = message.date
         if self.date_range and message.date:
@@ -414,7 +410,7 @@ class DateSelect(BaseOverlayWidget):
         if ctrl:
             self.post_message(self.EndDateChanged(self, date))
         else:
-            self.post_message(self.DateChanged(self, date))
+            self.post_message(self.StartChanged(self, date))
 
     def _set_month(self, target: str) -> None:
         try:
@@ -797,7 +793,7 @@ class EndDateSelect(DateSelect):
             if not ctrl:
                 self.post_message(self.EndDateChanged(self, date))
             else:
-                self.post_message(self.DateChanged(self, date))
+                self.post_message(self.StartChanged(self, date))
 
     def _set_current_scope(self) -> None:
         self.set_reactive(DateSelect.scope, DateScope.MONTH)
@@ -1074,9 +1070,9 @@ class DatePicker(BasePicker[DateInput, Date, DateOverlay]):
             )
         )
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         message.stop()
         self.date = message.date

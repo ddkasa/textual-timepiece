@@ -209,15 +209,15 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
                 self.start_date = date - self._date_range
         self.post_message(self.DateRangeChanged(self, self.start_date, date))
 
-    @on(DateSelect.DateChanged)
+    @on(DateSelect.StartChanged)
     @on(DateSelect.EndDateChanged)
     def _dialog_date_changed(
         self,
-        message: DateSelect.DateChanged | DateSelect.EndDateChanged,
+        message: DateSelect.StartChanged | DateSelect.EndDateChanged,
     ) -> None:
         """Handles changes in dates including, keeping dates the same span."""
         message.stop()
-        if isinstance(message, DateSelect.DateChanged):
+        if isinstance(message, DateSelect.StartChanged):
             self.start_date = message.date
         else:
             self.end_date = message.date
@@ -527,11 +527,11 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             self._time_range = None
             cast(LockButton, message.control).locked = False
 
-    @on(DateSelect.DateChanged)
+    @on(DateSelect.StartChanged)
     @on(DateSelect.EndDateChanged)
-    def _dialog_date_changed(self, message: DateSelect.DateChanged) -> None:
+    def _dialog_date_changed(self, message: DateSelect.StartChanged) -> None:
         message.stop()
-        if isinstance(message, DateSelect.DateChanged):
+        if isinstance(message, DateSelect.StartChanged):
             self.adjust_start_date(message.date)
         else:
             self.adjust_end_date(message.date)

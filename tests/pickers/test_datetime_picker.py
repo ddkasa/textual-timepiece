@@ -106,11 +106,11 @@ async def test_dt_dialog_edge_cases(datetime_app, freeze_time):
     async with datetime_app.run_test() as pilot:
         datetime_app.widget.focus()
         select = datetime_app.widget.overlay.date_select
-        select.post_message(DateSelect.DateChanged(select, Date.MIN))
+        select.post_message(DateSelect.StartChanged(select, Date.MIN))
         await pilot.pause()
         assert datetime_app.widget.date == Date.MIN
 
-        select.post_message(DateSelect.DateChanged(select, Date.MAX))
+        select.post_message(DateSelect.StartChanged(select, Date.MAX))
         await pilot.pause()
         assert datetime_app.widget.date == Date.MAX
 

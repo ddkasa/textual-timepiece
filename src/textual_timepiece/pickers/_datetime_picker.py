@@ -277,9 +277,9 @@ class DateTimePicker(
     def _watch_datetime(self, datetime: LocalDateTime | None) -> None:
         self.post_message(self.Changed(self, datetime))
 
-    def _on_date_select_date_changed(
+    def _on_date_select_start_changed(
         self,
-        message: DateSelect.DateChanged,
+        message: DateSelect.StartChanged,
     ) -> None:
         message.stop()
         if not message.date:
