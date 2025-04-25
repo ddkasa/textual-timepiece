@@ -268,28 +268,16 @@ class TimeSelect(BaseOverlayWidget):
 
             row, col = divmod(focused_id, 4)
             if direction == "up":
-                if row - 1 >= 0:
-                    id = focused_id - 4
-                else:
-                    id = 43 + (col + 1)
+                id = focused_id - 4 if row - 1 >= 0 else 43 + (col + 1)
 
             elif direction == "right":
-                if col + 1 <= 3:
-                    id = focused_id + 1
-                else:
-                    id = focused_id - col
+                id = focused_id + 1 if col + 1 <= 3 else focused_id - col
 
             elif direction == "down":
-                if row + 1 < 12:
-                    id = focused_id + 4
-                else:
-                    id = col
+                id = focused_id + 4 if row + 1 < 12 else col
 
             else:
-                if col - 1 >= 0:
-                    id = focused_id - 1
-                else:
-                    id = focused_id + (3 - col)
+                id = focused_id - 1 if col - 1 >= 0 else focused_id + (3 - col)
 
             widget = self.query_one(f"#time-{id}", Button)
 
