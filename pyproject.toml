@@ -75,7 +75,6 @@ fix = true
 extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]
-ignore = ["ANN401", "D107", "A002", "A001"]
 select = [
     "E",
     "F",
@@ -90,10 +89,14 @@ select = [
     "B",   # flake8-bugbear
     "A",   # flake8-builtins
     "G",   # flake8-logging-format
+    "TC",  # flake8-type-checking 
+    "RET", # flake8-return
     "ERA", # eradicate
     "ISC", # flake8-implicit-str-concat
     "RUF", # Ruff-specific rules
+    "SIM", # flake8-simplify
 ]
+ignore = ["ANN401", "D107", "A002", "A001"]
 unfixable = [
     "ERA", # Don't remove commented-out code
 ]

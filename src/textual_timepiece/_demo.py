@@ -5,10 +5,10 @@ import random
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Literal
 
-from rich.console import RenderableType
 from rich.pretty import Pretty
 from rich.syntax import Syntax
 from textual import on
@@ -45,6 +45,9 @@ from textual_timepiece.timeline._timeline_manager import (
     RuledHorizontalTimeline,
 )
 from textual_timepiece.timeline._timeline_manager import RuledVerticalTimeline
+
+if TYPE_CHECKING:
+    from rich.console import RenderableType
 
 
 class DemoWidget(Widget):
@@ -242,40 +245,48 @@ class TimepieceDemo(App[None]):
         yield Header(show_clock=True)
 
         with TabbedContent(initial="pickers"):
-            with TabPane("Pickers", id="pickers"):
-                with Container(id="Pickers", classes="previews"):
-                    for item in (
-                        DatePicker,
-                        DurationPicker,
-                        TimePicker,
-                        DateTimePicker,
-                        DateRangePicker,
-                        DateTimeRangePicker,
-                        DateTimeDurationPicker,
-                    ):
-                        yield DemoWidget(item)
+            with (
+                TabPane("Pickers", id="pickers"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for item in (
+                    DatePicker,
+                    DurationPicker,
+                    TimePicker,
+                    DateTimePicker,
+                    DateRangePicker,
+                    DateTimeRangePicker,
+                    DateTimeDurationPicker,
+                ):
+                    yield DemoWidget(item)
 
-            with TabPane("Select"):
-                with Container(id="Pickers", classes="previews"):
-                    for select in (
-                        DateSelect,
-                        TimeSelect,
-                        DurationSelect,
-                    ):
-                        yield DemoWidget(select)
+            with (
+                TabPane("Select"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for select in (
+                    DateSelect,
+                    TimeSelect,
+                    DurationSelect,
+                ):
+                    yield DemoWidget(select)
 
-            with TabPane("Heatmap"):
-                with Container(id="heatmap", classes="previews"):
-                    for i in (ActivityHeatmap, HeatmapManager):
-                        yield DemoWidget(i)
+            with (
+                TabPane("Heatmap"),
+                Container(id="heatmap", classes="previews"),
+            ):
+                for i in (ActivityHeatmap, HeatmapManager):
+                    yield DemoWidget(i)
 
-            with TabPane("Timeline"):
-                with Container(id="timeline", classes="previews"):
-                    for timeline in (
-                        RuledVerticalTimeline,
-                        RuledHorizontalTimeline,
-                    ):
-                        yield DemoWidget(timeline)
+            with (
+                TabPane("Timeline"),
+                Container(id="timeline", classes="previews"),
+            ):
+                for timeline in (
+                    RuledVerticalTimeline,
+                    RuledHorizontalTimeline,
+                ):
+                    yield DemoWidget(timeline)
 
         yield Footer()
 

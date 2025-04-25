@@ -3,6 +3,7 @@ from __future__ import annotations
 import inspect
 import sys
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Generic
 from typing import Iterator
@@ -13,11 +14,8 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self
 
-from rich.console import RenderableType
 from rich.text import Text
-from textual.app import RenderResult
 from textual.dom import DOMNode
-from textual.geometry import Offset
 from textual.message import Message
 from textual.reactive import reactive
 from textual.reactive import var
@@ -27,6 +25,11 @@ from textual.widgets import Button
 from textual_timepiece.constants import LOCKED_ICON
 from textual_timepiece.constants import TARGET_ICON
 from textual_timepiece.constants import UNLOCKED_ICON
+
+if TYPE_CHECKING:
+    from rich.console import RenderableType
+    from textual.app import RenderResult
+    from textual.geometry import Offset
 
 
 class BaseWidget(Widget):

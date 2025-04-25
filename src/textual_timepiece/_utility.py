@@ -6,7 +6,7 @@ import enum
 import math
 from calendar import Calendar
 from calendar import month_name
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Iterator
 from typing import Protocol
@@ -17,6 +17,9 @@ from whenever import Date
 from whenever import DateDelta
 from whenever import Time
 from whenever import TimeDelta
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:

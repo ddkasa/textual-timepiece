@@ -16,15 +16,9 @@ from typing import cast
 from rich.segment import Segment
 from rich.style import Style
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Horizontal
-from textual.events import Blur
-from textual.events import Click
-from textual.events import Focus
-from textual.events import Leave
-from textual.events import MouseMove
 from textual.geometry import Offset
 from textual.geometry import Size
 from textual.reactive import reactive
@@ -37,7 +31,6 @@ from whenever import DateDelta
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
-from textual_timepiece._types import Directions
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
@@ -51,8 +44,14 @@ from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
 
 if TYPE_CHECKING:
-    pass
+    from textual.app import ComposeResult
+    from textual.events import Blur
+    from textual.events import Click
+    from textual.events import Focus
+    from textual.events import Leave
+    from textual.events import MouseMove
 
+    from textual_timepiece._types import Directions
 
 DisplayData: TypeAlias = Scope
 
@@ -287,11 +286,11 @@ class DateSelect(BaseOverlayWidget):
         if self.scope == DateScope.YEAR:
             return str(self.loc.year)
 
-        elif self.scope == DateScope.DECADE:
+        if self.scope == DateScope.DECADE:
             start = math.floor(self.loc.year / 10) * 10
             return f"{start} <-> {start + 9}"
 
-        elif self.scope == DateScope.CENTURY:
+        if self.scope == DateScope.CENTURY:
             start = math.floor(self.loc.year / 100) * 100
             return f"{start} <-> {start + 99}"
 
@@ -381,7 +380,7 @@ class DateSelect(BaseOverlayWidget):
             self._find_move(x=-1)
 
     def _find_move(self, *, y: int = 0, x: int = 0) -> None:
-        cursor = cast(DateCursor, self.cursor)
+        cursor = cast("DateCursor", self.cursor)
         if (new_y := cursor.y + y) == 0:
             new_x = cursor.x + x
             if cursor.y != 0:
@@ -439,7 +438,7 @@ class DateSelect(BaseOverlayWidget):
         if self.scope == DateScope.MONTH:
             self._set_date(target, ctrl=ctrl)
         elif self.scope == DateScope.YEAR:
-            self._set_month(cast(str, target))
+            self._set_month(cast("str", target))
         else:
             self._set_years(target)
 
@@ -453,7 +452,7 @@ class DateSelect(BaseOverlayWidget):
 
     def action_select_cursor(self, ctrl: bool = False) -> None:
         """Triggers the functionality for what is below the keyboard cursor."""
-        cursor = cast(DateCursor, self.cursor)
+        cursor = cast("DateCursor", self.cursor)
         if cursor.y == 0:
             nav = (
                 LEFT_ARROW,
@@ -658,7 +657,7 @@ class DateSelect(BaseOverlayWidget):
                 )
                 date = None
             else:
-                date = self.loc.replace(day=cast(int, day))
+                date = self.loc.replace(day=cast("int", day))
                 segments.append(
                     Segment(
                         str(day).rjust(3),
@@ -686,7 +685,7 @@ class DateSelect(BaseOverlayWidget):
         segs = list[Segment]()
         for i, value in enumerate(values):
             if self.scope == DateScope.CENTURY:
-                value = f"{value}-{cast(int, value) + 9}"
+                value = f"{value}-{cast('int', value) + 9}"
             else:
                 value = str(value)
             n = len(value)
@@ -937,7 +936,7 @@ class DateInput(AbstractInput[Date]):
         return 5 <= self.cursor_position < 7
 
     def _is_day_pos(self) -> bool:
-        return 8 <= self.cursor_position
+        return self.cursor_position >= 8
 
     def convert(self) -> Date | None:
         # NOTE: Pydate instead as I want to keep it open to standard formats.

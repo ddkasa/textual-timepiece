@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import cast
 
@@ -11,7 +12,6 @@ else:
     from typing_extensions import Self
 
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Horizontal
@@ -39,6 +39,9 @@ from ._date_picker import EndDateSelect
 from ._datetime_picker import DateTimeInput
 from ._time_picker import DurationInput
 from ._time_picker import DurationSelect
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
 
 # TODO: Set a maximum and minimum range that is required.
 # TODO: Limit or validate to min/max dates
@@ -269,12 +272,12 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         if (
             self.end_date
             and self.start_date
-            and cast(LockButton, message.control).locked
+            and cast("LockButton", message.control).locked
         ):
             self._date_range = self.end_date - self.start_date
         else:
             self._date_range = None
-            cast(LockButton, message.control).locked = False
+            cast("LockButton", message.control).locked = False
 
     def action_clear(self) -> None:
         """Clear the start and end dates."""
@@ -525,7 +528,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         message.stop()
 
         if (
-            cast(LockButton, message.control).locked
+            cast("LockButton", message.control).locked
             and self.end_dt
             and self.start_dt
         ):
@@ -534,7 +537,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
             )
         else:
             self._time_range = None
-            cast(LockButton, message.control).locked = False
+            cast("LockButton", message.control).locked = False
 
     @on(DateSelect.StartChanged)
     @on(DateSelect.EndChanged)
@@ -715,7 +718,7 @@ class DateTimeDurationPicker(DateTimeRangePicker):
         message.stop()
         if self.start_date:
             self.duration_input.disabled = cast(
-                LockButton, message.button
+                "LockButton", message.button
             ).locked
 
     @cached_property

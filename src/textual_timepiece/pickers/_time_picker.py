@@ -2,18 +2,17 @@ from __future__ import annotations
 
 from contextlib import suppress
 from string import digits
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Final
 from typing import Literal
 from typing import cast
 
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Grid
 from textual.containers import Horizontal
-from textual.events import Mount
 from textual.reactive import var
 from textual.validation import Failure
 from textual.validation import ValidationResult
@@ -30,7 +29,6 @@ from whenever import seconds
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
-from textual_timepiece._types import Directions
 from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
 from textual_timepiece._utility import round_time
@@ -39,6 +37,12 @@ from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
 from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.events import Mount
+
+    from textual_timepiece._types import Directions
 
 
 class DurationSelect(BaseOverlayWidget):
@@ -263,33 +267,21 @@ class TimeSelect(BaseOverlayWidget):
         else:
             # FIX: Subclass a button with a required id.
             focused_id = int(
-                cast(str, cast(Button, self.app.focused).id).split("-")[-1]
+                cast("str", cast("Button", self.app.focused).id).split("-")[-1]
             )
 
             row, col = divmod(focused_id, 4)
             if direction == "up":
-                if row - 1 >= 0:
-                    id = focused_id - 4
-                else:
-                    id = 43 + (col + 1)
+                id = focused_id - 4 if row - 1 >= 0 else 43 + (col + 1)
 
             elif direction == "right":
-                if col + 1 <= 3:
-                    id = focused_id + 1
-                else:
-                    id = focused_id - col
+                id = focused_id + 1 if col + 1 <= 3 else focused_id - col
 
             elif direction == "down":
-                if row + 1 < 12:
-                    id = focused_id + 4
-                else:
-                    id = col
+                id = focused_id + 4 if row + 1 < 12 else col
 
             else:
-                if col - 1 >= 0:
-                    id = focused_id - 1
-                else:
-                    id = focused_id + (3 - col)
+                id = focused_id - 1 if col - 1 >= 0 else focused_id + (3 - col)
 
             widget = self.query_one(f"#time-{id}", Button)
 
@@ -394,7 +386,7 @@ class DurationInput(AbstractInput[TimeDelta]):
             self.duration += hours(offset)
         elif 3 <= self.cursor_position < 5:
             self.duration += minutes(offset)
-        elif 6 <= self.cursor_position:
+        elif self.cursor_position >= 6:
             self.duration += seconds(offset)
 
 
@@ -591,7 +583,7 @@ class TimeInput(AbstractInput[Time]):
         if self.cursor_position < 0:
             return
 
-        elif self.cursor_position == 8:
+        if self.cursor_position == 8:
             self.value = self.value[:-1] + "0"
 
         elif self.cursor_position not in {2, 5}:
@@ -610,7 +602,7 @@ class TimeInput(AbstractInput[Time]):
             self.time = add_time(self.time or Time(), hours(offset))
         elif 3 <= self.cursor_position < 5:
             self.time = add_time(self.time or Time(), minutes(offset))
-        elif 6 <= self.cursor_position:
+        elif self.cursor_position >= 6:
             self.time = add_time(self.time or Time(), seconds(offset))
 
 
