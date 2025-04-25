@@ -300,7 +300,6 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         Args:
             id: If removing an un-highlighted widget.
         """
-
         if id:
             try:
                 entry = self.query_one(f"#{id}", self.Entry)
@@ -333,7 +332,6 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             tail: Increase the size if resizing.
             resize: Resize the entry instead of moving.
         """
-
         if resize:
             cast(EntryType, self.selected).resize(1, tail=tail)
         else:
@@ -350,7 +348,6 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             tail: Increase the size if resizing.
             resize: Resize the entry instead of moving.
         """
-
         if resize:
             cast(EntryType, self.selected).resize(-1, tail=not tail)
         else:
