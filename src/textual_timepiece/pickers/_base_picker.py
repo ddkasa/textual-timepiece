@@ -154,14 +154,19 @@ class BaseOverlay(BaseWidget, can_focus=True):
         return True
 
 
-T = TypeVar("T")
+ValueType = TypeVar("ValueType")
 
 
 # TODO: Rewrite a better masked input suitable for time input.
 # NOTE: Current implementation of masked input is highly restrictive. I need
 # a more flexible version in order to allow for different formats to be parsed
 # on the fly.
-class AbstractInput(MaskedInput, BaseWidget, Generic[T], can_focus=True):
+class AbstractInput(
+    MaskedInput,
+    BaseWidget,
+    Generic[ValueType],
+    can_focus=True,
+):
     """Abstract class that defines behaviour for all datetime input widgets.
 
     Default Input messages are disabled and are meant to be replaced by a
@@ -219,7 +224,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T], can_focus=True):
 
     def __init__(
         self,
-        value: T | None = None,
+        value: ValueType | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -249,7 +254,7 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T], can_focus=True):
         self.set_class(value, "updated")
 
     @abstractmethod
-    def convert(self) -> T | None: ...
+    def convert(self) -> ValueType | None: ...
 
     def _action_leave(self) -> None:
         self.blur()
@@ -283,12 +288,12 @@ class AbstractInput(MaskedInput, BaseWidget, Generic[T], can_focus=True):
         return len(self.PATTERN) + 1
 
     @property
-    def alias(self) -> T | None:
+    def alias(self) -> ValueType | None:
         """Alias for whatever value the input may be holding."""
-        return cast(T | None, getattr(self, self.ALIAS))
+        return cast(ValueType | None, getattr(self, self.ALIAS))
 
     @alias.setter
-    def alias(self, value: T | None) -> None:
+    def alias(self, value: ValueType | None) -> None:
         """Alias for whatever value the input may be holding."""
         self.set_reactive(getattr(self.__class__, self.ALIAS), value)
 
@@ -450,7 +455,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
 InputType = TypeVar("InputType", bound=AbstractInput[Any])
 
 
-class BasePicker(AbstractPicker[Any], Generic[InputType, T, Overlay]):
+class BasePicker(AbstractPicker[Any], Generic[InputType, ValueType, Overlay]):
     """Base Picker class for combining various single ended widgets."""
 
     ALIAS: str
@@ -480,7 +485,7 @@ class BasePicker(AbstractPicker[Any], Generic[InputType, T, Overlay]):
 
     def __init__(
         self,
-        value: T | None = None,
+        value: ValueType | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -518,11 +523,11 @@ class BasePicker(AbstractPicker[Any], Generic[InputType, T, Overlay]):
         return self.query_exactly_one(self.INPUT)
 
     @property
-    def value(self) -> T | None:
+    def value(self) -> ValueType | None:
         """Alias for whatever value the picker may be holding."""
-        return cast(T | None, getattr(self, self.ALIAS))
+        return cast(ValueType | None, getattr(self, self.ALIAS))
 
     @value.setter
-    def value(self, value: T | None) -> None:
+    def value(self, value: ValueType | None) -> None:
         """Alias for whatever value the picker may be holding."""
         self.set_reactive(getattr(self.__class__, self.ALIAS), value)
