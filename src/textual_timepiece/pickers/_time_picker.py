@@ -516,7 +516,7 @@ class TimeValidator(Validator):
 
 
 class TimeInput(AbstractInput[Time]):
-    """Time input for a HH:MM:SS format"""
+    """Time input for a HH:MM:SS format."""
 
     class Updated(BaseMessage["TimeInput"]):
         """Message sent when the time is updated."""

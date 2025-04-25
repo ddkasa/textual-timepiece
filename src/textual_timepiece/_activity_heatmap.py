@@ -477,6 +477,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
 
         Args:
             data: Two dimensional data that is ready to be converted.
+            year: The year the provided data belongs to.
         """
         template = ActivityHeatmap.generate_empty_activity(year)
         values = [

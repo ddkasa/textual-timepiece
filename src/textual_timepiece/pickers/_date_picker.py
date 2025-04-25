@@ -738,8 +738,7 @@ class DateSelect(BaseOverlayWidget):
 
 
 class EndDateSelect(DateSelect):
-    """Date select widget that inverts the widgets controls to select end_date
-    first.
+    """DateSelect that inverts the widgets controls to prioritize the end_date.
 
     Params:
         start: Initial start date for the widget.
@@ -917,7 +916,6 @@ class DateInput(AbstractInput[Date]):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-
         try:
             if self.date is None:
                 self.date = Date.today_in_system_tz()

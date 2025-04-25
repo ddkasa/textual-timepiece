@@ -28,7 +28,6 @@ def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:
     Returns:
         A tuple of hours, minutes and seconds.
     """
-
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
 
@@ -117,7 +116,6 @@ def get_scope(scope: DateScope, period: Date) -> Scope:
     Returns:
         The range of times in a two dimensional array.
     """
-
     if scope == DateScope.MONTH:
         return Calendar().monthdayscalendar(period.year, period.month)
     if scope == DateScope.YEAR:

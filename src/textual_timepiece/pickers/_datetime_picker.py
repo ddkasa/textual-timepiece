@@ -135,7 +135,6 @@ class DateTimeInput(AbstractInput[LocalDateTime]):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-
         try:
             if self.datetime is None:
                 self.datetime = SystemDateTime.now().local()
