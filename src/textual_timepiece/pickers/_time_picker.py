@@ -394,7 +394,7 @@ class DurationInput(AbstractInput[TimeDelta]):
             self.duration += hours(offset)
         elif 3 <= self.cursor_position < 5:
             self.duration += minutes(offset)
-        elif 6 <= self.cursor_position:
+        elif self.cursor_position >= 6:
             self.duration += seconds(offset)
 
 
@@ -610,7 +610,7 @@ class TimeInput(AbstractInput[Time]):
             self.time = add_time(self.time or Time(), hours(offset))
         elif 3 <= self.cursor_position < 5:
             self.time = add_time(self.time or Time(), minutes(offset))
-        elif 6 <= self.cursor_position:
+        elif self.cursor_position >= 6:
             self.time = add_time(self.time or Time(), seconds(offset))
 
 

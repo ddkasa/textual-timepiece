@@ -932,7 +932,7 @@ class DateInput(AbstractInput[Date]):
         return 5 <= self.cursor_position < 7
 
     def _is_day_pos(self) -> bool:
-        return 8 <= self.cursor_position
+        return self.cursor_position >= 8
 
     def convert(self) -> Date | None:
         # NOTE: Pydate instead as I want to keep it open to standard formats.
