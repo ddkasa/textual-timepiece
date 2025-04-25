@@ -245,40 +245,48 @@ class TimepieceDemo(App[None]):
         yield Header(show_clock=True)
 
         with TabbedContent(initial="pickers"):
-            with TabPane("Pickers", id="pickers"):
-                with Container(id="Pickers", classes="previews"):
-                    for item in (
-                        DatePicker,
-                        DurationPicker,
-                        TimePicker,
-                        DateTimePicker,
-                        DateRangePicker,
-                        DateTimeRangePicker,
-                        DateTimeDurationPicker,
-                    ):
-                        yield DemoWidget(item)
+            with (
+                TabPane("Pickers", id="pickers"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for item in (
+                    DatePicker,
+                    DurationPicker,
+                    TimePicker,
+                    DateTimePicker,
+                    DateRangePicker,
+                    DateTimeRangePicker,
+                    DateTimeDurationPicker,
+                ):
+                    yield DemoWidget(item)
 
-            with TabPane("Select"):
-                with Container(id="Pickers", classes="previews"):
-                    for select in (
-                        DateSelect,
-                        TimeSelect,
-                        DurationSelect,
-                    ):
-                        yield DemoWidget(select)
+            with (
+                TabPane("Select"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for select in (
+                    DateSelect,
+                    TimeSelect,
+                    DurationSelect,
+                ):
+                    yield DemoWidget(select)
 
-            with TabPane("Heatmap"):
-                with Container(id="heatmap", classes="previews"):
-                    for i in (ActivityHeatmap, HeatmapManager):
-                        yield DemoWidget(i)
+            with (
+                TabPane("Heatmap"),
+                Container(id="heatmap", classes="previews"),
+            ):
+                for i in (ActivityHeatmap, HeatmapManager):
+                    yield DemoWidget(i)
 
-            with TabPane("Timeline"):
-                with Container(id="timeline", classes="previews"):
-                    for timeline in (
-                        RuledVerticalTimeline,
-                        RuledHorizontalTimeline,
-                    ):
-                        yield DemoWidget(timeline)
+            with (
+                TabPane("Timeline"),
+                Container(id="timeline", classes="previews"),
+            ):
+                for timeline in (
+                    RuledVerticalTimeline,
+                    RuledHorizontalTimeline,
+                ):
+                    yield DemoWidget(timeline)
 
         yield Footer()
 
