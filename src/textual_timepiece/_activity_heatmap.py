@@ -562,7 +562,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         if self.cursor.is_month:
             if month is not None:
                 return month == self.cursor.month
-            elif day is not None and week is not None:
+            if day is not None and week is not None:
                 year = self.year
                 if week == 52:
                     week = 0
@@ -612,12 +612,11 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         if action == "move_cursor" and self.cursor:
             if parameters[0] == "right":
                 return self.cursor.week < 53
-            elif parameters[0] == "down":
+            if parameters[0] == "down":
                 return self.cursor.day < 9
-            elif parameters[0] == "left":
+            if parameters[0] == "left":
                 return self.cursor.week > 1
-            else:
-                return self.cursor.day > 1
+            return self.cursor.day > 1
 
         if action == "clear_cursor":
             return isinstance(self.cursor, HeatmapCursor)

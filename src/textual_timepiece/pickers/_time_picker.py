@@ -591,7 +591,7 @@ class TimeInput(AbstractInput[Time]):
         if self.cursor_position < 0:
             return
 
-        elif self.cursor_position == 8:
+        if self.cursor_position == 8:
             self.value = self.value[:-1] + "0"
 
         elif self.cursor_position not in {2, 5}:

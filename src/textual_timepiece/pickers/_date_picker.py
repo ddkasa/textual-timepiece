@@ -282,11 +282,11 @@ class DateSelect(BaseOverlayWidget):
         if self.scope == DateScope.YEAR:
             return str(self.loc.year)
 
-        elif self.scope == DateScope.DECADE:
+        if self.scope == DateScope.DECADE:
             start = math.floor(self.loc.year / 10) * 10
             return f"{start} <-> {start + 9}"
 
-        elif self.scope == DateScope.CENTURY:
+        if self.scope == DateScope.CENTURY:
             start = math.floor(self.loc.year / 100) * 100
             return f"{start} <-> {start + 99}"
 
