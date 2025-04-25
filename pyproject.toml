@@ -105,7 +105,7 @@ unfixable = [
 [tool.ruff.lint.isort]
 known-first-party = ["textual_timepiece"]
 force-single-line = true
-
+required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
