@@ -917,7 +917,6 @@ class DateInput(AbstractInput[Date]):
 
     def action_adjust_time(self, offset: int) -> None:
         """Adjust date with an offset depending on the text cursor position."""
-
         try:
             if self.date is None:
                 self.date = Date.today_in_system_tz()
