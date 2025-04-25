@@ -7,7 +7,6 @@ from collections.abc import Callable
 from contextlib import suppress
 from datetime import datetime
 from functools import cached_property
-from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import NamedTuple
 from typing import TypeAlias
@@ -49,10 +48,6 @@ from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
 from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
-
-if TYPE_CHECKING:
-    pass
-
 
 DisplayData: TypeAlias = Scope
 
