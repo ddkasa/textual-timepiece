@@ -1,5 +1,7 @@
 """Widgets for displaying & interacting with data on a timeline scale."""
 
+from __future__ import annotations
+
 from ._base_timeline import HorizontalRuler
 from ._base_timeline import HorizontalTimeline
 from ._base_timeline import HorizontalTimelineNavigation
