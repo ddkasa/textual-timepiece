@@ -671,11 +671,13 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         return month + 1
 
     def _date_lookup(self) -> Date | None:
-        if self.cursor is not None and self.cursor.is_day:
-            if (
-                day := self.cursor.to_date(self.year)
-            ) is not None and day.year == self.year:
-                return day
+        if (
+            self.cursor is not None
+            and self.cursor.is_day
+            and (day := self.cursor.to_date(self.year)) is not None
+            and day.year == self.year
+        ):
+            return day
 
         return None
 
