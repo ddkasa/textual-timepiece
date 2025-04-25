@@ -347,7 +347,7 @@ class AbstractEntry(Static, can_focus=True):
     @property
     def dimension(self) -> int:
         """Alias for the size of the entry depending on orientation."""
-        return cast(int, getattr(self.styles, self.DIMENSION).value)
+        return cast("int", getattr(self.styles, self.DIMENSION).value)
 
     @dimension.setter
     def dimension(self, value: int) -> None:
@@ -426,11 +426,11 @@ class VerticalEntry(AbstractEntry):
         return 0 <= offset.y <= self.EDGE_MARGIN
 
     def is_head(self, offset: Offset) -> bool:
-        height = cast(Scalar, self.styles.height).value
+        height = cast("Scalar", self.styles.height).value
         return height - self.EDGE_MARGIN <= offset.y <= height
 
     def is_start(self, offset: Offset) -> bool:
-        return offset.y < cast(Scalar, self.styles.height).value / 2
+        return offset.y < cast("Scalar", self.styles.height).value / 2
 
     def move(self, delta: int) -> None:
         offset = Offset(0, delta)
@@ -449,9 +449,9 @@ class VerticalEntry(AbstractEntry):
         if tail:
             delta *= -1
 
-        new_height = cast(Scalar, self.styles.height).value + delta
+        new_height = cast("Scalar", self.styles.height).value + delta
 
-        if tail and new_height != cast(Scalar, self.styles.height).value:
+        if tail and new_height != cast("Scalar", self.styles.height).value:
             self.offset += Offset(0, -delta)
 
         self.styles.height = new_height
@@ -538,11 +538,11 @@ class HorizontalEntry(AbstractEntry):
         return 0 <= offset.x <= self.EDGE_MARGIN
 
     def is_head(self, offset: Offset) -> bool:
-        width = cast(Scalar, self.styles.width).value
+        width = cast("Scalar", self.styles.width).value
         return width - self.EDGE_MARGIN <= offset.x <= width
 
     def is_start(self, offset: Offset) -> bool:
-        return offset.x < cast(Scalar, self.styles.width).value / 2
+        return offset.x < cast("Scalar", self.styles.width).value / 2
 
     def move(self, delta: int) -> None:
         offset = Offset(delta, 0)
@@ -561,9 +561,9 @@ class HorizontalEntry(AbstractEntry):
         if tail:
             delta *= -1
 
-        new_width = cast(Scalar, self.styles.width).value + delta
+        new_width = cast("Scalar", self.styles.width).value + delta
 
-        if tail and new_width != cast(Scalar, self.styles.width).value:
+        if tail and new_width != cast("Scalar", self.styles.width).value:
             self.offset += Offset(-delta, 0)
 
         self.styles.width = new_width

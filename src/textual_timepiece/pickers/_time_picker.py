@@ -263,7 +263,7 @@ class TimeSelect(BaseOverlayWidget):
         else:
             # FIX: Subclass a button with a required id.
             focused_id = int(
-                cast(str, cast(Button, self.app.focused).id).split("-")[-1]
+                cast("str", cast("Button", self.app.focused).id).split("-")[-1]
             )
 
             row, col = divmod(focused_id, 4)

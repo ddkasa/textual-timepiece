@@ -137,7 +137,7 @@ class BaseOverlay(BaseWidget, can_focus=True):
     def on_resize(self, event: Resize) -> None:
         # TODO: Need a better way to calculate this.
         # NOTE: Might have to set a constant height in a class var
-        parent = cast(Widget, self.parent)
+        parent = cast("Widget", self.parent)
         offset = 1 if parent.has_class("mini") else 3
         bottom = self.app.size.height // 2 > parent.region.y
         self.offset = Offset(0, offset if bottom else -(self.size.height + 2))
@@ -290,7 +290,7 @@ class AbstractInput(
     @property
     def alias(self) -> ValueType | None:
         """Alias for whatever value the input may be holding."""
-        return cast(ValueType | None, getattr(self, self.ALIAS))
+        return cast("ValueType | None", getattr(self, self.ALIAS))
 
     @alias.setter
     def alias(self, value: ValueType | None) -> None:
@@ -449,7 +449,7 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
 
     @cached_property
     def overlay(self) -> Overlay:
-        return cast(Overlay, self.query_exactly_one(BaseOverlay))
+        return cast("Overlay", self.query_exactly_one(BaseOverlay))
 
 
 InputType = TypeVar("InputType", bound=AbstractInput[Any])
@@ -525,7 +525,7 @@ class BasePicker(AbstractPicker[Any], Generic[InputType, ValueType, Overlay]):
     @property
     def value(self) -> ValueType | None:
         """Alias for whatever value the picker may be holding."""
-        return cast(ValueType | None, getattr(self, self.ALIAS))
+        return cast("ValueType | None", getattr(self, self.ALIAS))
 
     @value.setter
     def value(self, value: ValueType | None) -> None:

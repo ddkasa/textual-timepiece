@@ -106,7 +106,7 @@ class VerticalTimelineLayout(AbstractTimelineLayout[VerticalEntry]):
 
             add_column(entry)
 
-            end = entry.offset.y + cast(Scalar, entry.styles.height).value
+            end = entry.offset.y + cast("Scalar", entry.styles.height).value
             if previous_end is None or end > previous_end:
                 previous_end = end
 
@@ -119,7 +119,7 @@ class VerticalTimelineLayout(AbstractTimelineLayout[VerticalEntry]):
                     0,
                     0,
                     tile_width,
-                    round(cast(Scalar, entry.styles.height).value),
+                    round(cast("Scalar", entry.styles.height).value),
                 ),
                 Offset(col, floor(entry.offset.y)),
             )
@@ -150,7 +150,7 @@ class HorizontalTimelineLayout(AbstractTimelineLayout[HorizontalEntry]):
 
             add_row(entry)
 
-            end = entry.offset.x + cast(Scalar, entry.styles.width).value
+            end = entry.offset.x + cast("Scalar", entry.styles.width).value
             if previous_end is None or end > previous_end:
                 previous_end = end
 
@@ -162,7 +162,7 @@ class HorizontalTimelineLayout(AbstractTimelineLayout[HorizontalEntry]):
                 Region(
                     0,
                     0,
-                    round(cast(Scalar, entry.styles.width).value),
+                    round(cast("Scalar", entry.styles.width).value),
                     tile_height,
                 ),
                 Offset(floor(entry.offset.x), row),

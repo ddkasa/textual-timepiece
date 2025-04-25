@@ -70,7 +70,7 @@ class HeatmapCursor(NamedTuple):
 
     def to_date(self, year: int) -> Date | None:
         if self.is_month:
-            return Date(year, cast(int, self.month), 1)
+            return Date(year, cast("int", self.month), 1)
 
         if (week := self.week) == 53:
             week = 1

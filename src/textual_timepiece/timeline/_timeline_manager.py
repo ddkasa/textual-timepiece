@@ -123,7 +123,7 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
 
     @property
     def ruler(self) -> Ruler:
-        return cast(Ruler, self.query_exactly_one(AbstractRuler))
+        return cast("Ruler", self.query_exactly_one(AbstractRuler))
 
     @property
     def subdivisions(self) -> int:

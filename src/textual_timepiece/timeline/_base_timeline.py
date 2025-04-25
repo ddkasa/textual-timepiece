@@ -202,7 +202,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             self.length = duration
 
     async def _on_descendant_focus(self, event: DescendantFocus) -> None:
-        self._highlighted = cast(EntryType, event.widget)
+        self._highlighted = cast("EntryType", event.widget)
         self.post_message(self.EntrySelected(self, self._highlighted))
 
     async def _on_descendant_blur(self, event: DescendantBlur) -> None:
@@ -319,7 +319,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             self._start = None
             self._mime = None
         else:
-            cast(EntryType, self.selected).blur()
+            cast("EntryType", self.selected).blur()
 
     def action_adjust_tail(
         self,
@@ -333,9 +333,9 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             resize: Resize the entry instead of moving.
         """
         if resize:
-            cast(EntryType, self.selected).resize(1, tail=tail)
+            cast("EntryType", self.selected).resize(1, tail=tail)
         else:
-            cast(EntryType, self.selected).move(1)
+            cast("EntryType", self.selected).move(1)
 
     def action_adjust_head(
         self,
@@ -349,9 +349,9 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             resize: Resize the entry instead of moving.
         """
         if resize:
-            cast(EntryType, self.selected).resize(-1, tail=not tail)
+            cast("EntryType", self.selected).resize(-1, tail=not tail)
         else:
-            cast(EntryType, self.selected).move(-1)
+            cast("EntryType", self.selected).move(-1)
 
     @abstractmethod
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
@@ -441,12 +441,12 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
         return self._basic_strip
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
-        start = cast(Offset, self._start)
+        start = cast("Offset", self._start)
         return start.y if start.y < end.y else end.y, abs(end.y - start.y)
 
     def pre_layout(self, layout: VerticalTimelineLayout) -> None:  # type: ignore[override]
         self._nodes._sort(
-            key=lambda w: (w.offset.y, cast(Scalar, w.styles.height).value),
+            key=lambda w: (w.offset.y, cast("Scalar", w.styles.height).value),
         )
 
     def get_content_height(
@@ -520,12 +520,12 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         return cast("Strip", self._cached_strip)
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
-        start = cast(Offset, self._start)
+        start = cast("Offset", self._start)
         return start.x if start.x < end.x else end.x, abs(end.x - start.x)
 
     def pre_layout(self, layout: HorizontalTimelineLayout) -> None:  # type: ignore[override]
         self._nodes._sort(
-            key=lambda w: (w.offset.x, cast(Scalar, w.styles.width).value),
+            key=lambda w: (w.offset.x, cast("Scalar", w.styles.width).value),
         )
 
     def get_content_width(self, container: Size, viewport: Size) -> int:

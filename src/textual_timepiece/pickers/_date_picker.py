@@ -381,7 +381,7 @@ class DateSelect(BaseOverlayWidget):
             self._find_move(x=-1)
 
     def _find_move(self, *, y: int = 0, x: int = 0) -> None:
-        cursor = cast(DateCursor, self.cursor)
+        cursor = cast("DateCursor", self.cursor)
         if (new_y := cursor.y + y) == 0:
             new_x = cursor.x + x
             if cursor.y != 0:
@@ -439,7 +439,7 @@ class DateSelect(BaseOverlayWidget):
         if self.scope == DateScope.MONTH:
             self._set_date(target, ctrl=ctrl)
         elif self.scope == DateScope.YEAR:
-            self._set_month(cast(str, target))
+            self._set_month(cast("str", target))
         else:
             self._set_years(target)
 
@@ -453,7 +453,7 @@ class DateSelect(BaseOverlayWidget):
 
     def action_select_cursor(self, ctrl: bool = False) -> None:
         """Triggers the functionality for what is below the keyboard cursor."""
-        cursor = cast(DateCursor, self.cursor)
+        cursor = cast("DateCursor", self.cursor)
         if cursor.y == 0:
             nav = (
                 LEFT_ARROW,
@@ -658,7 +658,7 @@ class DateSelect(BaseOverlayWidget):
                 )
                 date = None
             else:
-                date = self.loc.replace(day=cast(int, day))
+                date = self.loc.replace(day=cast("int", day))
                 segments.append(
                     Segment(
                         str(day).rjust(3),
@@ -686,7 +686,7 @@ class DateSelect(BaseOverlayWidget):
         segs = list[Segment]()
         for i, value in enumerate(values):
             if self.scope == DateScope.CENTURY:
-                value = f"{value}-{cast(int, value) + 9}"
+                value = f"{value}-{cast('int', value) + 9}"
             else:
                 value = str(value)
             n = len(value)
