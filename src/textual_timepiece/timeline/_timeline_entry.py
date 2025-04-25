@@ -13,24 +13,24 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self
 
-from rich.console import RenderableType
-from textual.await_remove import AwaitRemove
-from textual.css.scalar import Scalar
-from textual.events import Leave
-from textual.events import MouseDown
-from textual.events import MouseEvent
-from textual.events import MouseMove
-from textual.events import MouseUp
 from textual.geometry import Offset
 from textual.geometry import Size
 from textual.reactive import var
-from textual.visual import SupportsVisual
 from textual.widgets import Static
 
 from textual_timepiece._extra import BaseMessage
 
 if TYPE_CHECKING:
+    from rich.console import RenderableType
+    from textual.await_remove import AwaitRemove
+    from textual.css.scalar import Scalar
     from textual.dom import DOMNode
+    from textual.events import Leave
+    from textual.events import MouseDown
+    from textual.events import MouseEvent
+    from textual.events import MouseMove
+    from textual.events import MouseUp
+    from textual.visual import SupportsVisual
 
     from textual_timepiece.timeline._base_timeline import VerticalTimeline
 

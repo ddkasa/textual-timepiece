@@ -7,6 +7,7 @@ from collections.abc import Callable
 from contextlib import suppress
 from datetime import datetime
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import NamedTuple
 from typing import TypeAlias
@@ -15,15 +16,9 @@ from typing import cast
 from rich.segment import Segment
 from rich.style import Style
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Horizontal
-from textual.events import Blur
-from textual.events import Click
-from textual.events import Focus
-from textual.events import Leave
-from textual.events import MouseMove
 from textual.geometry import Offset
 from textual.geometry import Size
 from textual.reactive import reactive
@@ -36,7 +31,6 @@ from whenever import DateDelta
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
-from textual_timepiece._types import Directions
 from textual_timepiece._utility import DateScope
 from textual_timepiece._utility import Scope
 from textual_timepiece._utility import get_scope
@@ -48,6 +42,16 @@ from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
 from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.events import Blur
+    from textual.events import Click
+    from textual.events import Focus
+    from textual.events import Leave
+    from textual.events import MouseMove
+
+    from textual_timepiece._types import Directions
 
 DisplayData: TypeAlias = Scope
 

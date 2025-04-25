@@ -9,6 +9,7 @@ from collections import defaultdict
 from datetime import date
 from functools import cached_property
 from itertools import chain
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import NamedTuple
 from typing import TypeAlias
@@ -20,12 +21,10 @@ else:
     from typing_extensions import Self
 
 
-from rich.color import Color as RColor
 from rich.segment import Segment
 from rich.style import Style as RStyle
 from textual import on
 from textual import work
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.color import Color
@@ -51,7 +50,6 @@ from whenever import Date
 from whenever import days
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._types import Directions
 
 from ._extra import BaseWidget
 from ._extra import TargetButton
@@ -59,6 +57,12 @@ from ._utility import flat_to_shape
 from ._utility import format_seconds
 from ._utility import iterate_timespan
 from ._utility import normalize_values
+
+if TYPE_CHECKING:
+    from rich.color import Color as RColor
+    from textual.app import ComposeResult
+
+    from textual_timepiece._types import Directions
 
 
 class HeatmapCursor(NamedTuple):

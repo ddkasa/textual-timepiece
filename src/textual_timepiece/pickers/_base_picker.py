@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Awaitable
 from typing import Callable
@@ -23,7 +24,6 @@ from textual.events import Resize
 from textual.geometry import Offset
 from textual.geometry import Size
 from textual.reactive import var
-from textual.widget import Widget
 from textual.widgets import Button
 from textual.widgets import Input
 from textual.widgets import MaskedInput
@@ -31,6 +31,9 @@ from textual.widgets import MaskedInput
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import BaseWidget
 from textual_timepiece._extra import ExpandButton
+
+if TYPE_CHECKING:
+    from textual.widget import Widget
 
 
 class BaseOverlayWidget(BaseWidget, can_focus=True):

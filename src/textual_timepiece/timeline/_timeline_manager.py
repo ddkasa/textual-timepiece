@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import ClassVar
@@ -9,11 +10,9 @@ from typing import Generic
 from typing import TypeVar
 from typing import cast
 
-from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 from textual.reactive import reactive
 from textual.reactive import var
-from textual.widget import Widget
 
 from textual_timepiece._utility import format_seconds
 from textual_timepiece.timeline._base_timeline import HorizontalRuler
@@ -23,6 +22,10 @@ from ._base_timeline import AbstractRuler
 from ._base_timeline import HorizontalTimelineNavigation
 from ._base_timeline import TimelineNavigation
 from ._base_timeline import VerticalTimelineNavigation
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.widget import Widget
 
 # NOTE: How many premade widgets do I create?
 # TODO: Calculate subdivisions dynamically.

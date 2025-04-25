@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import cast
 
@@ -11,7 +12,6 @@ else:
     from typing_extensions import Self
 
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Horizontal
@@ -39,6 +39,9 @@ from ._date_picker import EndDateSelect
 from ._datetime_picker import DateTimeInput
 from ._time_picker import DurationInput
 from ._time_picker import DurationSelect
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
 
 # TODO: Set a maximum and minimum range that is required.
 # TODO: Limit or validate to min/max dates

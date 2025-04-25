@@ -18,18 +18,10 @@ else:
 
 from rich.segment import Segment
 from rich.style import Style as RichStyle
-from textual.app import ComposeResult
-from textual.await_remove import AwaitRemove
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.css.query import NoMatches
 from textual.css.query import QueryType
-from textual.css.scalar import Scalar
-from textual.events import DescendantBlur
-from textual.events import DescendantFocus
-from textual.events import MouseDown
-from textual.events import MouseMove
-from textual.events import MouseUp
 from textual.geometry import Offset
 from textual.geometry import Region
 from textual.geometry import Size
@@ -52,6 +44,15 @@ from ._timeline_layouts import VerticalTimelineLayout
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    from textual.app import ComposeResult
+    from textual.await_remove import AwaitRemove
+    from textual.css.scalar import Scalar
+    from textual.events import DescendantBlur
+    from textual.events import DescendantFocus
+    from textual.events import MouseDown
+    from textual.events import MouseMove
+    from textual.events import MouseUp
 
 EntryType = TypeVar("EntryType", bound="AbstractEntry")
 TimelineType = TypeVar("TimelineType", bound="AbstractTimeline[Any]")

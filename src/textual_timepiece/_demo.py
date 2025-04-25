@@ -5,10 +5,10 @@ import random
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Literal
 
-from rich.console import RenderableType
 from rich.pretty import Pretty
 from rich.syntax import Syntax
 from textual import on
@@ -45,6 +45,9 @@ from textual_timepiece.timeline._timeline_manager import (
     RuledHorizontalTimeline,
 )
 from textual_timepiece.timeline._timeline_manager import RuledVerticalTimeline
+
+if TYPE_CHECKING:
+    from rich.console import RenderableType
 
 
 class DemoWidget(Widget):

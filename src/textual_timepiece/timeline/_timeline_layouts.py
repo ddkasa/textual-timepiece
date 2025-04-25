@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from collections.abc import Callable
 from math import floor
 from typing import TYPE_CHECKING
 from typing import Generic
 from typing import TypeVar
 from typing import cast
 
-from textual.css.scalar import Scalar
 from textual.geometry import NULL_SPACING
 from textual.geometry import Offset
 from textual.geometry import Region
@@ -24,6 +22,10 @@ from ._timeline_entry import HorizontalEntry
 from ._timeline_entry import VerticalEntry
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from textual.css.scalar import Scalar
+
     from ._base_timeline import AbstractTimeline
 
 

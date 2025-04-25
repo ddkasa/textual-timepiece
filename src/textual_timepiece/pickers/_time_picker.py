@@ -2,18 +2,17 @@ from __future__ import annotations
 
 from contextlib import suppress
 from string import digits
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Final
 from typing import Literal
 from typing import cast
 
 from textual import on
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.containers import Grid
 from textual.containers import Horizontal
-from textual.events import Mount
 from textual.reactive import var
 from textual.validation import Failure
 from textual.validation import ValidationResult
@@ -30,7 +29,6 @@ from whenever import seconds
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
-from textual_timepiece._types import Directions
 from textual_timepiece._utility import add_time
 from textual_timepiece._utility import format_seconds
 from textual_timepiece._utility import round_time
@@ -39,6 +37,12 @@ from ._base_picker import AbstractInput
 from ._base_picker import BaseOverlay
 from ._base_picker import BaseOverlayWidget
 from ._base_picker import BasePicker
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.events import Mount
+
+    from textual_timepiece._types import Directions
 
 
 class DurationSelect(BaseOverlayWidget):

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 
 from textual import on
-from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.containers import Vertical
 from textual.reactive import var
@@ -25,6 +25,9 @@ from ._base_picker import BasePicker
 from ._date_picker import DateSelect
 from ._time_picker import DurationSelect
 from ._time_picker import TimeSelect
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
 
 
 class DateTimeOverlay(BaseOverlay):
