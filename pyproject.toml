@@ -75,15 +75,15 @@ fix = true
 extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]
+ignore = ["ANN401", "D107", "A002", "A001"]
 select = [
-    "E401",
     "E",
     "F",
-    "W",    # flake8
-    "C",    # mccabe
-    "I",    # isort
-    "N",    # pep8-naming
-    # "D",   # flake8-docstrings
+    "W",   # flake8
+    "C",   # mccabe
+    "I",   # isort
+    "N",   # pep8-naming
+    "D",   # flake8-docstrings
     "ANN", # flake8-annotations
     "S",   # flake8-bandit
     "BLE", # flake8-blind-except
@@ -94,7 +94,6 @@ select = [
     "ISC", # flake8-implicit-str-concat
     "RUF", # Ruff-specific rules
 ]
-ignore = ["ANN101", "ANN401", "D107", "ANN102", "A002", "A001"]
 unfixable = [
     "ERA", # Don't remove commented-out code
 ]
@@ -106,6 +105,10 @@ unfixable = [
 [tool.ruff.lint.isort]
 known-first-party = ["textual_timepiece"]
 force-single-line = true
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 
 [tool.mypy]

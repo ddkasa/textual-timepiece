@@ -84,10 +84,12 @@ plugins:
             group_by_category: true
             filters:
               - "!^_"
+              - "!^__"
               - "^__init__$"
               - "!^can_replace$"
               - "!^compose$"
               - "!^render$"
+              - "!^check_action$"
               - "!^render_line$"
               - "!^render_lines$"
               - "!^get_content_width$"
