@@ -83,16 +83,16 @@ select = [
     "C",    # mccabe
     "I",    # isort
     "N",    # pep8-naming
-    # "D",   # flake8-docstrings
-    "ANN", # flake8-annotations
-    "S",   # flake8-bandit
-    "BLE", # flake8-blind-except
-    "B",   # flake8-bugbear
-    "A",   # flake8-builtins
-    "G",   # flake8-logging-format
-    "ERA", # eradicate
-    "ISC", # flake8-implicit-str-concat
-    "RUF", # Ruff-specific rules
+    "D",    # flake8-docstrings
+    "ANN",  # flake8-annotations
+    "S",    # flake8-bandit
+    "BLE",  # flake8-blind-except
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "G",    # flake8-logging-format
+    "ERA",  # eradicate
+    "ISC",  # flake8-implicit-str-concat
+    "RUF",  # Ruff-specific rules
 ]
 ignore = ["ANN101", "ANN401", "D107", "ANN102", "A002", "A001"]
 unfixable = [
@@ -106,6 +106,10 @@ unfixable = [
 [tool.ruff.lint.isort]
 known-first-party = ["textual_timepiece"]
 force-single-line = true
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 
 [tool.mypy]
