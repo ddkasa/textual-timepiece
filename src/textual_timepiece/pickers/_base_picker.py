@@ -447,14 +447,14 @@ class AbstractPicker(BaseWidget, Generic[Overlay]):
         return cast(Overlay, self.query_exactly_one(BaseOverlay))
 
 
-TI = TypeVar("TI", bound=AbstractInput[Any])
+InputType = TypeVar("InputType", bound=AbstractInput[Any])
 
 
-class BasePicker(AbstractPicker[Any], Generic[TI, T, Overlay]):
+class BasePicker(AbstractPicker[Any], Generic[InputType, T, Overlay]):
     """Base Picker class for combining various single ended widgets."""
 
     ALIAS: str
-    INPUT: type[TI]
+    INPUT: type[InputType]
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
@@ -514,7 +514,7 @@ class BasePicker(AbstractPicker[Any], Generic[TI, T, Overlay]):
         """Behaviour when using the target-default button or action."""
 
     @cached_property
-    def input_widget(self) -> TI:
+    def input_widget(self) -> InputType:
         return self.query_exactly_one(self.INPUT)
 
     @property
