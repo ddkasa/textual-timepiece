@@ -400,6 +400,12 @@ VerticalEntryType = TypeVar(
     default=VerticalEntry,
 )
 
+VerticalEntryT = TypeVar(
+    "VerticalEntryT",
+    bound=VerticalEntry,
+    default=VerticalEntry,
+)
+
 
 class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """Basic timeline widget that displays entries in a vertical view."""
@@ -424,14 +430,18 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """
     """Default CSS for `VerticalTimeline` widget."""
 
-    class EntryCreated(AbstractTimeline.Updated[EntryT, "VerticalTimeline"]):
+    class Created(
+        AbstractTimeline.Created[VerticalEntryT, "VerticalTimeline"]
+    ):
         """Sent when a new entry is created."""
 
-    class EntryDeleted(AbstractTimeline.Updated[EntryT, "VerticalTimeline"]):
+    class Deleted(
+        AbstractTimeline.Deleted[VerticalEntryT, "VerticalTimeline"]
+    ):
         """Sent when an entry is deleted."""
 
-    class EntrySelected(
-        AbstractTimeline.Updated[EntryType, "VerticalTimeline"]
+    class Selected(
+        AbstractTimeline.Selected[VerticalEntryT, "VerticalTimeline"]
     ):
         """Sent when a new entry selected."""
 
@@ -480,6 +490,12 @@ HorizontalEntryType = TypeVar(
     default=HorizontalEntry,
 )
 
+HorizontalEntryT = TypeVar(
+    "HorizontalEntryT",
+    bound=HorizontalEntry,
+    default=HorizontalEntry,
+)
+
 
 class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """Basic timeline widget that displays entries in a horizontal view."""
@@ -506,6 +522,20 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """Default CSS for `HorizontalTimeline` widget."""
 
     _cached_strip = None
+    class Created(
+        AbstractTimeline.Created[HorizontalEntryT, "HorizontalTimeline"]
+    ):
+        """Sent when a new entry is created."""
+
+    class Deleted(
+        AbstractTimeline.Deleted[HorizontalEntryT, "HorizontalTimeline"]
+    ):
+        """Sent when an entry is deleted."""
+
+    class Selected(
+        AbstractTimeline.Selected[HorizontalEntryT, "HorizontalTimeline"]
+    ):
+        """Sent when a new entry selected."""
 
     def _create_strip(self) -> Strip:
         """Prerenders the strip for reuse on each line."""
