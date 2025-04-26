@@ -710,7 +710,16 @@ class AbstractRuler(Widget):
 
 
 class VerticalRuler(AbstractRuler):
-    """Vertical ruler for marking vertical timelines."""
+    """Vertical ruler for marking vertical timelines.
+
+    Params:
+        duration: Total length of the ruler.
+        marker_factory: Callable for creating the markers.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     DEFAULT_CSS: ClassVar[str] = """\
     VerticalRuler {
