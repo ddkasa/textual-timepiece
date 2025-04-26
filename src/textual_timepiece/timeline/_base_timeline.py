@@ -315,7 +315,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             return
 
         entry.remove()
-        self.post_message(AbstractTimeline.Deleted(self, entry))
+        self.post_message(self.Deleted(self, entry))
 
     def _action_clear_active(self) -> None:
         if self._mime:
@@ -413,7 +413,17 @@ VerticalTimelineType = TypeVar(
 
 
 class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
-    """Basic timeline widget that displays entries in a vertical view."""
+    """Timeline that displays entries in a vertical view.
+
+    Params:
+        *children: Entries to intially add to the widget.
+        duration: Size of the widget.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        tile: Whether to tile the timeline or not.
+    """
 
     Entry = VerticalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
     Layout = VerticalTimelineLayout
@@ -516,7 +526,17 @@ HorizontalTimelineType = TypeVar(
 
 
 class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
-    """Basic timeline widget that displays entries in a horizontal view."""
+    """Timeline that displays entries in a horizontal view.
+
+    Params:
+        *children: Entries to intially add to the widget.
+        duration: Size of the widget.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        tile: Whether to tile the timeline or not.
+    """
 
     Entry = HorizontalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
     Layout = HorizontalTimelineLayout
@@ -690,7 +710,16 @@ class AbstractRuler(Widget):
 
 
 class VerticalRuler(AbstractRuler):
-    """Vertical ruler for marking vertical timelines."""
+    """Vertical ruler for marking vertical timelines.
+
+    Params:
+        duration: Total length of the ruler.
+        marker_factory: Callable for creating the markers.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     DEFAULT_CSS: ClassVar[str] = """\
     VerticalRuler {
@@ -739,7 +768,16 @@ class VerticalRuler(AbstractRuler):
 
 
 class HorizontalRuler(AbstractRuler):
-    """Horizontal ruler for marking horizontal timelines."""
+    """Horizontal ruler for marking horizontal timelines.
+
+    Params:
+        duration: Total length of the ruler.
+        marker_factory: Callable for creating the markers.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     DEFAULT_CSS: ClassVar[str] = """\
     HorizontalRuler {
@@ -821,7 +859,15 @@ class TimelineNavigation(Widget, Generic[ChildTimeline]):
 class VerticalTimelineNavigation(
     TimelineNavigation[VerticalTimeline[VerticalEntry]]
 ):
-    """Vertical widget containing a vertical timeline and header."""
+    """Vertical widget containing a vertical timeline and header.
+
+    Params:
+        header: Header to use at the start of the timeline.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     Timeline = VerticalTimeline
 
@@ -837,7 +883,15 @@ class VerticalTimelineNavigation(
 class HorizontalTimelineNavigation(
     TimelineNavigation[HorizontalTimeline[HorizontalEntryType]]
 ):
-    """Horizontal widget containing a horizontal timeline and header."""
+    """Horizontal widget containing a horizontal timeline and header.
+
+    Params:
+        header: Header to use at the start of the timeline.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     Timeline = HorizontalTimeline
 

@@ -11,6 +11,7 @@ from typing import TypeVar
 from typing import cast
 
 from textual.containers import ScrollableContainer
+from textual.css.query import NoMatches
 from textual.reactive import reactive
 from textual.reactive import var
 
@@ -49,7 +50,7 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
     """Ruled timelines with markers.
 
     Params:
-        total: Total amount of timlines to draw.
+        total: Total amount of timelines to draw.
         marker_factory: Factory function for creating markers on the ruler.
             Defaults to generating markers in the *HH:mm* format.
         header_factory: Factory function for creating headers.
@@ -57,8 +58,7 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        can_maximized: Allow this container to maximize?
-            `None` to use default logic.
+        can_maximize: Whether the widget can be maximized or not.
     """
 
     Timeline: type[Navigation]
@@ -110,19 +110,29 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
     def _validate_total(self, value: int) -> int:
         return max(value, 1)
 
-    def _watch_total(self, old: int, new: int) -> None:
+    async def _watch_total(self, old: int, new: int) -> None:
         if old < new:
-            for i in range(old + 1, new + 1):
-                self.mount(
+            await self.mount(
+                *(
                     self.Timeline(
                         self._header_factory(i)
                         if self._header_factory
                         else None,
+                        id=f"timeline-{i}",
                     ).data_bind(AbstractRuledTimeline.length)
+                    for i in range(old + 1, new + 1)
                 )
+            )
         else:
+            timelines: list[Navigation] = []
             for i in range(old, new, -1):
-                self.query_one(f"#timeline-{i}").remove()
+                try:
+                    tl = self.query_one(f"#timeline-{i}", self.Timeline)
+                except NoMatches as err:
+                    self.log.debug(err)
+                else:
+                    timelines.append(tl)
+            await self.remove_children(timelines)
 
     @property
     def ruler(self) -> Ruler:
@@ -140,7 +150,24 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
 class RuledVerticalTimeline(
     AbstractRuledTimeline[VerticalTimelineNavigation, VerticalRuler]
 ):
-    """Ruled vertical timeline with markers."""
+    """Ruled vertical timeline with markers.
+
+    !!! note
+        If providing a headers with with the `header_factory` parameter make
+        sure to compensate with top padding for the ruler to keep alignment
+        in place.
+
+    Params:
+        total: Total amount of timelines to draw.
+        marker_factory: Factory function for creating markers on the ruler.
+            Defaults to generating markers in the *HH:mm* format.
+        header_factory: Factory function for creating headers.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        can_maximize: Whether the widget can be maximized or not.
+    """
 
     Timeline = VerticalTimelineNavigation
     DEFAULT_CSS: ClassVar[str] = """\
@@ -167,7 +194,25 @@ class RuledVerticalTimeline(
 class RuledHorizontalTimeline(
     AbstractRuledTimeline[HorizontalTimelineNavigation, HorizontalRuler]
 ):
-    """Ruled horizontal timeline with markers."""
+    """Ruled horizontal timeline with markers.
+
+    !!! note
+        If providing a headers with with the `header_factory` parameter make
+        sure to compensate with left padding for the ruler to keep alignment
+        in place.
+
+    Params:
+        total: Total amount of timelines to draw.
+        marker_factory: Factory function for creating markers on the ruler.
+            Defaults to generating markers in the *HH:mm* format.
+        header_factory: Factory function for creating headers.
+
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        can_maximize: Whether the widget can be maximized or not.
+    """
 
     Timeline = HorizontalTimelineNavigation
     DEFAULT_CSS: ClassVar[str] = """\

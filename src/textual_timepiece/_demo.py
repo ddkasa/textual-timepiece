@@ -17,6 +17,7 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.containers import Horizontal
 from textual.containers import ScrollableContainer
+from textual.events import Mount
 from textual.message import Message
 from textual.screen import ModalScreen
 from textual.widget import Widget
