@@ -57,6 +57,8 @@ if TYPE_CHECKING:
 EntryType = TypeVar("EntryType", bound="AbstractEntry")
 TimelineType = TypeVar("TimelineType", bound="AbstractTimeline[Any]")
 
+EntryT = TypeVar("EntryT", bound="AbstractEntry")
+
 
 class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     """Abstract timeline implementation with various items.
@@ -76,25 +78,27 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         tile: Whether to tile the timeline or not.
     """
 
-    class Update(BaseMessage[TimelineType]):
+    class Update(BaseMessage[TimelineType], Generic[EntryT, TimelineType]):
         """Base class for all timeline messages."""
 
-        def __init__(self, widget: TimelineType, entry: EntryType) -> None:
+        def __init__(self, widget: TimelineType, entry: EntryT) -> None:
             super().__init__(widget)
+
             self.entry = entry
+            """Entry that was updated."""
 
         @property
         def timeline(self) -> TimelineType:
             """Alias for `widget` attribute."""
             return self.widget
 
-    class EntryCreated(Update[TimelineType]):
+    class EntryCreated(Update[EntryT, TimelineType]):
         """Sent when a new entry is created."""
 
-    class EntryDeleted(Update[TimelineType]):
+    class EntryDeleted(Update[EntryT, TimelineType]):
         """Sent when an entry is deleted."""
 
-    class EntrySelected(Update[TimelineType]):
+    class EntrySelected(Update[EntryType, TimelineType]):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]
