@@ -315,7 +315,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             return
 
         entry.remove()
-        self.post_message(AbstractTimeline.Deleted(self, entry))
+        self.post_message(self.Deleted(self, entry))
 
     def _action_clear_active(self) -> None:
         if self._mime:
