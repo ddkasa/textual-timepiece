@@ -50,7 +50,7 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
     """Ruled timelines with markers.
 
     Params:
-        total: Total amount of timlines to draw.
+        total: Total amount of timelines to draw.
         marker_factory: Factory function for creating markers on the ruler.
             Defaults to generating markers in the *HH:mm* format.
         header_factory: Factory function for creating headers.
@@ -58,8 +58,7 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        can_maximized: Allow this container to maximize?
-            `None` to use default logic.
+        can_maximize: Whether the widget can be maximized or not.
     """
 
     Timeline: type[Navigation]
