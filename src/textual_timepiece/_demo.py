@@ -48,6 +48,7 @@ from textual_timepiece.timeline._timeline_manager import RuledVerticalTimeline
 
 if TYPE_CHECKING:
     from rich.console import RenderableType
+    from textual.events import Mount
 
 
 class DemoWidget(Widget):
@@ -133,7 +134,7 @@ class PreviewScreen(ModalScreen[None]):
         super().__init__(name, id, classes)
         self._renderable = renderable
 
-    def _on_mount(self) -> None:
+    def _on_mount(self, event: Mount) -> None:
         self.refresh_bindings()
 
     def compose(self) -> ComposeResult:
@@ -290,7 +291,7 @@ class TimepieceDemo(App[None]):
 
         yield Footer()
 
-    def _on_mount(self) -> None:
+    def _on_mount(self, event: Mount) -> None:
         for widget in self.query(ActivityHeatmap):
             self._set_data(widget)
 
