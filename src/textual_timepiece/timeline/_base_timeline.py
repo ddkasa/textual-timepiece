@@ -406,6 +406,12 @@ VerticalEntryT = TypeVar(
     default=VerticalEntry,
 )
 
+VerticalTimelineType = TypeVar(
+    "VerticalTimelineType",
+    bound="VerticalTimeline",
+    default="VerticalTimeline",
+)
+
 
 class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """Basic timeline widget that displays entries in a vertical view."""
@@ -431,17 +437,17 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """Default CSS for `VerticalTimeline` widget."""
 
     class Created(
-        AbstractTimeline.Created[VerticalEntryT, "VerticalTimeline"]
+        AbstractTimeline.Created[VerticalEntryT, VerticalTimelineType]
     ):
         """Sent when a new entry is created."""
 
     class Deleted(
-        AbstractTimeline.Deleted[VerticalEntryT, "VerticalTimeline"]
+        AbstractTimeline.Deleted[VerticalEntryT, VerticalTimelineType]
     ):
         """Sent when an entry is deleted."""
 
     class Selected(
-        AbstractTimeline.Selected[VerticalEntryT, "VerticalTimeline"]
+        AbstractTimeline.Selected[VerticalEntryT, VerticalTimelineType]
     ):
         """Sent when a new entry selected."""
 
@@ -495,6 +501,11 @@ HorizontalEntryT = TypeVar(
     bound=HorizontalEntry,
     default=HorizontalEntry,
 )
+HorizontalTimelineType = TypeVar(
+    "HorizontalTimelineType",
+    bound="HorizontalTimeline",
+    default="HorizontalTimeline",
+)
 
 
 class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
@@ -522,17 +533,17 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """Default CSS for `HorizontalTimeline` widget."""
 
     class Created(
-        AbstractTimeline.Created[HorizontalEntryT, "HorizontalTimeline"]
+        AbstractTimeline.Created[HorizontalEntryT, HorizontalTimelineType]
     ):
         """Sent when a new entry is created."""
 
     class Deleted(
-        AbstractTimeline.Deleted[HorizontalEntryT, "HorizontalTimeline"]
+        AbstractTimeline.Deleted[HorizontalEntryT, HorizontalTimelineType]
     ):
         """Sent when an entry is deleted."""
 
     class Selected(
-        AbstractTimeline.Selected[HorizontalEntryT, "HorizontalTimeline"]
+        AbstractTimeline.Selected[HorizontalEntryT, HorizontalTimelineType]
     ):
         """Sent when a new entry selected."""
 
