@@ -78,7 +78,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         tile: Whether to tile the timeline or not.
     """
 
-    class Update(BaseMessage[TimelineType], Generic[EntryT, TimelineType]):
+    class Updated(BaseMessage[TimelineType], Generic[EntryT, TimelineType]):
         """Base class for all timeline messages."""
 
         def __init__(self, widget: TimelineType, entry: EntryT) -> None:
@@ -92,13 +92,13 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             """Alias for `widget` attribute."""
             return self.widget
 
-    class EntryCreated(Update[EntryT, TimelineType]):
+    class Created(Updated[EntryT, TimelineType]):
         """Sent when a new entry is created."""
 
-    class EntryDeleted(Update[EntryT, TimelineType]):
+    class Deleted(Updated[EntryT, TimelineType]):
         """Sent when an entry is deleted."""
 
-    class EntrySelected(Update[EntryType, TimelineType]):
+    class Selected(Updated[EntryType, TimelineType]):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]
@@ -208,7 +208,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
 
     async def _on_descendant_focus(self, event: DescendantFocus) -> None:
         self._highlighted = cast("EntryType", event.widget)
-        self.post_message(self.EntrySelected(self, self._highlighted))
+        self.post_message(self.Selected(self, self._highlighted))
 
     async def _on_descendant_blur(self, event: DescendantBlur) -> None:
         if event.widget is self._highlighted:
@@ -255,7 +255,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             self.capture_mouse()
             self._start = event.offset
             if self._mime:
-                self.post_message(self.EntryCreated(self, self._mime))
+                self.post_message(self.Created(self, self._mime))
                 self._mime = None
 
     async def _create_mime(self, offset: Offset) -> None:
@@ -277,7 +277,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         if self.app.mouse_captured == self:
             self.capture_mouse(False)
         if self._mime:
-            self.post_message(self.EntryCreated(self, self._mime))
+            self.post_message(self.Created(self, self._mime))
             self._start = None
             self._mime = None
 
@@ -316,7 +316,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             return
 
         entry.remove()
-        self.post_message(AbstractTimeline.EntryDeleted(self, entry))
+        self.post_message(AbstractTimeline.Deleted(self, entry))
 
     def _action_clear_active(self) -> None:
         if self._mime:
@@ -423,6 +423,17 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     }
     """
     """Default CSS for `VerticalTimeline` widget."""
+
+    class EntryCreated(AbstractTimeline.Updated[EntryT, "VerticalTimeline"]):
+        """Sent when a new entry is created."""
+
+    class EntryDeleted(AbstractTimeline.Updated[EntryT, "VerticalTimeline"]):
+        """Sent when an entry is deleted."""
+
+    class EntrySelected(
+        AbstractTimeline.Updated[EntryType, "VerticalTimeline"]
+    ):
+        """Sent when a new entry selected."""
 
     def render_lines(self, crop: Region) -> list[Strip]:
         self._basic_strip = Strip(
