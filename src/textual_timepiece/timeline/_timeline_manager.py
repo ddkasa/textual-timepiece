@@ -194,7 +194,25 @@ class RuledVerticalTimeline(
 class RuledHorizontalTimeline(
     AbstractRuledTimeline[HorizontalTimelineNavigation, HorizontalRuler]
 ):
-    """Ruled horizontal timeline with markers."""
+    """Ruled horizontal timeline with markers.
+
+    !!! note
+        If providing a headers with with the `header_factory` parameter make
+        sure to compensate with left padding for the ruler to keep alignment
+        in place.
+
+    Params:
+        total: Total amount of timelines to draw.
+        marker_factory: Factory function for creating markers on the ruler.
+            Defaults to generating markers in the *HH:mm* format.
+        header_factory: Factory function for creating headers.
+
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        can_maximize: Whether the widget can be maximized or not.
+    """
 
     Timeline = HorizontalTimelineNavigation
     DEFAULT_CSS: ClassVar[str] = """\
