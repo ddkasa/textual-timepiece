@@ -214,9 +214,8 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         if event.widget is self._highlighted:
             self._highlighted = None
 
-    def _watch_markers(self, old: Markers, new: Markers) -> None:
-        for line in old.keys() ^ new.keys():
-            self.refresh_line(line)
+    @abstractmethod
+    def _watch_markers(self, old: Markers, new: Markers) -> None: ...
 
     def refresh_line(self, y: int) -> None:
         """Refresh a single line.
@@ -451,6 +450,14 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     ):
         """Sent when a new entry selected."""
 
+    def _watch_markers(
+        self,
+        old: AbstractTimeline.Markers,
+        new: AbstractTimeline.Markers,
+    ) -> None:
+        for line in old.keys() ^ new.keys():
+            self.refresh_line(line)
+
     def render_lines(self, crop: Region) -> list[Strip]:
         self._basic_strip = Strip(
             [
@@ -574,6 +581,14 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
 
     def render_line(self, y: int) -> Strip:
         return self._cached_strip
+
+    def _watch_markers(
+        self,
+        old: AbstractTimeline.Markers,
+        new: AbstractTimeline.Markers,
+    ) -> None:
+        if old.keys() ^ new.keys():
+            self.refresh()
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
         start = cast("Offset", self._start)
