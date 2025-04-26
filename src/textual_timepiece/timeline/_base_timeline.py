@@ -859,7 +859,15 @@ class TimelineNavigation(Widget, Generic[ChildTimeline]):
 class VerticalTimelineNavigation(
     TimelineNavigation[VerticalTimeline[VerticalEntry]]
 ):
-    """Vertical widget containing a vertical timeline and header."""
+    """Vertical widget containing a vertical timeline and header.
+
+    Params:
+        header: Header to use at the start of the timeline.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+    """
 
     Timeline = VerticalTimeline
 
