@@ -11,6 +11,7 @@ from typing import TypeVar
 from typing import cast
 
 from textual.containers import ScrollableContainer
+from textual.css.query import NoMatches
 from textual.reactive import reactive
 from textual.reactive import var
 
@@ -110,19 +111,29 @@ class AbstractRuledTimeline(ScrollableContainer, Generic[Navigation, Ruler]):
     def _validate_total(self, value: int) -> int:
         return max(value, 1)
 
-    def _watch_total(self, old: int, new: int) -> None:
+    async def _watch_total(self, old: int, new: int) -> None:
         if old < new:
-            for i in range(old + 1, new + 1):
-                self.mount(
+            await self.mount(
+                *(
                     self.Timeline(
                         self._header_factory(i)
                         if self._header_factory
                         else None,
+                        id=f"timeline-{i}",
                     ).data_bind(AbstractRuledTimeline.length)
+                    for i in range(old + 1, new + 1)
                 )
+            )
         else:
+            timelines: list[Navigation] = []
             for i in range(old, new, -1):
-                self.query_one(f"#timeline-{i}").remove()
+                try:
+                    tl = self.query_one(f"#timeline-{i}", self.Timeline)
+                except NoMatches as err:
+                    self.log.debug(err)
+                else:
+                    timelines.append(tl)
+            await self.remove_children(timelines)
 
     @property
     def ruler(self) -> Ruler:
