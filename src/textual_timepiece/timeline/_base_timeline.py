@@ -521,7 +521,6 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """
     """Default CSS for `HorizontalTimeline` widget."""
 
-    _cached_strip = None
     class Created(
         AbstractTimeline.Created[HorizontalEntryT, "HorizontalTimeline"]
     ):
@@ -563,7 +562,7 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         return super().render_lines(crop)
 
     def render_line(self, y: int) -> Strip:
-        return cast("Strip", self._cached_strip)
+        return self._cached_strip
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
         start = cast("Offset", self._start)
