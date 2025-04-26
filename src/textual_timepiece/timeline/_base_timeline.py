@@ -57,6 +57,8 @@ if TYPE_CHECKING:
 EntryType = TypeVar("EntryType", bound="AbstractEntry")
 TimelineType = TypeVar("TimelineType", bound="AbstractTimeline[Any]")
 
+EntryT = TypeVar("EntryT", bound="AbstractEntry")
+
 
 class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     """Abstract timeline implementation with various items.
@@ -76,25 +78,27 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         tile: Whether to tile the timeline or not.
     """
 
-    class Update(BaseMessage[TimelineType]):
+    class Updated(BaseMessage[TimelineType], Generic[EntryT, TimelineType]):
         """Base class for all timeline messages."""
 
-        def __init__(self, widget: TimelineType, entry: EntryType) -> None:
+        def __init__(self, widget: TimelineType, entry: EntryT) -> None:
             super().__init__(widget)
+
             self.entry = entry
+            """Entry that was updated."""
 
         @property
         def timeline(self) -> TimelineType:
             """Alias for `widget` attribute."""
             return self.widget
 
-    class EntryCreated(Update[TimelineType]):
+    class Created(Updated[EntryT, TimelineType]):
         """Sent when a new entry is created."""
 
-    class EntryDeleted(Update[TimelineType]):
+    class Deleted(Updated[EntryT, TimelineType]):
         """Sent when an entry is deleted."""
 
-    class EntrySelected(Update[TimelineType]):
+    class Selected(Updated[EntryType, TimelineType]):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]
@@ -204,15 +208,14 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
 
     async def _on_descendant_focus(self, event: DescendantFocus) -> None:
         self._highlighted = cast("EntryType", event.widget)
-        self.post_message(self.EntrySelected(self, self._highlighted))
+        self.post_message(self.Selected(self, self._highlighted))
 
     async def _on_descendant_blur(self, event: DescendantBlur) -> None:
         if event.widget is self._highlighted:
             self._highlighted = None
 
-    def _watch_markers(self, old: Markers, new: Markers) -> None:
-        for line in old.keys() ^ new.keys():
-            self.refresh_line(line)
+    @abstractmethod
+    def _watch_markers(self, old: Markers, new: Markers) -> None: ...
 
     def refresh_line(self, y: int) -> None:
         """Refresh a single line.
@@ -251,7 +254,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             self.capture_mouse()
             self._start = event.offset
             if self._mime:
-                self.post_message(self.EntryCreated(self, self._mime))
+                self.post_message(self.Created(self, self._mime))
                 self._mime = None
 
     async def _create_mime(self, offset: Offset) -> None:
@@ -273,7 +276,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         if self.app.mouse_captured == self:
             self.capture_mouse(False)
         if self._mime:
-            self.post_message(self.EntryCreated(self, self._mime))
+            self.post_message(self.Created(self, self._mime))
             self._start = None
             self._mime = None
 
@@ -312,7 +315,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             return
 
         entry.remove()
-        self.post_message(AbstractTimeline.EntryDeleted(self, entry))
+        self.post_message(AbstractTimeline.Deleted(self, entry))
 
     def _action_clear_active(self) -> None:
         if self._mime:
@@ -396,6 +399,18 @@ VerticalEntryType = TypeVar(
     default=VerticalEntry,
 )
 
+VerticalEntryT = TypeVar(
+    "VerticalEntryT",
+    bound=VerticalEntry,
+    default=VerticalEntry,
+)
+
+VerticalTimelineType = TypeVar(
+    "VerticalTimelineType",
+    bound="VerticalTimeline",
+    default="VerticalTimeline",
+)
+
 
 class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     """Basic timeline widget that displays entries in a vertical view."""
@@ -419,6 +434,29 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     }
     """
     """Default CSS for `VerticalTimeline` widget."""
+
+    class Created(
+        AbstractTimeline.Created[VerticalEntryT, VerticalTimelineType]
+    ):
+        """Sent when a new entry is created."""
+
+    class Deleted(
+        AbstractTimeline.Deleted[VerticalEntryT, VerticalTimelineType]
+    ):
+        """Sent when an entry is deleted."""
+
+    class Selected(
+        AbstractTimeline.Selected[VerticalEntryT, VerticalTimelineType]
+    ):
+        """Sent when a new entry selected."""
+
+    def _watch_markers(
+        self,
+        old: AbstractTimeline.Markers,
+        new: AbstractTimeline.Markers,
+    ) -> None:
+        for line in old.keys() ^ new.keys():
+            self.refresh_line(line)
 
     def render_lines(self, crop: Region) -> list[Strip]:
         self._basic_strip = Strip(
@@ -465,6 +503,17 @@ HorizontalEntryType = TypeVar(
     default=HorizontalEntry,
 )
 
+HorizontalEntryT = TypeVar(
+    "HorizontalEntryT",
+    bound=HorizontalEntry,
+    default=HorizontalEntry,
+)
+HorizontalTimelineType = TypeVar(
+    "HorizontalTimelineType",
+    bound="HorizontalTimeline",
+    default="HorizontalTimeline",
+)
+
 
 class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """Basic timeline widget that displays entries in a horizontal view."""
@@ -490,7 +539,20 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
     """
     """Default CSS for `HorizontalTimeline` widget."""
 
-    _cached_strip = None
+    class Created(
+        AbstractTimeline.Created[HorizontalEntryT, HorizontalTimelineType]
+    ):
+        """Sent when a new entry is created."""
+
+    class Deleted(
+        AbstractTimeline.Deleted[HorizontalEntryT, HorizontalTimelineType]
+    ):
+        """Sent when an entry is deleted."""
+
+    class Selected(
+        AbstractTimeline.Selected[HorizontalEntryT, HorizontalTimelineType]
+    ):
+        """Sent when a new entry selected."""
 
     def _create_strip(self) -> Strip:
         """Prerenders the strip for reuse on each line."""
@@ -518,7 +580,15 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         return super().render_lines(crop)
 
     def render_line(self, y: int) -> Strip:
-        return cast("Strip", self._cached_strip)
+        return self._cached_strip
+
+    def _watch_markers(
+        self,
+        old: AbstractTimeline.Markers,
+        new: AbstractTimeline.Markers,
+    ) -> None:
+        if old.keys() ^ new.keys():
+            self.refresh()
 
     def _calc_entry_size(self, end: Offset) -> tuple[int, int]:
         start = cast("Offset", self._start)
