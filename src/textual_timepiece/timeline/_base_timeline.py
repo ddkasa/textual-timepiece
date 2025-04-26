@@ -526,7 +526,17 @@ HorizontalTimelineType = TypeVar(
 
 
 class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
-    """Basic timeline widget that displays entries in a horizontal view."""
+    """Timeline that displays entries in a horizontal view.
+
+    Params:
+        *children: Entries to intially add to the widget.
+        duration: Size of the widget.
+        name: The name of the widget.
+        id: The ID of the widget in the DOM.
+        classes: The CSS classes for the widget.
+        disabled: Whether the widget is disabled or not.
+        tile: Whether to tile the timeline or not.
+    """
 
     Entry = HorizontalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
     Layout = HorizontalTimelineLayout
