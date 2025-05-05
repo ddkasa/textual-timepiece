@@ -141,7 +141,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
 
     Examples:
         >>> def compose(self) -> ComposeResult:
-        >>>     yield ActivityHeatmap(year2025)
+        >>>     yield ActivityHeatmap(year=2025)
 
         >>> def on_mount(self) -> None:
         >>>     activity = generate_activity()
