@@ -217,21 +217,6 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     @abstractmethod
     def _watch_markers(self, old: Markers, new: Markers) -> None: ...
 
-    def refresh_line(self, y: int) -> None:
-        """Refresh a single line.
-
-        Args:
-            y: Coordinate of line.
-        """
-        self.refresh(
-            Region(
-                0,
-                y - self.scroll_offset.y,
-                max(self.virtual_size.width, self.size.width),
-                1,
-            )
-        )
-
     def mount(  # type: ignore[override] # NOTE: Making sure the user mounts the right widgets.
         self,
         *widgets: EntryType,
@@ -467,6 +452,21 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
     ) -> None:
         for line in old.keys() ^ new.keys():
             self.refresh_line(line)
+
+    def refresh_line(self, y: int) -> None:
+        """Refresh a single line.
+
+        Args:
+            y: Coordinate of line.
+        """
+        self.refresh(
+            Region(
+                0,
+                y - self.scroll_offset.y,
+                max(self.virtual_size.width, self.size.width),
+                1,
+            )
+        )
 
     def render_lines(self, crop: Region) -> list[Strip]:
         self._basic_strip = Strip(
