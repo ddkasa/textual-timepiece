@@ -160,7 +160,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
             """Alias for `date` attribute."""
             return self.date
 
-    class DateSelected(Selected):
+    class DaySelected(Selected):
         """Message sent when a day is selected."""
 
         @property
@@ -533,7 +533,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     @on(Click)
     def _action_select_tile(self) -> None:
         if (day := self._date_lookup()) is not None:
-            self.post_message(self.DateSelected(self, day))
+            self.post_message(self.DaySelected(self, day))
         elif (week := self._week_lookup()) is not None:
             self.post_message(self.WeekSelected(self, week))
         elif (month := self._month_lookup()) is not None:
