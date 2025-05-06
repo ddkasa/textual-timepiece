@@ -208,12 +208,20 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
         if date and self._date_range:
             with self.prevent(self.Changed):
                 self.end_date = date + self._date_range
+
+        self.query_one("#target-default-start").disabled = (
+            date == Date.today_in_system_tz()
+        )
         self.post_message(self.Changed(self, date, self.end_date))
 
     def _watch_end_date(self, date: Date | None) -> None:
         if date and self._date_range:
             with self.prevent(self.Changed):
                 self.start_date = date - self._date_range
+
+        self.query_one("#target-default-end").disabled = (
+            date == Date.today_in_system_tz()
+        )
         self.post_message(self.Changed(self, self.start_date, date))
 
     @on(DateSelect.StartChanged)
