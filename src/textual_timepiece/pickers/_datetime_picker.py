@@ -132,7 +132,7 @@ class DateTimeInput(AbstractInput[PlainDateTime]):
 
     def convert(self) -> PlainDateTime | None:
         try:
-            return PlainDateTime.strptime(self.value, self.FORMAT)
+            return PlainDateTime.parse_strptime(self.value, format=self.FORMAT)
         except ValueError:
             return None
 
