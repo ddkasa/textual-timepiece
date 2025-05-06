@@ -9,7 +9,7 @@
 
 ---
 
-Textual Timepiece is a collection of widgets related to time management and manipulation. It includes various time and date [pickers](reference/pickers.md), an [activity heatmap](reference/activity_heatmap.md) for displaying year dates and some extras.
+Textual Timepiece is a collection of widgets related to time management and manipulation. It includes various time and date [pickers](reference/pickers.md), an [activity heatmap](reference/activity_heatmap.md) for displaying yearly data and various tools for constructing [timelines](reference/timeline.md).
 
 ## Demo
 
