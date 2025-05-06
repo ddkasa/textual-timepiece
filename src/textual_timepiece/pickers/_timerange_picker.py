@@ -21,7 +21,7 @@ from textual.widgets import Button
 from textual.widgets import Static
 from whenever import Date
 from whenever import DateDelta
-from whenever import LocalDateTime
+from whenever import PlainDateTime
 from whenever import SystemDateTime
 from whenever import Time
 from whenever import TimeDelta
@@ -370,17 +370,17 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     Examples:
         ```python
             def compose(self) -> ComposeResult:
-                now = SystemDateTime.now().local()
+                now = SystemDateTime.now().to_plain()
                 yield DateTimeRangePicker(now, time_range=TimeDelta(hours=5))
         ```
 
         ```python
             def compose(self) -> ComposeResult:
-                yield DateTimeRangePicker(SystemDateTime.now().local())
+                yield DateTimeRangePicker(SystemDateTime.now().to_plain())
 
             def action_stop(self) -> None:
                 pick = self.query_one(DateTimeRangePicker)
-                pick.end_dt = SystemDateTime.now().local()
+                pick.end_dt = SystemDateTime.now().to_plain()
         ```
     """
 
@@ -390,8 +390,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
         def __init__(
             self,
             widget: DateTimeRangePicker,
-            start: LocalDateTime | None,
-            end: LocalDateTime | None,
+            start: PlainDateTime | None,
+            end: PlainDateTime | None,
         ) -> None:
             super().__init__(widget)
             self.start = start
@@ -428,9 +428,9 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     | alt+ctrl+t | Set the end datetime to now or the start datetime. |
     """
 
-    start_dt = var[LocalDateTime | None](None, init=False)
+    start_dt = var[PlainDateTime | None](None, init=False)
     """Picker start datetime. Bound to all the parent widgets."""
-    end_dt = var[LocalDateTime | None](None, init=False)
+    end_dt = var[PlainDateTime | None](None, init=False)
     """Picker end datetime. Bound to all the parent widgets."""
 
     start_date = var[Date | None](None, init=False)
@@ -440,8 +440,8 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
     def __init__(
         self,
-        start: LocalDateTime | None = None,
-        end: LocalDateTime | None = None,
+        start: PlainDateTime | None = None,
+        end: PlainDateTime | None = None,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -505,7 +505,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
 
         return self.end_dt.date()
 
-    def _watch_start_dt(self, new: LocalDateTime | None) -> None:
+    def _watch_start_dt(self, new: PlainDateTime | None) -> None:
         if new and self._time_range:
             with self.prevent(self.Changed):
                 self.end_dt = new.add(
@@ -514,7 +514,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
                 )
         self.post_message(self.Changed(self, new, self.end_dt))
 
-    def _watch_end_dt(self, new: LocalDateTime | None) -> None:
+    def _watch_end_dt(self, new: PlainDateTime | None) -> None:
         if new and self._time_range:
             with self.prevent(self.Changed):
                 self.start_dt = new.subtract(
@@ -632,7 +632,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     ) -> None:
         if message:
             message.stop()
-        self.start_dt = SystemDateTime.now().local()
+        self.start_dt = SystemDateTime.now().to_plain()
 
     @on(Button.Pressed, "#target-default-end")
     def _action_target_default_end(
@@ -641,7 +641,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     ) -> None:
         if message:
             message.stop()
-        now = SystemDateTime.now().local()
+        now = SystemDateTime.now().to_plain()
         if not self.start_dt or now >= self.start_dt:
             self.end_dt = now
         else:
