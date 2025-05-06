@@ -27,6 +27,19 @@
 | [ActivityHeatmap](https://ddkasa.github.io/textual-timepiece/reference/activity_heatmap/#textual_timepiece.activity_heatmap.ActivityHeatmap) | Activity Heatmap for displaying yearly data similar to the GitHub contribution graph. |
 | [HeatmapManager](https://ddkasa.github.io/textual-timepiece/reference/activity_heatmap/#textual_timepiece.activity_heatmap.HeatmapManager)   | Widget for browsing the Activity Heatmap with yearly navigation builtin.              |
 
+| Timeline                                                                                                                                               | Description                                                       |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| [HorizontalEntry](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.HorizontalEntry)                           | Horizontal entry for a horizontal timeline layout.                |
+| [HorizontalRuler](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.HorizontalRuler)                           | Horizontal ruler for marking horizontal timelines.                |
+| [HorizontalTimeline](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.HorizontalTimeline)                     | Basic timeline widget that displays entries in a horizontal view. |
+| [HorizontalTimelineNavigation](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.HorizontalTimelineNavigation) | Horizontal widget containing a horizontal timeline and header.    |
+| [RuledHorizontalTimeline](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.RuledHorizontalTimeline)           | Ruled horizontal timeline with markers.                           |
+| [RuledVerticalTimeline](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.RuledVerticalTimeline)               | Ruled vertical timeline with markers.                             |
+| [VerticalEntry](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.VerticalEntry)                               | Vertical entry for a vertical timeline layout.                    |
+| [VerticalRuler](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.VerticalRuler)                               | Vertical ruler for marking vertical timelines.                    |
+| [VerticalTimeline](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.VerticalTimeline)                         | Basic timeline widget that displays entries in a vertical view.   |
+| [VerticalTimelineNavigation](https://ddkasa.github.io/textual-timepiece/reference/timeline/#textual_timepiece.timeline.VerticalTimelineNavigation)     | Vertical widget containing a vertical timeline and header.        |
+
 | Selector                                                                                                                   | Description                                                           |
 | :------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- |
 | [DateSelect](https://ddkasa.github.io/textual-timepiece/reference/selectors/#textual_timepiece.pickers.DateSelect)         | Date selection widget with calendar panes.                            |
