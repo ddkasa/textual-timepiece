@@ -857,7 +857,7 @@ class TimelineNavigation(Widget, Generic[ChildTimeline]):
 
 
 class VerticalTimelineNavigation(
-    TimelineNavigation[VerticalTimeline[VerticalEntry]]
+    TimelineNavigation[VerticalTimeline[VerticalEntryType]]
 ):
     """Vertical widget containing a vertical timeline and header.
 
@@ -869,7 +869,7 @@ class VerticalTimelineNavigation(
         disabled: Whether the widget is disabled or not.
     """
 
-    Timeline = VerticalTimeline
+    Timeline = VerticalTimeline[VerticalEntryT]
 
     DEFAULT_CSS: ClassVar[str] = """
     VerticalTimelineNavigation {
@@ -893,7 +893,7 @@ class HorizontalTimelineNavigation(
         disabled: Whether the widget is disabled or not.
     """
 
-    Timeline = HorizontalTimeline
+    Timeline = HorizontalTimeline[HorizontalEntryT]
 
     DEFAULT_CSS: ClassVar[str] = """
     HorizontalTimelineNavigation {

@@ -20,8 +20,10 @@ from textual_timepiece.timeline._base_timeline import HorizontalRuler
 from textual_timepiece.timeline._base_timeline import VerticalRuler
 
 from ._base_timeline import AbstractRuler
+from ._base_timeline import HorizontalEntryType
 from ._base_timeline import HorizontalTimelineNavigation
 from ._base_timeline import TimelineNavigation
+from ._base_timeline import VerticalEntryType
 from ._base_timeline import VerticalTimelineNavigation
 
 if TYPE_CHECKING:
@@ -169,7 +171,7 @@ class RuledVerticalTimeline(
         can_maximize: Whether the widget can be maximized or not.
     """
 
-    Timeline = VerticalTimelineNavigation
+    Timeline = VerticalTimelineNavigation[VerticalEntryType]
     DEFAULT_CSS: ClassVar[str] = """\
     RuledVerticalTimeline {
         layout: horizontal;
@@ -214,7 +216,7 @@ class RuledHorizontalTimeline(
         can_maximize: Whether the widget can be maximized or not.
     """
 
-    Timeline = HorizontalTimelineNavigation
+    Timeline = HorizontalTimelineNavigation[HorizontalEntryType]
     DEFAULT_CSS: ClassVar[str] = """\
     RuledHorizontalTimeline {
         height: 1fr;
