@@ -304,6 +304,9 @@ class AbstractInput(
 Overlay = TypeVar("Overlay", bound=BaseOverlay)
 
 
+# TODO: Focus on widget should focus input
+
+
 class AbstractPicker(BaseWidget, Generic[Overlay]):
     """Abstract Picker class that defines most of the base behaviour."""
 
