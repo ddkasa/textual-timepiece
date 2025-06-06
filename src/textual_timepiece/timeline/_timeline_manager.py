@@ -30,15 +30,6 @@ if TYPE_CHECKING:
     from textual.app import ComposeResult
     from textual.widget import Widget
 
-# NOTE: How many premade widgets do I create?
-# TODO: Calculate subdivisions dynamically.
-# TODO: Header widgets for each timeline.
-# TODO: Header Padding
-
-# Approaches
-# 1. Allow to set full distance.
-# 2. Allow to set intervals.
-
 
 def _default_marker_factory(index: int) -> str:
     return format_seconds(index, include_seconds=False)
