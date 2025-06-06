@@ -495,7 +495,8 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
         return start.y if start.y < end.y else end.y, abs(end.y - start.y)
 
     def pre_layout(self, layout: VerticalTimelineLayout) -> None:  # type: ignore[override]
-        self._nodes._sort(
+        # Sorting with the public sort method will cause infinite layout calls.
+        self._nodes._sort(  # TODO: This needs a public solution.
             key=lambda w: (w.offset.y, cast("Scalar", w.styles.height).value),
         )
 
@@ -617,7 +618,8 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         return start.x if start.x < end.x else end.x, abs(end.x - start.x)
 
     def pre_layout(self, layout: HorizontalTimelineLayout) -> None:  # type: ignore[override]
-        self._nodes._sort(
+        # Sorting with the public sort method will cause infinite layout calls.
+        self._nodes._sort(  # TODO: This needs a public solution .
             key=lambda w: (w.offset.x, cast("Scalar", w.styles.width).value),
         )
 
