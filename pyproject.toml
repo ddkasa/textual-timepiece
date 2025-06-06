@@ -32,6 +32,7 @@ keywords = [
     "heatmap",
     "activity",
     "widget",
+    "timeline",
 ]
 license = "MIT"
 license-files = ["LICENSE.md"]
