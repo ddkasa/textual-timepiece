@@ -83,3 +83,33 @@
 --8<-- "docs/examples/mini_picker_example.py"
 ```
 ///
+
+### Vertical Timeline 
+
+/// tab | Result
+    new: true
+```{.textual path="docs/examples/basic_timeline_example.py"}
+```
+///
+
+/// tab | Source
+```python
+--8<-- "docs/examples/basic_timeline_example.py"
+```
+///
+
+### Horizontal Timeline 
+
+/// tab | Result
+    new: true
+```{.textual path="docs/examples/horizontal_timeline_example.py"}
+```
+///
+
+/// tab | Source
+```python
+--8<-- "docs/examples/horizontal_timeline_example.py"
+```
+///
+
+

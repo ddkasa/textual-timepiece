@@ -6,7 +6,7 @@ import enum
 import math
 from calendar import Calendar
 from calendar import month_name
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Iterator
 from typing import Protocol
@@ -18,8 +18,19 @@ from whenever import DateDelta
 from whenever import Time
 from whenever import TimeDelta
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:
+    """Breakdown total seconds into hours, minutes and seconds.
+
+    Args:
+        total_seconds: Total seconds in the form of an integer.
+
+    Returns:
+        A tuple of hours, minutes and seconds.
+    """
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
 
@@ -27,6 +38,15 @@ def breakdown_seconds(total_seconds: int) -> tuple[int, int, int]:
 
 
 def format_seconds(total_seconds: int, *, include_seconds: bool = True) -> str:
+    """Format total seconds to a time in 24 hour format.
+
+    Args:
+        total_seconds: Total seconds to format.
+        include_seconds: Whether to include seconds on the end of the result.
+
+    Returns:
+        Seconds formatted into a *HH:mm* string.
+    """
     hours, minutes, seconds = breakdown_seconds(total_seconds)
     result = f"{hours:0>2}:{minutes:0>2}"
     if include_seconds:
@@ -99,7 +119,6 @@ def get_scope(scope: DateScope, period: Date) -> Scope:
     Returns:
         The range of times in a two dimensional array.
     """
-
     if scope == DateScope.MONTH:
         return Calendar().monthdayscalendar(period.year, period.month)
     if scope == DateScope.YEAR:

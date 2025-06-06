@@ -5,10 +5,10 @@ import random
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Literal
 
-from rich.console import RenderableType
 from rich.pretty import Pretty
 from rich.syntax import Syntax
 from textual import on
@@ -17,6 +17,7 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.containers import Horizontal
 from textual.containers import ScrollableContainer
+from textual.events import Mount
 from textual.message import Message
 from textual.screen import ModalScreen
 from textual.widget import Widget
@@ -41,11 +42,23 @@ from textual_timepiece.pickers import TimePicker
 from textual_timepiece.pickers._date_picker import DateSelect
 from textual_timepiece.pickers._time_picker import DurationSelect
 from textual_timepiece.pickers._time_picker import TimeSelect
+from textual_timepiece.timeline._timeline_manager import (
+    RuledHorizontalTimeline,
+)
+from textual_timepiece.timeline._timeline_manager import RuledVerticalTimeline
+
+if TYPE_CHECKING:
+    from rich.console import RenderableType
+    from textual.events import Mount
 
 
 class DemoWidget(Widget):
+    """Displays each widget with additional information."""
+
     @dataclass
-    class ToggleFeature(Message):
+    class Toggle(Message):
+        """Sent when the user presses one of the buttons."""
+
         widget: type[Widget]
         preview: Literal[
             "docstring", "tcss", "code", "docs", "source", "bindings"
@@ -84,27 +97,30 @@ class DemoWidget(Widget):
             yield Button("Code Preview", id="code", classes="nav")
 
     def compose(self) -> ComposeResult:
+        """Compose the layout for the widget."""
         yield from self._compose_navigation_bar()
         yield self._widget_type()
 
     @on(Button.Pressed, "#docstring")
-    def open_docstring(self, message: Button.Pressed) -> None:
-        self.post_message(self.ToggleFeature(self._widget_type, "docstring"))
+    def _open_docstring(self, message: Button.Pressed) -> None:
+        self.post_message(self.Toggle(self._widget_type, "docstring"))
 
     @on(Button.Pressed, "#default-css")
-    def open_default_css(self, message: Button.Pressed) -> None:
-        self.post_message(self.ToggleFeature(self._widget_type, "tcss"))
+    def _open_default_css(self, message: Button.Pressed) -> None:
+        self.post_message(self.Toggle(self._widget_type, "tcss"))
 
     @on(Button.Pressed, "#code")
-    def open_source(self, message: Button.Pressed) -> None:
-        self.post_message(self.ToggleFeature(self._widget_type, "code"))
+    def _open_source(self, message: Button.Pressed) -> None:
+        self.post_message(self.Toggle(self._widget_type, "code"))
 
     @on(Button.Pressed, "#bindings")
-    def open_bindings(self, message: Button.Pressed) -> None:
-        self.post_message(self.ToggleFeature(self._widget_type, "bindings"))
+    def _open_bindings(self, message: Button.Pressed) -> None:
+        self.post_message(self.Toggle(self._widget_type, "bindings"))
 
 
 class PreviewScreen(ModalScreen[None]):
+    """Preview screen that pops up to display associated widget info."""
+
     BINDINGS: ClassVar = [
         ("escape", "hide_preview", "Close Preview"),
     ]
@@ -119,10 +135,11 @@ class PreviewScreen(ModalScreen[None]):
         super().__init__(name, id, classes)
         self._renderable = renderable
 
-    def on_mount(self) -> None:
+    def _on_mount(self, event: Mount) -> None:
         self.refresh_bindings()
 
     def compose(self) -> ComposeResult:
+        """Generate the layout for the screen."""
         with Container():
             with ScrollableContainer():
                 yield Static(self._renderable, id="preview")
@@ -135,14 +152,14 @@ class PreviewScreen(ModalScreen[None]):
                     classes="nav",
                 )
 
-    def action_hide_preview(self) -> None:
+    def _action_hide_preview(self) -> None:
         self.dismiss()
 
 
 class TimepieceDemo(App[None]):
-    font: bool = True
+    """Main demo app that displays the widgets."""
 
-    CSS = """
+    CSS: ClassVar[str] = """
     Screen {
         layout: horizontal;
         align: center middle;
@@ -220,51 +237,67 @@ class TimepieceDemo(App[None]):
 
         }
     }
-
     """
 
     TITLE = "Textual Timepiece"
     SUB_TITLE = __version__
 
     def compose(self) -> ComposeResult:
+        """Generate the main layout for the demo app."""
         yield Header(show_clock=True)
 
         with TabbedContent(initial="pickers"):
-            with TabPane("Pickers", id="pickers"):
-                with Container(id="Pickers", classes="previews"):
-                    for item in (
-                        DatePicker,
-                        DurationPicker,
-                        TimePicker,
-                        DateTimePicker,
-                        DateRangePicker,
-                        DateTimeRangePicker,
-                        DateTimeDurationPicker,
-                    ):
-                        yield DemoWidget(item)
+            with (
+                TabPane("Pickers", id="pickers"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for item in (
+                    DatePicker,
+                    DurationPicker,
+                    TimePicker,
+                    DateTimePicker,
+                    DateRangePicker,
+                    DateTimeRangePicker,
+                    DateTimeDurationPicker,
+                ):
+                    yield DemoWidget(item)
 
-            with TabPane("Select"):
-                with Container(id="Pickers", classes="previews"):
-                    for select in (
-                        DateSelect,
-                        TimeSelect,
-                        DurationSelect,
-                    ):
-                        yield DemoWidget(select)
+            with (
+                TabPane("Select"),
+                Container(id="Pickers", classes="previews"),
+            ):
+                for select in (
+                    DateSelect,
+                    TimeSelect,
+                    DurationSelect,
+                ):
+                    yield DemoWidget(select)
 
-            with TabPane("Heatmap"):
-                with Container(id="heatmap", classes="previews"):
-                    for i in (ActivityHeatmap, HeatmapManager):
-                        yield DemoWidget(i)
+            with (
+                TabPane("Heatmap"),
+                Container(id="heatmap", classes="previews"),
+            ):
+                for i in (ActivityHeatmap, HeatmapManager):
+                    yield DemoWidget(i)
+
+            with (
+                TabPane("Timeline"),
+                Container(id="timeline", classes="previews"),
+            ):
+                for timeline in (
+                    RuledVerticalTimeline,
+                    RuledHorizontalTimeline,
+                ):
+                    yield DemoWidget(timeline)
 
         yield Footer()
 
-    def on_mount(self) -> None:
+    def _on_mount(self, event: Mount) -> None:
         for widget in self.query(ActivityHeatmap):
             self._set_data(widget)
 
-    @on(DemoWidget.ToggleFeature)
-    def open_tab(self, message: DemoWidget.ToggleFeature) -> None:
+    @on(DemoWidget.Toggle)
+    def _open_tab(self, message: DemoWidget.Toggle) -> None:
         data: RenderableType
         if message.preview == "tcss":
             data = message.widget.DEFAULT_CSS
@@ -299,16 +332,18 @@ class TimepieceDemo(App[None]):
         )
 
     @on(HeatmapManager.YearChanged)
-    def change_heat_year(self, message: HeatmapManager.YearChanged) -> None:
+    def _change_heat_year(self, message: HeatmapManager.YearChanged) -> None:
         message.stop()
         self._set_data(message.widget.heatmap)
 
     @cached_property
     def preview_panel(self) -> Static:
+        """Panel for displaying information about a widget."""
         return self.query_one("#preview", Static)
 
 
 def main() -> None:
+    """Main entry point for the demo application."""
     TimepieceDemo().run()
 
 

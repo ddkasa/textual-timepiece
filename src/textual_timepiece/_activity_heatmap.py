@@ -6,10 +6,10 @@ from calendar import day_abbr
 from calendar import month_abbr
 from calendar import monthrange
 from collections import defaultdict
-from dataclasses import dataclass
 from datetime import date
 from functools import cached_property
 from itertools import chain
+from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import NamedTuple
 from typing import TypeAlias
@@ -21,12 +21,10 @@ else:
     from typing_extensions import Self
 
 
-from rich.color import Color as RColor
 from rich.segment import Segment
 from rich.style import Style as RStyle
 from textual import on
 from textual import work
-from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
 from textual.color import Color
@@ -52,7 +50,6 @@ from whenever import Date
 from whenever import days
 
 from textual_timepiece._extra import BaseMessage
-from textual_timepiece._types import Directions
 
 from ._extra import BaseWidget
 from ._extra import TargetButton
@@ -60,6 +57,12 @@ from ._utility import flat_to_shape
 from ._utility import format_seconds
 from ._utility import iterate_timespan
 from ._utility import normalize_values
+
+if TYPE_CHECKING:
+    from rich.color import Color as RColor
+    from textual.app import ComposeResult
+
+    from textual_timepiece._types import Directions
 
 
 class HeatmapCursor(NamedTuple):
@@ -71,7 +74,7 @@ class HeatmapCursor(NamedTuple):
 
     def to_date(self, year: int) -> Date | None:
         if self.is_month:
-            return Date(year, cast(int, self.month), 1)
+            return Date(year, cast("int", self.month), 1)
 
         if (week := self.week) == 53:
             week = 1
@@ -124,7 +127,7 @@ class HeatmapCursor(NamedTuple):
 # TODO: Dirty region tracking.
 
 
-class ActivityHeatmap(ScrollView, BaseWidget):
+class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     """Base renderable widget for an activity heatmap.
 
     Params:
@@ -138,35 +141,48 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
     Examples:
         >>> def compose(self) -> ComposeResult:
-        >>>     yield ActivityHeatmap(year2025)
+        >>>     yield ActivityHeatmap(year=2025)
 
         >>> def on_mount(self) -> None:
         >>>     activity = generate_activity()
         >>>     self.query_one(ActivityHeatmap).values = activity
     """
 
-    @dataclass
-    class DateSelected(BaseMessage):
+    class Selected(BaseMessage["ActivityHeatmap"]):
+        """Base message for when something gets selected within the widget."""
+
+        def __init__(self, widget: ActivityHeatmap, date: Date) -> None:
+            super().__init__(widget)
+            self.date = date
+
+        @property
+        def value(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
+
+    class DaySelected(Selected):
         """Message sent when a day is selected."""
 
-        widget: ActivityHeatmap
-        day: Date
+        @property
+        def day(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    @dataclass
-    class WeekSelected(BaseMessage):
+    class WeekSelected(Selected):
         """Message sent when a week number is selected."""
 
-        widget: ActivityHeatmap
-        week: Date
+        @property
+        def week(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
-    @dataclass
-    class MonthSelected(BaseMessage):
+    class MonthSelected(Selected):
         """Message sent when a month label is selected."""
 
-        widget: ActivityHeatmap
-        month: Date
-
-    can_focus = True
+        @property
+        def month(self) -> Date:
+            """Alias for `date` attribute."""
+            return self.date
 
     ActivityData: TypeAlias = defaultdict[date, float]
     """Final data type that the heatmap uses."""
@@ -465,6 +481,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
 
         Args:
             data: Two dimensional data that is ready to be converted.
+            year: The year the provided data belongs to.
         """
         template = ActivityHeatmap.generate_empty_activity(year)
         values = [
@@ -516,7 +533,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
     @on(Click)
     def _action_select_tile(self) -> None:
         if (day := self._date_lookup()) is not None:
-            self.post_message(self.DateSelected(self, day))
+            self.post_message(self.DaySelected(self, day))
         elif (week := self._week_lookup()) is not None:
             self.post_message(self.WeekSelected(self, week))
         elif (month := self._month_lookup()) is not None:
@@ -549,7 +566,7 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         if self.cursor.is_month:
             if month is not None:
                 return month == self.cursor.month
-            elif day is not None and week is not None:
+            if day is not None and week is not None:
                 year = self.year
                 if week == 52:
                     week = 0
@@ -599,12 +616,11 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         if action == "move_cursor" and self.cursor:
             if parameters[0] == "right":
                 return self.cursor.week < 53
-            elif parameters[0] == "down":
+            if parameters[0] == "down":
                 return self.cursor.day < 9
-            elif parameters[0] == "left":
+            if parameters[0] == "left":
                 return self.cursor.week > 1
-            else:
-                return self.cursor.day > 1
+            return self.cursor.day > 1
 
         if action == "clear_cursor":
             return isinstance(self.cursor, HeatmapCursor)
@@ -655,11 +671,13 @@ class ActivityHeatmap(ScrollView, BaseWidget):
         return month + 1
 
     def _date_lookup(self) -> Date | None:
-        if self.cursor is not None and self.cursor.is_day:
-            if (
-                day := self.cursor.to_date(self.year)
-            ) is not None and day.year == self.year:
-                return day
+        if (
+            self.cursor is not None
+            and self.cursor.is_day
+            and (day := self.cursor.to_date(self.year)) is not None
+            and day.year == self.year
+        ):
+            return day
 
         return None
 
@@ -752,12 +770,12 @@ class HeatmapManager(BaseWidget):
         disabled: Whether the widget is disabled or not.
     """
 
-    @dataclass
-    class YearChanged(BaseMessage):
+    class YearChanged(BaseMessage["HeatmapManager"]):
         """Message sent when the year is updated."""
 
-        widget: HeatmapManager
-        year: int
+        def __init__(self, widget: HeatmapManager, year: int) -> None:
+            super().__init__(widget)
+            self.year = year
 
     DEFAULT_CSS: ClassVar[str] = """
     HeatmapManager {

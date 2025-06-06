@@ -14,7 +14,8 @@ from typing import TYPE_CHECKING
 
 import textual_timepiece.activity_heatmap
 import textual_timepiece.pickers
-import textual_timepiece.pickers._base_picker
+# import textual_timepiece.pickers._base_picker
+import textual_timepiece.timeline
 
 if TYPE_CHECKING:
     from textual.binding import Binding
@@ -73,7 +74,8 @@ def module() -> None:
     modules = [
         textual_timepiece.activity_heatmap,
         textual_timepiece.pickers,
-        textual_timepiece.pickers._base_picker,
+        # textual_timepiece.pickers._base_picker,
+        textual_timepiece.timeline,
     ]
 
     for module in modules:
@@ -85,11 +87,13 @@ def module() -> None:
                 w, "COMPONENT_CLASSES", set()
             )
 
-            if bindings or component_classes:
+            if bindings or component_classes or hasattr(w, "DEFAULT_CSS"):
                 print(name)
                 print()
                 print_bindings(name, bindings)
                 print_component_classes(name, component_classes)
+                print("CSS".center(20, "-"))
+                print(f'"""Default CSS for `{name}` widget."""')
                 print()
 
 

@@ -1,6 +1,6 @@
 import pytest
 from whenever import Date
-from whenever import LocalDateTime
+from whenever import PlainDateTime
 from whenever import Time
 
 from textual_timepiece.pickers import DateSelect
@@ -106,11 +106,11 @@ async def test_dt_dialog_edge_cases(datetime_app, freeze_time):
     async with datetime_app.run_test() as pilot:
         datetime_app.widget.focus()
         select = datetime_app.widget.overlay.date_select
-        select.post_message(DateSelect.DateChanged(select, Date.MIN))
+        select.post_message(DateSelect.StartChanged(select, Date.MIN))
         await pilot.pause()
         assert datetime_app.widget.date == Date.MIN
 
-        select.post_message(DateSelect.DateChanged(select, Date.MAX))
+        select.post_message(DateSelect.StartChanged(select, Date.MAX))
         await pilot.pause()
         assert datetime_app.widget.date == Date.MAX
 
@@ -119,8 +119,8 @@ async def test_dt_dialog_edge_cases(datetime_app, freeze_time):
 async def test_dt_input_edge_cases(datetime_app, freeze_time):
     async with datetime_app.run_test() as pilot:
         datetime_app.widget.input_widget.focus()
-        datetime_app.widget.datetime = LocalDateTime.MAX
+        datetime_app.widget.datetime = PlainDateTime.MAX
         await pilot.press("up")
 
-        datetime_app.widget.datetime = LocalDateTime.MIN
+        datetime_app.widget.datetime = PlainDateTime.MIN
         await pilot.press("down")

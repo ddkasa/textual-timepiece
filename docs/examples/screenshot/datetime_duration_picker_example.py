@@ -1,12 +1,12 @@
 from textual.app import App, ComposeResult
 from textual_timepiece.pickers import DateTimeDurationPicker
-from whenever import LocalDateTime
+from whenever import PlainDateTime
 
 
 class DateTimeDurationPickerApp(App[None]):
     
     def compose(self) -> ComposeResult:
-        now = LocalDateTime(2025, 2, 10, 12, 13)
+        now = PlainDateTime(2025, 2, 10, 12, 13)
         yield (dp := DateTimeDurationPicker(now, now.add(days=1, hours=5, ignore_dst=True)))
         dp.set_reactive(DateTimeDurationPicker.expanded, True)
 

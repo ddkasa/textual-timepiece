@@ -10,6 +10,8 @@ Examples:
     >>> from textual_timepiece.pickers import DatePicker
 """
 
+from __future__ import annotations
+
 import os
 
 LEFT_ARROW: str = os.environ.get("TTIME_ICON_LEFT_ARROW", "←")

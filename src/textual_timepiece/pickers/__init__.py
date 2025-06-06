@@ -1,3 +1,7 @@
+"""Various pickers for date times and their associated components."""
+
+from __future__ import annotations
+
 from ._date_picker import DateInput
 from ._date_picker import DateOverlay
 from ._date_picker import DatePicker
