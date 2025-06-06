@@ -407,7 +407,8 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        tile: Whether to tile the timeline or not.
+        tile: Whether to tile the timeline or not. Set to `False` if a single
+            column of entries is preferred.
     """
 
     Entry = VerticalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
@@ -535,7 +536,8 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        tile: Whether to tile the timeline or not.
+        tile: Whether to tile the timeline or not. Set to `False` if a single
+            row of entries is preferred.
     """
 
     Entry = HorizontalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
