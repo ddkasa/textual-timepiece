@@ -112,7 +112,6 @@ class AbstractEntry(Static, can_focus=True):
     clicked = var[Offset | None](None, init=False)
     """Initial point where the entry was clicked when moving or resizing."""
 
-    offset: Offset
     _is_moving: bool | None = None
     _start_is_hovered: bool | None = None
 
