@@ -9,6 +9,123 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-06-06
+
+### Added
+- `demo`: Add `Mount` event as argument by @ddkasa
+- `timeline`: Add subclassed messages to timelines by @ddkasa
+- `AbstractTimeline`: Add entry generic to messages by @ddkasa
+- `demo`: Add `Mount` event as argument by @ddkasa
+- Add missing future annotations imports by @ddkasa
+- `timeline-layout`: Add explicit `strict` parameters to `zip` by @ddkasa
+- `AbstractTimeline`: Add `refresh_line` helper method by @ddkasa
+- `timeline`: Add timeline widgets to module by @ddkasa
+- `utility`: Add `breakdown_seconds` as a public helper function by @ddkasa
+- `demo`: Add timelines to demo app by @ddkasa
+- `utility`: Add `format_seconds` as a public helper function by @ddkasa
+- `message`: Add widget types to messages by @ddkasa
+- `DateTimeInput`: Add `value` alias to `DateTimeChanged` message by @ddkasa
+- Add additional info to __about__ module by @ddkasa
+
+### Changed
+- `timeline`: Update generics for type hints by @ddkasa
+- `DateRangePicker`: Items get disabled on default target by @ddkasa
+- **Breaking** `ActivityHeatmap`: Rename `DateSelected` to `DaySelected` by @ddkasa
+- `DateTimeInput`: Replace `PlainDateTime.strptime` with `parse_strptime` by @ddkasa
+- **Breaking** `pickers`: Replace all `LocalDateTime` occurences with `PlainDateTime` by @ddkasa
+- `timeline`: Move `refresh_line` method to `VerticaTimeline` by @ddkasa
+- `AbstractRuledTimeline`: Make sure to `await` removals and mounts by @ddkasa
+- `AbstractTimeline`: Use local instance `Deleted` message by @ddkasa
+- `timelines`: Use different marker logic for horizontal and vertical timelines by @ddkasa
+- `timeline`: Use generic timeline type for messages by @ddkasa
+- `AbstractTimeline`: Simplify message names to single past-participle verbs by @ddkasa
+- `demo`: Combine `with` statements in `compose` method by @ddkasa
+- `ActivityHeatmap`: Combine `_date_lookup` if statement by @ddkasa
+- Move types into `TYPE_CHECKING` by @ddkasa
+- `TimeSelect`: Replace `action_focus_neighbor` if blocks with ternary statements by @ddkasa
+- Quote all `cast` types by @ddkasa
+- `pickers`: Rename `T` generic to `ValueType` by @ddkasa
+- `pickers`: Rename `TI` generic to `InputType` by @ddkasa
+- `demo`: Rename `__main__` to `_demo` by @ddkasa
+- `EndDateSelect`: Reword docstring summary to single line by @ddkasa
+- `timeline`: Use generics for all timelines by @ddkasa
+- `AbstractTimeline`: Rename messages and remove `dataclass` decorator by @ddkasa
+- `TimelineEntry`: Rename messages and remove `dataclass` decorator by @ddkasa
+- `VerticalTimeline`: Update `render_lines` to cache basic strip by @ddkasa
+- `AbstractRuler`: Prevent compute methods from firing on generated reactives by @ddkasa
+- `AbstractEntry`: Convert `clicked` to reactive by @ddkasa
+- `AbstractTimeline`: Make sure to update layout on `length` update by @ddkasa
+- `AbstractTimeline`: Update only marker lines that have changed by @ddkasa
+- `AbstractEntry`: Use keywords for mime creation by @ddkasa
+- `timeline`: Implement timeline manager classes by @ddkasa
+- `timeline`: Implement base timeline classes by @ddkasa
+- `timeline`: Implement timeline layouts by @ddkasa
+- `timeline`: Implement timeline entry classes by @ddkasa
+- `ActivityHeatmap`: Implement `Selected` base message by @ddkasa
+- `BaseMessage`: Implement generic type for node by @ddkasa
+- `DateTimeRangePicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `DateTimeRangePicker`: Rename `DTRangeChanged` message to `Changed` by @ddkasa
+- `DateRangePicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `DateRangePicker`: Rename `DateRangeChanged` message to `Changed` by @ddkasa
+- `TimePicker`: Implement `Changed.value` property by @ddkasa
+- `TimePicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `TimePicker`: Rename `TimeChanged` message to `Changed` by @ddkasa
+- `TimeInput`: Implement `Updated.value` property by @ddkasa
+- `TimeInput`: Convert `Updated` to normal class by @ddkasa
+- **Breaking** `TimeInput`: Rename `TimeChanged` message to `Updated` by @ddkasa
+- `DurationPicker`: Implement `Changed.value` property by @ddkasa
+- `DurationPicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `DurationPicker`: Rename `DurationChanged` message to `Changed` by @ddkasa
+- `DurationInput`: Implement `Updated.value` property by @ddkasa
+- `DurationInput`: Convert `Updated` to normal class by @ddkasa
+- **Breaking** `DurationInput`: Rename `DurationChanged` message to `Updated` by @ddkasa
+- `TimeSelect`: Implement `Selected.value` property by @ddkasa
+- **Breaking** `TimeSelect`: Rename `TimeSelected` message to `Selected` by @ddkasa
+- `TimeSelect`: Convert `TimeSelected` to normal class by @ddkasa
+- **Breaking** `DurationSelect`: Rename `DurationRounded` message to `Rounded` by @ddkasa
+- **Breaking** `DurationSelect`: Rename `DurationAdjusted` message to `Adjusted` by @ddkasa
+- `DurationSelect`: Convert `DurationRounded` to normal class by @ddkasa
+- `DurationSelect`: Convert `DurationAdjusted` to normal class by @ddkasa
+- `DateSelect`: Implement `Changed.value` alias by @ddkasa
+- **Breaking** `DateSelect`: Rename `EndDateChanged` to `EndChanged` by @ddkasa
+- **Breaking** `DateSelect`: Rename `DateChanged` to `StartChanged` by @ddkasa
+- `DateSelect`: Implement `Changed` base message by @ddkasa
+- `DatePicker`: Implement `Changed.value` property by @ddkasa
+- `DatePicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `DatePicker`: Rename `DateChanged` message to `Changed` by @ddkasa
+- `DateInput`: Implement `Updated.value` property by @ddkasa
+- `DateInput`: Convert `Updated` to normal class by @ddkasa
+- **Breaking** `DateInput`: Rename `DateChanged` message to `Updated` by @ddkasa
+- `DateTimePicker`: Convert `Changed` to normal class by @ddkasa
+- **Breaking** `DateTimePicker`: Rename `DateTimeChanged` message to `Changed` by @ddkasa
+- **Breaking** `DateTimeInput`: Rename `DateTimeChanged` to `Updated` by @ddkasa
+- `DateTimeInput`: Convert `DateTimeChanged` message to standard class by @ddkasa
+- `HeatmapManager`: Convert `YearChanged` message to standard class by @ddkasa
+- `ActivityHeatmap`: Move `can_focus` into class arguments by @ddkasa
+- `ActivityHeatmap`: Convert messages to standard classes by @ddkasa
+- `base-widgets`: Move `can_focus` into class arguments by @ddkasa
+- `BaseMessage`: Convert `BaseMessage` to standard class by @ddkasa
+- `BaseOverlay`: Rename `Close` message to `Closed` by @ddkasa
+- **Breaking** `demo`: Rename `demo` command to `textual-timepiece` by @ddkasa
+
+### Fixed
+- `range-picker`: Update snapshots by @ddkasa
+- `AbstractTimeline`: Make sure to clear `_start` value during cancellation by @ddkasa
+- `timeline`: Update all snapshots by @ddkasa
+- `snapshots`: Update all snapshots by @ddkasa
+- `nox`: Correctly test all python versions locally by @ddkasa
+- `typing`: Update typing to adhere to strict checks by @ddkasa
+
+### Removed
+- `timeline`: Remove old todo notes by @ddkasa
+- `AbstractEntry`: Remove unnecessary `Offset` hint by @ddkasa
+- `HorizontalTimeline`: Remove `_cached_strip` initial value by @ddkasa
+- `time-picker`: Remove yoda expressions by @ddkasa
+- Remove unnecessary elif statements after return by @ddkasa
+- `date-picker`: Remove unnecessary `TYPE_CHECKING by @ddkasa
+- `pickers`: Remove unnecessary spaces after docstring by @ddkasa
+- `AbstractTimeline`: Remove spaces after docstring by @ddkasa
+
 ## [0.4.0] - 2025-03-10
 
 ### Changed
@@ -133,6 +250,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @ddkasa made their first contribution
+[0.5.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.3.1..v0.4.0
 [0.3.1]: https://github.com/ddkasa/textual-timepiece/compare/v0.3.0..v0.3.1
 [0.3.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.2.0..v0.3.0
