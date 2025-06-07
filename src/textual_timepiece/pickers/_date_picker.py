@@ -57,6 +57,7 @@ DisplayData: TypeAlias = Scope
 
 
 # TODO: Month and year picker
+# TODO: Week and year picker
 # PERF: Region refreshing
 
 
