@@ -153,6 +153,19 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             tooltip="Cancel creating an entry or deselect entries.",
         ),
     ]
+    """All bindings for `AbstractTimeline` widget.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+down,ctrl+right | Move entry to the backward. |
+    | ctrl+up,ctrl+left | Move entry to the forward. |
+    | alt+shift+down,alt+shift+left | Resize the tail end of the entry. |
+    | alt+shift+up,alt+shift+right | Resize the end of the entry forward. |
+    | shift+up,shift+left | Resize the start of the entry backward. |
+    | shift+down,shift+right | Move the head of the entry forward. |
+    | ctrl+d,delete,backspace | Delete the selected entry. |
+    | escape | Cancel creating an entry or deselect entries. |
+    """
 
     COMPONENT_CLASSES: ClassVar[set[str]] = {
         "timeline--normal",
