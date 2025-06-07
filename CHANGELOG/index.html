@@ -1,0 +1,1652 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Textual Timepiece a datetime widget library for Textual.">
+      
+      
+        <meta name="author" content="David Kasakaitis">
+      
+      
+        <link rel="canonical" href="https://ddkasa.github.io/textual-timepiece/CHANGELOG/">
+      
+      
+        <link rel="prev" href="../reference/timeline/">
+      
+      
+        <link rel="next" href="../LICENSE/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Changelog - Textual Timepiece</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Victor:300,300i,400,400i,700,700i%7CVictor+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Victor";--md-code-font:"Victor Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../css/stylesheet.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Textual Timepiece" class="md-header__button md-logo" aria-label="Textual Timepiece" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M176 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h16v34.4C92.3 113.8 16 200 16 304c0 114.9 93.1 208 208 208s208-93.1 208-208c0-41.8-12.3-80.7-33.5-113.2l24.1-24.1c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L355.7 143c-28.1-23-62.2-38.8-99.7-44.6V64h16c17.7 0 32-14.3 32-32S289.7 0 272 0h-96m72 192v128c0 13.3-10.7 24-24 24s-24-10.7-24-24V192c0-13.3 10.7-24 24-24s24 10.7 24 24"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Textual Timepiece
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="amber"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://www.github.com/ddkasa/textual-timepiece" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ddkasa/textual-timepiece
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Textual Timepiece" class="md-nav__button md-logo" aria-label="Textual Timepiece" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M176 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h16v34.4C92.3 113.8 16 200 16 304c0 114.9 93.1 208 208 208s208-93.1 208-208c0-41.8-12.3-80.7-33.5-113.2l24.1-24.1c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L355.7 143c-28.1-23-62.2-38.8-99.7-44.6V64h16c17.7 0 32-14.3 32-32S289.7 0 272 0h-96m72 192v128c0 13.3-10.7 24-24 24s-24-10.7-24-24V192c0-13.3 10.7-24 24-24s24 10.7 24 24"/></svg>
+
+    </a>
+    Textual Timepiece
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://www.github.com/ddkasa/textual-timepiece" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ddkasa/textual-timepiece
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/activity_heatmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Activity Heatmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/constants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Constants
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Input
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/pickers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pickers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/selectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Selectors
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/timeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Timeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#051-2025-06-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 - 2025-06-07
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 - 2025-06-07">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2025-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 - 2025-06-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 - 2025-06-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2025-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 - 2025-03-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 - 2025-03-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#031-2025-03-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 - 2025-03-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.1 - 2025-03-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2025-02-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 - 2025-02-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 - 2025-02-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2025-02-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 - 2025-02-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 - 2025-02-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2025-02-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      [0.1.0] - 2025-02-09
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.0] - 2025-02-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Contributors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#051-2025-06-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 - 2025-06-07
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 - 2025-06-07">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2025-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 - 2025-06-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 - 2025-06-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2025-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 - 2025-03-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 - 2025-03-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#031-2025-03-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 - 2025-03-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.1 - 2025-03-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2025-02-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 - 2025-02-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 - 2025-02-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2025-02-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 - 2025-02-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 - 2025-02-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2025-02-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      [0.1.0] - 2025-02-09
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.0] - 2025-02-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Contributors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="051-2025-06-07"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.5.0..v0.5.1">0.5.1</a> - 2025-06-07<a class="headerlink" href="#051-2025-06-07" title="Permanent link">&para;</a></h2>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>DEFAULT_CSS</code>: Escape initial newline by @ddkasa</li>
+</ul>
+<h2 id="050-2025-06-06"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.4.0..v0.5.0">0.5.0</a> - 2025-06-06<a class="headerlink" href="#050-2025-06-06" title="Permanent link">&para;</a></h2>
+<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>demo</code>: Add <code>Mount</code> event as argument by @ddkasa</li>
+<li><code>timeline</code>: Add subclassed messages to timelines by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Add entry generic to messages by @ddkasa</li>
+<li><code>demo</code>: Add <code>Mount</code> event as argument by @ddkasa</li>
+<li>Add missing future annotations imports by @ddkasa</li>
+<li><code>timeline-layout</code>: Add explicit <code>strict</code> parameters to <code>zip</code> by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Add <code>refresh_line</code> helper method by @ddkasa</li>
+<li><code>timeline</code>: Add timeline widgets to module by @ddkasa</li>
+<li><code>utility</code>: Add <code>breakdown_seconds</code> as a public helper function by @ddkasa</li>
+<li><code>demo</code>: Add timelines to demo app by @ddkasa</li>
+<li><code>utility</code>: Add <code>format_seconds</code> as a public helper function by @ddkasa</li>
+<li><code>message</code>: Add widget types to messages by @ddkasa</li>
+<li><code>DateTimeInput</code>: Add <code>value</code> alias to <code>DateTimeChanged</code> message by @ddkasa</li>
+<li>Add additional info to <strong>about</strong> module by @ddkasa</li>
+</ul>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>timeline</code>: Update generics for type hints by @ddkasa</li>
+<li><code>DateRangePicker</code>: Items get disabled on default target by @ddkasa</li>
+<li><strong>Breaking</strong> <code>ActivityHeatmap</code>: Rename <code>DateSelected</code> to <code>DaySelected</code> by @ddkasa</li>
+<li><code>DateTimeInput</code>: Replace <code>PlainDateTime.strptime</code> with <code>parse_strptime</code> by @ddkasa</li>
+<li><strong>Breaking</strong> <code>pickers</code>: Replace all <code>LocalDateTime</code> occurences with <code>PlainDateTime</code> by @ddkasa</li>
+<li><code>timeline</code>: Move <code>refresh_line</code> method to <code>VerticaTimeline</code> by @ddkasa</li>
+<li><code>AbstractRuledTimeline</code>: Make sure to <code>await</code> removals and mounts by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Use local instance <code>Deleted</code> message by @ddkasa</li>
+<li><code>timelines</code>: Use different marker logic for horizontal and vertical timelines by @ddkasa</li>
+<li><code>timeline</code>: Use generic timeline type for messages by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Simplify message names to single past-participle verbs by @ddkasa</li>
+<li><code>demo</code>: Combine <code>with</code> statements in <code>compose</code> method by @ddkasa</li>
+<li><code>ActivityHeatmap</code>: Combine <code>_date_lookup</code> if statement by @ddkasa</li>
+<li>Move types into <code>TYPE_CHECKING</code> by @ddkasa</li>
+<li><code>TimeSelect</code>: Replace <code>action_focus_neighbor</code> if blocks with ternary statements by @ddkasa</li>
+<li>Quote all <code>cast</code> types by @ddkasa</li>
+<li><code>pickers</code>: Rename <code>T</code> generic to <code>ValueType</code> by @ddkasa</li>
+<li><code>pickers</code>: Rename <code>TI</code> generic to <code>InputType</code> by @ddkasa</li>
+<li><code>demo</code>: Rename <code>__main__</code> to <code>_demo</code> by @ddkasa</li>
+<li><code>EndDateSelect</code>: Reword docstring summary to single line by @ddkasa</li>
+<li><code>timeline</code>: Use generics for all timelines by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Rename messages and remove <code>dataclass</code> decorator by @ddkasa</li>
+<li><code>TimelineEntry</code>: Rename messages and remove <code>dataclass</code> decorator by @ddkasa</li>
+<li><code>VerticalTimeline</code>: Update <code>render_lines</code> to cache basic strip by @ddkasa</li>
+<li><code>AbstractRuler</code>: Prevent compute methods from firing on generated reactives by @ddkasa</li>
+<li><code>AbstractEntry</code>: Convert <code>clicked</code> to reactive by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Make sure to update layout on <code>length</code> update by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Update only marker lines that have changed by @ddkasa</li>
+<li><code>AbstractEntry</code>: Use keywords for mime creation by @ddkasa</li>
+<li><code>timeline</code>: Implement timeline manager classes by @ddkasa</li>
+<li><code>timeline</code>: Implement base timeline classes by @ddkasa</li>
+<li><code>timeline</code>: Implement timeline layouts by @ddkasa</li>
+<li><code>timeline</code>: Implement timeline entry classes by @ddkasa</li>
+<li><code>ActivityHeatmap</code>: Implement <code>Selected</code> base message by @ddkasa</li>
+<li><code>BaseMessage</code>: Implement generic type for node by @ddkasa</li>
+<li><code>DateTimeRangePicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateTimeRangePicker</code>: Rename <code>DTRangeChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><code>DateRangePicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateRangePicker</code>: Rename <code>DateRangeChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><code>TimePicker</code>: Implement <code>Changed.value</code> property by @ddkasa</li>
+<li><code>TimePicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>TimePicker</code>: Rename <code>TimeChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><code>TimeInput</code>: Implement <code>Updated.value</code> property by @ddkasa</li>
+<li><code>TimeInput</code>: Convert <code>Updated</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>TimeInput</code>: Rename <code>TimeChanged</code> message to <code>Updated</code> by @ddkasa</li>
+<li><code>DurationPicker</code>: Implement <code>Changed.value</code> property by @ddkasa</li>
+<li><code>DurationPicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DurationPicker</code>: Rename <code>DurationChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><code>DurationInput</code>: Implement <code>Updated.value</code> property by @ddkasa</li>
+<li><code>DurationInput</code>: Convert <code>Updated</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DurationInput</code>: Rename <code>DurationChanged</code> message to <code>Updated</code> by @ddkasa</li>
+<li><code>TimeSelect</code>: Implement <code>Selected.value</code> property by @ddkasa</li>
+<li><strong>Breaking</strong> <code>TimeSelect</code>: Rename <code>TimeSelected</code> message to <code>Selected</code> by @ddkasa</li>
+<li><code>TimeSelect</code>: Convert <code>TimeSelected</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DurationSelect</code>: Rename <code>DurationRounded</code> message to <code>Rounded</code> by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DurationSelect</code>: Rename <code>DurationAdjusted</code> message to <code>Adjusted</code> by @ddkasa</li>
+<li><code>DurationSelect</code>: Convert <code>DurationRounded</code> to normal class by @ddkasa</li>
+<li><code>DurationSelect</code>: Convert <code>DurationAdjusted</code> to normal class by @ddkasa</li>
+<li><code>DateSelect</code>: Implement <code>Changed.value</code> alias by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateSelect</code>: Rename <code>EndDateChanged</code> to <code>EndChanged</code> by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateSelect</code>: Rename <code>DateChanged</code> to <code>StartChanged</code> by @ddkasa</li>
+<li><code>DateSelect</code>: Implement <code>Changed</code> base message by @ddkasa</li>
+<li><code>DatePicker</code>: Implement <code>Changed.value</code> property by @ddkasa</li>
+<li><code>DatePicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DatePicker</code>: Rename <code>DateChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><code>DateInput</code>: Implement <code>Updated.value</code> property by @ddkasa</li>
+<li><code>DateInput</code>: Convert <code>Updated</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateInput</code>: Rename <code>DateChanged</code> message to <code>Updated</code> by @ddkasa</li>
+<li><code>DateTimePicker</code>: Convert <code>Changed</code> to normal class by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateTimePicker</code>: Rename <code>DateTimeChanged</code> message to <code>Changed</code> by @ddkasa</li>
+<li><strong>Breaking</strong> <code>DateTimeInput</code>: Rename <code>DateTimeChanged</code> to <code>Updated</code> by @ddkasa</li>
+<li><code>DateTimeInput</code>: Convert <code>DateTimeChanged</code> message to standard class by @ddkasa</li>
+<li><code>HeatmapManager</code>: Convert <code>YearChanged</code> message to standard class by @ddkasa</li>
+<li><code>ActivityHeatmap</code>: Move <code>can_focus</code> into class arguments by @ddkasa</li>
+<li><code>ActivityHeatmap</code>: Convert messages to standard classes by @ddkasa</li>
+<li><code>base-widgets</code>: Move <code>can_focus</code> into class arguments by @ddkasa</li>
+<li><code>BaseMessage</code>: Convert <code>BaseMessage</code> to standard class by @ddkasa</li>
+<li><code>BaseOverlay</code>: Rename <code>Close</code> message to <code>Closed</code> by @ddkasa</li>
+<li><strong>Breaking</strong> <code>demo</code>: Rename <code>demo</code> command to <code>textual-timepiece</code> by @ddkasa</li>
+</ul>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>range-picker</code>: Update snapshots by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Make sure to clear <code>_start</code> value during cancellation by @ddkasa</li>
+<li><code>timeline</code>: Update all snapshots by @ddkasa</li>
+<li><code>snapshots</code>: Update all snapshots by @ddkasa</li>
+<li><code>nox</code>: Correctly test all python versions locally by @ddkasa</li>
+<li><code>typing</code>: Update typing to adhere to strict checks by @ddkasa</li>
+</ul>
+<h3 id="removed">Removed<a class="headerlink" href="#removed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>timeline</code>: Remove old todo notes by @ddkasa</li>
+<li><code>AbstractEntry</code>: Remove unnecessary <code>Offset</code> hint by @ddkasa</li>
+<li><code>HorizontalTimeline</code>: Remove <code>_cached_strip</code> initial value by @ddkasa</li>
+<li><code>time-picker</code>: Remove yoda expressions by @ddkasa</li>
+<li>Remove unnecessary elif statements after return by @ddkasa</li>
+<li><code>date-picker</code>: Remove unnecessary `TYPE_CHECKING by @ddkasa</li>
+<li><code>pickers</code>: Remove unnecessary spaces after docstring by @ddkasa</li>
+<li><code>AbstractTimeline</code>: Remove spaces after docstring by @ddkasa</li>
+</ul>
+<h2 id="040-2025-03-10"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.3.1..v0.4.0">0.4.0</a> - 2025-03-10<a class="headerlink" href="#040-2025-03-10" title="Permanent link">&para;</a></h2>
+<h3 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Breaking</strong> <code>heatmap</code>: Use values reactive as entry point by @ddkasa</li>
+</ul>
+<h3 id="removed_1">Removed<a class="headerlink" href="#removed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>heatmap-manager</code>: Remove border from navigation by @ddkasa</li>
+</ul>
+<h2 id="031-2025-03-04"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.3.0..v0.3.1">0.3.1</a> - 2025-03-04<a class="headerlink" href="#031-2025-03-04" title="Permanent link">&para;</a></h2>
+<h3 id="changed_3">Changed<a class="headerlink" href="#changed_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>bindings</code>: Reverse binding type override by @ddkasa</li>
+<li><code>heatmap</code>: Reduce loops in <code>_render_weeks</code> method by @ddkasa</li>
+<li><code>heatmap</code>: Reduce loop count in <code>_render_weekday</code> method by @ddkasa</li>
+<li><code>heatmap</code>: Use sum builtin for sum methods by @ddkasa</li>
+</ul>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>heatmap</code>: Incorrect offset set on tile by @ddkasa</li>
+</ul>
+<h3 id="removed_2">Removed<a class="headerlink" href="#removed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>demo</code>: Remove documentation &amp; github buttons by @ddkasa</li>
+</ul>
+<h2 id="030-2025-02-28"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.2.0..v0.3.0">0.3.0</a> - 2025-02-28<a class="headerlink" href="#030-2025-02-28" title="Permanent link">&para;</a></h2>
+<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pickers</code>: Add DateTimeInput to module by @ddkasa</li>
+<li><code>pickers</code>: Add DateInput to module by @ddkasa</li>
+<li><code>date-select</code>: Add default border &amp; background by @ddkasa</li>
+<li><code>demo</code>: Add visual select widgets to demo by @ddkasa</li>
+</ul>
+<h3 id="changed_4">Changed<a class="headerlink" href="#changed_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Breaking</strong> <code>dur-picker</code>: Convert <code>on_mount</code> to private method by @ddkasa</li>
+<li><code>pickers</code>: Convert <code>watch_expanded</code> to private method by @ddkasa</li>
+<li><strong>Breaking</strong> <code>date-picker</code>: Convert watch_date to private method by @ddkasa</li>
+<li><strong>Breaking</strong> <code>time-input</code>: Convert watch_time to private method by @ddkasa</li>
+<li><strong>Breaking</strong> <code>pickers</code>: Disable input blurred message by @ddkasa</li>
+<li><code>heatmap</code>: More accurate type for input by @ddkasa</li>
+<li><strong>Breaking</strong> <code>heatmap</code>: Use <code>int</code> instead of <code>Date</code> for heatmap year by @ddkasa</li>
+<li><code>heatmap</code>: Use cached property for heatmap navigation by @ddkasa</li>
+<li><strong>Breaking</strong> <code>dt-dur-range</code>: Convert on_mount to private method by @ddkasa</li>
+<li><code>constants</code>: Use constants for special unicode characters by @ddkasa</li>
+<li><code>date-picker</code>: Use new date add method by @ddkasa</li>
+<li><strong>Breaking</strong> <code>date-picker</code>: Convert to private method by @ddkasa</li>
+<li><code>date-picker</code>: Improve render month method by @ddkasa</li>
+<li><code>date-picker</code>: Re-order methods by @ddkasa</li>
+<li><code>date-picker</code>: Improve render weekday by @ddkasa</li>
+<li><code>demo</code>: Move tcss to app by @ddkasa</li>
+<li><code>pickers</code>: Improve default tcss by @ddkasa</li>
+</ul>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pickers</code>: Validate all mini picker variants by @ddkasa</li>
+<li><code>dt-picker</code>: Use LocalDateTime in input generic by @ddkasa</li>
+<li><code>pickers</code>: Update all snapshots by @ddkasa</li>
+<li><code>dt-picker</code>: Extra edge case tests by @ddkasa</li>
+<li><code>range-pickers</code>: Use correct widget identifier by @ddkasa</li>
+<li><code>activity-heatmap</code>: Override tooltip type by @ddkasa</li>
+<li><code>extra</code>: Include left border with get_line_offset by @ddkasa</li>
+</ul>
+<h3 id="removed_3">Removed<a class="headerlink" href="#removed_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Breaking</strong> <code>heatmap</code>: Remove unnecessary parent parameters by @ddkasa</li>
+<li><code>heatmap</code>: Remove unnecessary tabs property by @ddkasa</li>
+<li><strong>Breaking</strong> <code>widgets</code>: Remove imports from base module by @ddkasa</li>
+<li><code>time-picker</code>: Remove unnecessary focus bool by @ddkasa</li>
+</ul>
+<h2 id="020-2025-02-13"><a href="https://github.com/ddkasa/textual-timepiece/compare/v0.1.0..v0.2.0">0.2.0</a> - 2025-02-13<a class="headerlink" href="#020-2025-02-13" title="Permanent link">&para;</a></h2>
+<h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pickers</code>: Add default message argument by @ddkasa</li>
+</ul>
+<h3 id="changed_5">Changed<a class="headerlink" href="#changed_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>date-range-picker</code>: Allow picking the end date first by @ddkasa</li>
+<li><strong>Breaking</strong> <code>pickers</code>: Rename dialogs to overlays by @ddkasa</li>
+<li><strong>Breaking</strong> <code>pickers</code>: Switch all SystemDateTime to LocalDateTime by @ddkasa</li>
+<li><code>dt-picker</code>: Use a datetime format for parsing by @ddkasa</li>
+<li><code>dt-picker</code>: Verify edge cases by @ddkasa</li>
+<li><code>date-picker</code>: Verify edge cases by @ddkasa</li>
+<li>Move directions alias by @ddkasa</li>
+<li><code>date-picker</code>: Use add method for location reactive by @ddkasa</li>
+<li><code>range-pickers</code>: Update default &amp; clear action functionality by @ddkasa</li>
+<li><code>pickers</code>: Use a base method for expand button by @ddkasa</li>
+<li><code>pickers</code>: Update default &amp; clear action functionality by @ddkasa</li>
+<li>Make reactive typing more consistent by @ddkasa</li>
+<li>Use dedicated target button by @ddkasa</li>
+<li><code>date-picker</code>: Use first row for aligning only by @ddkasa</li>
+<li><code>pickers</code>: Simplify some typing by @ddkasa</li>
+<li><code>pickers</code>: Rename binding by @ddkasa</li>
+<li><code>date-select</code>: Use max unicode 1.1 icons by @ddkasa</li>
+</ul>
+<h3 id="fixed_3">Fixed<a class="headerlink" href="#fixed_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>heatmap</code>: Deal with year edge cases by @ddkasa</li>
+<li><code>range-pickers</code>: Lock button using click method by @ddkasa</li>
+<li><code>dt-picker</code>: Wrong reactive bound to overlay by @ddkasa</li>
+<li><code>pickers</code>: Update snapshots by @ddkasa</li>
+<li><code>heatmap</code>: Adjust keyboard month navigation by @ddkasa</li>
+</ul>
+<h3 id="removed_4">Removed<a class="headerlink" href="#removed_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>datetime-picker</code>: Remove unnecessary action by @ddkasa</li>
+<li><code>pickers</code>: Remove unused placeholder class by @ddkasa</li>
+</ul>
+<h2 id="010-2025-02-09">[0.1.0] - 2025-02-09<a class="headerlink" href="#010-2025-02-09" title="Permanent link">&para;</a></h2>
+<h3 id="added_3">Added<a class="headerlink" href="#added_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pickers</code>: Add module <strong>init</strong> file by @ddkasa</li>
+<li>Add about module by @ddkasa</li>
+</ul>
+<h3 id="changed_6">Changed<a class="headerlink" href="#changed_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>heatmap</code>: Implement activity heatmap by @ddkasa</li>
+<li><code>utility</code>: Implement helper functionality by @ddkasa</li>
+<li><code>widgets</code>: Supplementary widgets by @ddkasa</li>
+<li><code>pickers</code>: Import pickers into base module by @ddkasa</li>
+<li><code>pickers</code>: Implement timerange picker classes by @ddkasa</li>
+<li><code>pickers</code>: Implement datetime picker classes by @ddkasa</li>
+<li><code>pickers</code>: Implement time &amp; duration picker classes by @ddkasa</li>
+<li><code>pickers</code>: Implement date picker classes by @ddkasa</li>
+<li><code>pickers</code>: Implement base picker classes by @ddkasa</li>
+<li><code>demo</code>: Implement demo app by @ddkasa</li>
+<li>Init commit by @ddkasa</li>
+</ul>
+<h3 id="fixed_4">Fixed<a class="headerlink" href="#fixed_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implement freeze_time fixture by @ddkasa</li>
+<li>Implement test app fixture by @ddkasa</li>
+</ul>
+<h2 id="new-contributors">New Contributors<a class="headerlink" href="#new-contributors" title="Permanent link">&para;</a></h2>
+<ul>
+<li>@ddkasa made their first contribution</li>
+</ul>
+<!-- generated by git-cliff -->
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 David Kasakaitis
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
