@@ -249,7 +249,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     | escape | Clear Any Cursor Selection. |
     """
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     ActivityHeatmap {
         background: transparent;
         height: auto;
@@ -777,7 +777,7 @@ class HeatmapManager(BaseWidget):
             super().__init__(widget)
             self.year = year
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     HeatmapManager {
         layout: vertical;
         align: center middle;

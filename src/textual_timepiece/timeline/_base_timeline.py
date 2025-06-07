@@ -153,10 +153,29 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
             tooltip="Cancel creating an entry or deselect entries.",
         ),
     ]
+    """All bindings for `AbstractTimeline` widget.
+
+    | Key(s) | Description |
+    | :- | :- |
+    | ctrl+down,ctrl+right | Move entry to the backward. |
+    | ctrl+up,ctrl+left | Move entry to the forward. |
+    | alt+shift+down,alt+shift+left | Resize the tail end of the entry. |
+    | alt+shift+up,alt+shift+right | Resize the end of the entry forward. |
+    | shift+up,shift+left | Resize the start of the entry backward. |
+    | shift+down,shift+right | Move the head of the entry forward. |
+    | ctrl+d,delete,backspace | Delete the selected entry. |
+    | escape | Cancel creating an entry or deselect entries. |
+    """
 
     COMPONENT_CLASSES: ClassVar[set[str]] = {
         "timeline--normal",
     }
+    """All component classes for the `AbstractTimeline` widget.
+
+    | Class | Description |
+    | :- | :- |
+    | `timeline--normal` | Target all lines without set markers. |
+    """
     DEFAULT_CSS: ClassVar[str] = """\
     AbstractTimeline {
         background: $panel-darken-1;
@@ -165,6 +184,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         }
     }
     """
+    """Default CSS for the `AbstractTimeline` widget."""
 
     children: list[EntryType]
     _start: Offset | None = None
@@ -407,7 +427,8 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        tile: Whether to tile the timeline or not.
+        tile: Whether to tile the timeline or not. Set to `False` if a single
+            column of entries is preferred.
     """
 
     Entry = VerticalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
@@ -494,7 +515,8 @@ class VerticalTimeline(AbstractTimeline[VerticalEntryType]):
         return start.y if start.y < end.y else end.y, abs(end.y - start.y)
 
     def pre_layout(self, layout: VerticalTimelineLayout) -> None:  # type: ignore[override]
-        self._nodes._sort(
+        # Sorting with the public sort method will cause infinite layout calls.
+        self._nodes._sort(  # TODO: This needs a public solution.
             key=lambda w: (w.offset.y, cast("Scalar", w.styles.height).value),
         )
 
@@ -535,7 +557,8 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         id: The ID of the widget in the DOM.
         classes: The CSS classes for the widget.
         disabled: Whether the widget is disabled or not.
-        tile: Whether to tile the timeline or not.
+        tile: Whether to tile the timeline or not. Set to `False` if a single
+            row of entries is preferred.
     """
 
     Entry = HorizontalEntry  # type: ignore[assignment] # FIX: Need to research to how to correctly accomplish this.
@@ -615,7 +638,8 @@ class HorizontalTimeline(AbstractTimeline[HorizontalEntryType]):
         return start.x if start.x < end.x else end.x, abs(end.x - start.x)
 
     def pre_layout(self, layout: HorizontalTimelineLayout) -> None:  # type: ignore[override]
-        self._nodes._sort(
+        # Sorting with the public sort method will cause infinite layout calls.
+        self._nodes._sort(  # TODO: This needs a public solution .
             key=lambda w: (w.offset.x, cast("Scalar", w.styles.width).value),
         )
 
@@ -871,7 +895,7 @@ class VerticalTimelineNavigation(
 
     Timeline = VerticalTimeline[VerticalEntryT]
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     VerticalTimelineNavigation {
         layout: vertical !important;
         height: auto !important;
@@ -895,7 +919,7 @@ class HorizontalTimelineNavigation(
 
     Timeline = HorizontalTimeline[HorizontalEntryT]
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     HorizontalTimelineNavigation {
         layout: horizontal !important;
         width: auto !important;

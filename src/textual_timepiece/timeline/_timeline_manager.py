@@ -146,7 +146,7 @@ class RuledVerticalTimeline(
     """Ruled vertical timeline with markers.
 
     !!! note
-        If providing a headers with with the `header_factory` parameter make
+        If providing headers with the `header_factory` parameter make
         sure to compensate with top padding for the ruler to keep alignment
         in place.
 
@@ -190,7 +190,7 @@ class RuledHorizontalTimeline(
     """Ruled horizontal timeline with markers.
 
     !!! note
-        If providing a headers with with the `header_factory` parameter make
+        If providing headers with the `header_factory` parameter make
         sure to compensate with left padding for the ruler to keep alignment
         in place.
 

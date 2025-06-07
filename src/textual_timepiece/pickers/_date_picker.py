@@ -57,6 +57,7 @@ DisplayData: TypeAlias = Scope
 
 
 # TODO: Month and year picker
+# TODO: Week and year picker
 # PERF: Region refreshing
 
 
@@ -117,7 +118,7 @@ class DateSelect(BaseOverlayWidget):
     class EndChanged(Changed):
         """Message sent when the end date changed."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     DateSelect {
         background: $surface;
         width: auto;

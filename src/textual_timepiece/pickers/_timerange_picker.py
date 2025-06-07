@@ -50,7 +50,7 @@ if TYPE_CHECKING:
 class DateRangeOverlay(BaseOverlay):
     """Simple date range dialog with to date selects combined."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     DateRangeOverlay {
         layout: horizontal;
 
@@ -324,7 +324,7 @@ class DateRangePicker(AbstractPicker[DateRangeOverlay]):
 
 
 class DateTimeRangeOverlay(BaseOverlay):
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     DateTimeRangeOverlay {
         layout: horizontal !important;
         width: auto;
