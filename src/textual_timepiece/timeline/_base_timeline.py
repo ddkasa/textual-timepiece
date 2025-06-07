@@ -184,6 +184,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
         }
     }
     """
+    """Default CSS for the `AbstractTimeline` widget."""
 
     children: list[EntryType]
     _start: Offset | None = None
