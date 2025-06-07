@@ -170,6 +170,12 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     COMPONENT_CLASSES: ClassVar[set[str]] = {
         "timeline--normal",
     }
+    """All component classes for the `AbstractTimeline` widget.
+
+    | Class | Description |
+    | :- | :- |
+    | `timeline--normal` | Target all lines without set markers. |
+    """
     DEFAULT_CSS: ClassVar[str] = """\
     AbstractTimeline {
         background: $panel-darken-1;
