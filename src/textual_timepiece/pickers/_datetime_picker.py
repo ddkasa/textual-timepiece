@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 class DateTimeOverlay(BaseOverlay):
     date = var[Date | None](None, init=False)
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     DateTimeOverlay {
         layout: horizontal;
         max-width: 76;

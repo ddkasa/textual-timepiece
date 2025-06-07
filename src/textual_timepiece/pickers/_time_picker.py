@@ -79,7 +79,7 @@ class DurationSelect(BaseOverlayWidget):
             self.scope = scope
             """Which subunit to round the duration to."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     DurationSelect {
         height: 3;
         layout: horizontal;
@@ -178,7 +178,7 @@ class TimeSelect(BaseOverlayWidget):
             """Alias for `target` attribute."""
             return self.target
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     TimeSelect {
         layout: grid !important;
         grid-size: 4;
@@ -298,7 +298,7 @@ class DurationOverlay(BaseOverlay):
 class TimeOverlay(BaseOverlay):
     """Time dialog which include a time matrix as well."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     TimeOverlay {
         max-width: 40;
 

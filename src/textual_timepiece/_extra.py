@@ -80,7 +80,7 @@ class BaseWidget(Widget):
 
 
 class LockButton(Button, BaseWidget):
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     LockButton {
         background: transparent;
         color: auto;
@@ -144,7 +144,7 @@ class LockButton(Button, BaseWidget):
 class ExpandButton(Button):
     """Button with a special icon."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     ExpandButton {
         background: transparent;
         height: 3;

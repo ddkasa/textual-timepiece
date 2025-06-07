@@ -39,7 +39,7 @@ if TYPE_CHECKING:
 class BaseOverlayWidget(BaseWidget, can_focus=True):
     """Base Class that defines the internal widgets of the dialog."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     BaseOverlayWidget {
         width: 40;
         height: auto;
@@ -63,7 +63,7 @@ class BaseOverlay(BaseWidget, can_focus=True):
     class Closed(BaseMessage["BaseOverlay"]):
         """Message sent when user closes an overlay."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     BaseOverlay {
         overlay: screen !important;
         constrain: inflect;
@@ -187,7 +187,7 @@ class AbstractInput(
         spinbox_sensitivity: How sensitive the spinbox features are.
     """
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     AbstractInput {
         background: transparent;
         width: auto;
@@ -310,7 +310,7 @@ Overlay = TypeVar("Overlay", bound=BaseOverlay)
 class AbstractPicker(BaseWidget, Generic[Overlay]):
     """Abstract Picker class that defines most of the base behaviour."""
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     AbstractPicker {
         layers: base dialog;
         layout: vertical;

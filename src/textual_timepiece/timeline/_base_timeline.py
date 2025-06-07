@@ -875,7 +875,7 @@ class VerticalTimelineNavigation(
 
     Timeline = VerticalTimeline[VerticalEntryT]
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     VerticalTimelineNavigation {
         layout: vertical !important;
         height: auto !important;
@@ -899,7 +899,7 @@ class HorizontalTimelineNavigation(
 
     Timeline = HorizontalTimeline[HorizontalEntryT]
 
-    DEFAULT_CSS: ClassVar[str] = """
+    DEFAULT_CSS: ClassVar[str] = """\
     HorizontalTimelineNavigation {
         layout: horizontal !important;
         width: auto !important;
