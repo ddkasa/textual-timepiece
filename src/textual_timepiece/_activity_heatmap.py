@@ -901,15 +901,13 @@ class HeatmapManager(BaseWidget):
         self.navigation.refresh()
 
     @on(Input.Submitted)
-    @on(DescendantBlur)
-    def _verify_year(self, message: Input.Submitted | DescendantBlur) -> None:
+    @on(Input.Blurred)
+    def _verify_year(self, message: Input.Submitted | Input.Blurred) -> None:
         message.stop()
-        if not isinstance(message.control, Input):
-            return
 
         if message.control.is_valid:
             try:
-                self.year = int(message.control.value)
+                self.year = int(message.value)
             except ValueError:
                 return
 
