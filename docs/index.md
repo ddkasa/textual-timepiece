@@ -4,6 +4,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/textual-timepiece?link=https%3A%2F%2Fpypi.org%2Fproject%2Ftextual-timepiece%2F)](https://pypi.org/project/textual-timepiece/)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ddkasa/textual-timepiece/ci.yaml?link=https%3A%2F%2Fgithub.com%2Fddkasa%2Ftextual-timepiece%2Factions%2Fworkflows%2Fci.yaml)](https://github.com/ddkasa/textual-timepiece/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/github/ddkasa/textual-timepiece/graph/badge.svg?token=47OPXLN8J6)](https://codecov.io/github/ddkasa/textual-timepiece)
+[![Framework: Textual](https://img.shields.io/badge/framework-Textual-5967FF?logo=python)](https://textual.textualize.io/)
 
 > Welcome to the Textual Timepiece Documentation.
 
@@ -14,10 +15,10 @@ Textual Timepiece is a collection of widgets related to time management and mani
 ## Demo
 
 /// tab | UV
-    new: true
+new: true
 
 !!! note
-    Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
+Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
 ```sh
 uvx textual-timepiece
@@ -44,7 +45,7 @@ pip install textual-timepiece && textual-timepiece
 ## Included Widgets
 
 /// tab | Pickers
-    new: true
+new: true
 | Widget | Description |
 |:-------|:-------|
 |[DatePicker][textual_timepiece.pickers.DatePicker]|A visual date picker with an input and overlay.|
@@ -62,7 +63,6 @@ pip install textual-timepiece && textual-timepiece
 |[ActivityHeatmap][textual_timepiece.activity_heatmap.ActivityHeatmap]|Activity Heatmap for displaying yearly activity similar to the GitHub contribution graph. |
 |[HeatmapManager][textual_timepiece.activity_heatmap.HeatmapManager]|Widget for browsing the Activity Heatmap with yearly navigation builtin.|
 ///
-
 
 /// tab | Timeline
 | Widget | Description |
@@ -97,11 +97,10 @@ pip install textual-timepiece && textual-timepiece
 |[DateTimeInput][textual_timepiece.pickers.DateTimeInput]|An input with a combination of a date and time in iso-format.|
 ///
 
-
 ## Installation
 
 /// tab | PIP
-    new: true
+new: true
 
 ```sh
 pip install textual-timepiece
@@ -126,14 +125,14 @@ poetry add textual-timepiece
 ///
 
 !!! info
-    Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
+Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
 
 ## Quick Start
 
 ### DatePicker
 
 /// tab | Result
-    new: true
+new: true
 
 ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
 
@@ -160,7 +159,7 @@ if __name__ == "__main__":
 ### DateTimePicker
 
 /// tab | Result
-    new: true
+new: true
 
 ```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
 
