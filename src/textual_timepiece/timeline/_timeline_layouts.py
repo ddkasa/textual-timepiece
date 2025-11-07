@@ -44,6 +44,7 @@ class AbstractTimelineLayout(Layout, Generic[T]):
         self,
         parent: AbstractTimeline[T],
         entries: list[T],
+        greedy: bool = False,
         size: Size,
     ) -> ArrangeResult:
         if not self.tile:
