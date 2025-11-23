@@ -463,7 +463,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         elif y == 17:
             strip = self._render_months(empty_background, empty_seg)
         elif y % 2 == 0 or not self.data or (len(self.data[0]) * 2) < y - 2:
-            strip = Strip.blank(self.size.width)
+            strip = Strip.blank(self.size.width, style=empty_background)
         else:
             strip = self._render_weekday(y, empty_background, empty_seg)
 
