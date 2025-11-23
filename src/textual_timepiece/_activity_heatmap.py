@@ -374,7 +374,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         if self._is_tile_hovered(day=day, week=week):
             return Segment("██", hover_color)
 
-        return Segment("  ")
+        return Segment("  ", style=empty)
 
     def _render_weekday(
         self,
