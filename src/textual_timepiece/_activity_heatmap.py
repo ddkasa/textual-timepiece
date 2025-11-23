@@ -189,6 +189,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
 
+    # TODO: Use BindingGroup for navigation keys
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "right",
