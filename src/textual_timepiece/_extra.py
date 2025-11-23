@@ -149,7 +149,7 @@ class ExpandButton(Button):
         background: transparent;
         height: 3;
         min-width: 3;
-        max-width: 5;
+        max-width: 3;
         border: none;
         padding: 0;
     }
