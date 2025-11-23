@@ -122,7 +122,7 @@ class DurationSelect(BaseOverlayWidget):
         for grid, buttons in DurationSelect.GRID_TEMPLATE.items():
             with Grid(id=grid):
                 for button in buttons:
-                    yield Button(button, classes=grid)
+                    yield Button(button, classes=grid, compact=True)
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
@@ -252,6 +252,7 @@ class TimeSelect(BaseOverlayWidget):
                 start.format_common_iso().removesuffix(":00"),
                 id=f"time-{time}",
                 classes="time icon",
+                compact=True,
             ).set_class(bool(time % 2), "dual-hour", update=False)
             start = add_time(start, interval)
 
