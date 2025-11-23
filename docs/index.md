@@ -15,10 +15,7 @@ Textual Timepiece is a collection of widgets related to time management and mani
 ## Demo
 
 /// tab | UV
-new: true
-
-!!! note
-Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
+    new: true
 
 ```sh
 uvx textual-timepiece
@@ -45,7 +42,7 @@ pip install textual-timepiece && textual-timepiece
 ## Included Widgets
 
 /// tab | Pickers
-new: true
+    new: true
 | Widget | Description |
 |:-------|:-------|
 |[DatePicker][textual_timepiece.pickers.DatePicker]|A visual date picker with an input and overlay.|
@@ -100,7 +97,7 @@ new: true
 ## Installation
 
 /// tab | PIP
-new: true
+    new: true
 
 ```sh
 pip install textual-timepiece
@@ -125,14 +122,14 @@ poetry add textual-timepiece
 ///
 
 !!! info
-Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
+    Requires [whenever](https://github.com/ariebovenberg/whenever) as an additional dependency.
 
 ## Quick Start
 
 ### DatePicker
 
 /// tab | Result
-new: true
+    new: true
 
 ```{.textual path="docs/examples/screenshot/date_picker_example.py"}
 
@@ -159,7 +156,7 @@ if __name__ == "__main__":
 ### DateTimePicker
 
 /// tab | Result
-new: true
+    new: true
 
 ```{.textual path="docs/examples/screenshot/datetime_picker_example.py"}
 
