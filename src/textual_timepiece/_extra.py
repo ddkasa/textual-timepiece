@@ -82,7 +82,7 @@ class BaseWidget(Widget):
 class LockButton(Button, BaseWidget):
     DEFAULT_CSS: ClassVar[str] = """\
     LockButton {
-        background: transparent;
+        # background: transparent;
         color: auto;
         min-width: 4;
         max-width: 4;
@@ -156,7 +156,6 @@ class ExpandButton(Button):
     """
 
     expanded = var[bool](False, init=False)
-    icon = reactive[Text](Text, init=False)
 
     def __init__(
         self,
@@ -177,11 +176,8 @@ class ExpandButton(Button):
             action=action,
         )
 
-    def compute_icon(self) -> Text:
+    def render(self) -> RenderResult:
         return Text("▲" if self.expanded else "▼", self.rich_style)
-
-    def watch_icon(self, icon: Text) -> None:
-        self.label = icon
 
 
 class TargetButton(Button):
