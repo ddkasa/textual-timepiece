@@ -32,7 +32,6 @@ from textual.containers import Center
 from textual.containers import Horizontal
 from textual.events import Blur
 from textual.events import Click
-from textual.events import DescendantBlur
 from textual.events import Focus
 from textual.events import Leave
 from textual.events import MouseMove
