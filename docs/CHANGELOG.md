@@ -9,6 +9,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `time-picker`: Add recompose to circumvent rendering issues
+- `ActivityHeatmap`: Add style to blank `Strip`
+- `DatePicker`: Add style to blank strip
+- `greedy`: Add `greedy` parameter to layouts
+- Add annotation import
+
+### Changed
+- `heatmap`: Pass style to blank `Strip`
+- `time-picker`: Apply `compact` styles
+- `ExpandButton`: Restrict width to 3
+- `HeatmapManager`: Handle `Input.Blurred` instead of `DescendantBlur`
+
+### Fixed
+- `range-picker`: Apply mini class to correct `Widget`
+- Update snapshots
+- `time-picker`: Override `notify_style_update` to circumvent rendering issues
+- `time-picker`: More specific styles
+- `AbstractTimeline`: Use correct entry type
+- Update snapshots
+- `snapshot`: Update snapshots
+
+### Removed
+- `heatmap`: Remove unnecessary `DescendantBlur` import
+- `ExpandButton`: Remove `icon` reactive
+
 ## [0.5.1] - 2025-06-07
 
 ### Changed
@@ -255,6 +283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @ddkasa made their first contribution
+[unreleased]: https://github.com/ddkasa/textual-timepiece/compare/v0.5.1..HEAD
 [0.5.1]: https://github.com/ddkasa/textual-timepiece/compare/v0.5.0..v0.5.1
 [0.5.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.3.1..v0.4.0
