@@ -78,6 +78,14 @@ class BaseWidget(Widget):
         super().disable_messages(*messages)
         return self
 
+    def notify_style_update(self) -> None:
+        # FIX: This is hacky way of dealing with rendering issues that
+        # Textualize/textual@dca94393e77a9fa05df7b1f88865e1aec8d26054
+        # introduced
+        for child in self.query():
+            child.notify_style_update()
+        super().notify_style_update()
+
 
 class LockButton(Button, BaseWidget):
     DEFAULT_CSS: ClassVar[str] = """\
