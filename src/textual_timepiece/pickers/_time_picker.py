@@ -155,6 +155,12 @@ class DurationSelect(BaseOverlayWidget):
             else:
                 self.post_message(self.Rounded(self, 60, "seconds"))
 
+    def on_show(self) -> None:
+        # FIXME: This is hacky way of dealing with rendering issues that
+        # Textualize/textual@dca94393e77a9fa05df7b1f88865e1aec8d26054
+        # introduced
+        self.refresh(recompose=True)
+
 
 class TimeSelect(BaseOverlayWidget):
     """Time selection interface.
@@ -287,6 +293,12 @@ class TimeSelect(BaseOverlayWidget):
             widget = self.query_one(f"#time-{id}", Button)
 
         self.app.set_focus(widget)
+
+    def on_show(self) -> None:
+        # FIXME: This is hacky way of dealing with rendering issues that
+        # Textualize/textual@dca94393e77a9fa05df7b1f88865e1aec8d26054
+        # introduced
+        self.refresh(recompose=True)
 
 
 class DurationOverlay(BaseOverlay):
