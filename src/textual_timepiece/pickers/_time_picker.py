@@ -90,23 +90,20 @@ class DurationSelect(BaseOverlayWidget):
             grid-size: 2 3;
             grid-gutter: 0;
             grid-rows: 1;
-
+            & > Button.duration-grid {
+                border: none;
+                min-width: 5;
+                width: 100%;
+                &:hover {
+                    border: none;
+                }
+                text-style: italic;
+            }
             & > Button:first-of-type {
                 column-span: 2;
                 text-style: bold;
                 background-tint: $background 50%;
             }
-
-            & > Button {
-                border: none;
-                min-width: 5;
-                width: 100%;
-                text-style: italic;
-                &:hover {
-                    border: none;
-                }
-            }
-
         }
     }
     """
@@ -122,7 +119,9 @@ class DurationSelect(BaseOverlayWidget):
         for grid, buttons in DurationSelect.GRID_TEMPLATE.items():
             with Grid(id=grid):
                 for button in buttons:
-                    yield Button(button, classes=grid, compact=True)
+                    yield Button(
+                        button, classes=grid + " duration-grid", compact=True
+                    )
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
@@ -190,7 +189,7 @@ class TimeSelect(BaseOverlayWidget):
         grid-size: 4;
         grid-gutter: 0;
         grid-rows: 1;
-        & > Button {
+        & > Button.icon {
             border: none;
             min-width: 5;
             width: 100%;
