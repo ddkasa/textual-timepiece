@@ -98,7 +98,7 @@ class AbstractTimeline(Widget, Generic[EntryType], can_focus=True):
     class Deleted(Updated[EntryT, TimelineType]):
         """Sent when an entry is deleted."""
 
-    class Selected(Updated[EntryType, TimelineType]):
+    class Selected(Updated[EntryT, TimelineType]):
         """Sent when a new entry selected."""
 
     Markers: TypeAlias = MappingProxyType[int, tuple[RichStyle, str]]

@@ -117,7 +117,7 @@ def test_mini_dt_range_dialog(
     datetime_range_app, range_snap_compare, freeze_time
 ):
     async def run_before(pilot):
-        datetime_range_app.add_class("mini")
+        datetime_range_app.widget.add_class("mini")
         datetime_range_app.action_focus_next()
         datetime_range_app.widget.query_one("#target-default-start").press()
 

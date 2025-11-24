@@ -4,6 +4,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/textual-timepiece?link=https%3A%2F%2Fpypi.org%2Fproject%2Ftextual-timepiece%2F)](https://pypi.org/project/textual-timepiece/)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ddkasa/textual-timepiece/ci.yaml?link=https%3A%2F%2Fgithub.com%2Fddkasa%2Ftextual-timepiece%2Factions%2Fworkflows%2Fci.yaml)](https://github.com/ddkasa/textual-timepiece/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/github/ddkasa/textual-timepiece/graph/badge.svg?token=47OPXLN8J6)](https://codecov.io/github/ddkasa/textual-timepiece)
+[![Framework: Textual](https://img.shields.io/badge/framework-Textual-5967FF?logo=python)](https://textual.textualize.io/)
 
 > Welcome to the Textual Timepiece Documentation.
 
@@ -15,9 +16,6 @@ Textual Timepiece is a collection of widgets related to time management and mani
 
 /// tab | UV
     new: true
-
-!!! note
-    Requires [uv](https://docs.astral.sh/uv/) to be installed and configured.
 
 ```sh
 uvx textual-timepiece
@@ -63,7 +61,6 @@ pip install textual-timepiece && textual-timepiece
 |[HeatmapManager][textual_timepiece.activity_heatmap.HeatmapManager]|Widget for browsing the Activity Heatmap with yearly navigation builtin.|
 ///
 
-
 /// tab | Timeline
 | Widget | Description |
 |:-------|:-------|
@@ -96,7 +93,6 @@ pip install textual-timepiece && textual-timepiece
 |[DurationInput][textual_timepiece.pickers.DurationInput]|Duration input with a duration up to 99 hours.|
 |[DateTimeInput][textual_timepiece.pickers.DateTimeInput]|An input with a combination of a date and time in iso-format.|
 ///
-
 
 ## Installation
 

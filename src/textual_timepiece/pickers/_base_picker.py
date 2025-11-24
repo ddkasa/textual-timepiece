@@ -131,7 +131,7 @@ class BaseOverlay(BaseWidget, can_focus=True):
 
         if show:
             self.display = show
-            anim(None)
+            anim(self.notify_style_update)
         else:
             anim(lambda: setattr(self, "display", show))
 

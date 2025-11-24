@@ -45,9 +45,11 @@ class AbstractTimelineLayout(Layout, Generic[T]):
         parent: AbstractTimeline[T],
         entries: list[T],
         size: Size,
+        *,
+        greedy: bool = True,
     ) -> ArrangeResult:
         if not self.tile:
-            return self._layout.arrange(parent, entries, size)  # type: ignore[arg-type] # NOTE: Asking for a parent class anyway.
+            return self._layout.arrange(parent, entries, size, greedy=greedy)  # type: ignore[arg-type] # NOTE: Asking for a parent class anyway.
 
         parent.pre_layout(self)
         # NOTE: Sorts the widgets in pre-layout by offset and size.

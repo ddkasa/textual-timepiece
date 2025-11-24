@@ -78,11 +78,19 @@ class BaseWidget(Widget):
         super().disable_messages(*messages)
         return self
 
+    def notify_style_update(self) -> None:
+        # FIX: This is hacky way of dealing with rendering issues that
+        # Textualize/textual@dca94393e77a9fa05df7b1f88865e1aec8d26054
+        # introduced
+        for child in self.query():
+            child.notify_style_update()
+        super().notify_style_update()
+
 
 class LockButton(Button, BaseWidget):
     DEFAULT_CSS: ClassVar[str] = """\
     LockButton {
-        background: transparent;
+        # background: transparent;
         color: auto;
         min-width: 4;
         max-width: 4;
@@ -149,14 +157,13 @@ class ExpandButton(Button):
         background: transparent;
         height: 3;
         min-width: 3;
-        max-width: 5;
+        max-width: 3;
         border: none;
         padding: 0;
     }
     """
 
     expanded = var[bool](False, init=False)
-    icon = reactive[Text](Text, init=False)
 
     def __init__(
         self,
@@ -177,11 +184,8 @@ class ExpandButton(Button):
             action=action,
         )
 
-    def compute_icon(self) -> Text:
+    def render(self) -> RenderResult:
         return Text("▲" if self.expanded else "▼", self.rich_style)
-
-    def watch_icon(self, icon: Text) -> None:
-        self.label = icon
 
 
 class TargetButton(Button):

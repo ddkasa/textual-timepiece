@@ -32,7 +32,6 @@ from textual.containers import Center
 from textual.containers import Horizontal
 from textual.events import Blur
 from textual.events import Click
-from textual.events import DescendantBlur
 from textual.events import Focus
 from textual.events import Leave
 from textual.events import MouseMove
@@ -190,6 +189,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
     BORDER_TITLE = "Activity Heatmap"
     BINDING_GROUP_TITLE = "Activity Heatmap"
 
+    # TODO: Use BindingGroup for navigation keys
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding(
             "right",
@@ -374,7 +374,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         if self._is_tile_hovered(day=day, week=week):
             return Segment("██", hover_color)
 
-        return Segment("  ")
+        return Segment("  ", style=empty)
 
     def _render_weekday(
         self,
@@ -464,7 +464,7 @@ class ActivityHeatmap(ScrollView, BaseWidget, can_focus=True):
         elif y == 17:
             strip = self._render_months(empty_background, empty_seg)
         elif y % 2 == 0 or not self.data or (len(self.data[0]) * 2) < y - 2:
-            strip = Strip.blank(self.size.width)
+            strip = Strip.blank(self.size.width, style=empty_background)
         else:
             strip = self._render_weekday(y, empty_background, empty_seg)
 
@@ -901,15 +901,13 @@ class HeatmapManager(BaseWidget):
         self.navigation.refresh()
 
     @on(Input.Submitted)
-    @on(DescendantBlur)
-    def _verify_year(self, message: Input.Submitted | DescendantBlur) -> None:
+    @on(Input.Blurred)
+    def _verify_year(self, message: Input.Submitted | Input.Blurred) -> None:
         message.stop()
-        if not isinstance(message.control, Input):
-            return
 
         if message.control.is_valid:
             try:
-                self.year = int(message.control.value)
+                self.year = int(message.value)
             except ValueError:
                 return
 

@@ -709,7 +709,7 @@ class DateSelect(BaseOverlayWidget):
 
     def render_line(self, y: int) -> Strip:
         if (y % 2 == 0) or (len(self.data) + 2) * 2 < y or not self.data:
-            return Strip.blank(self.size.width)
+            return Strip.blank(self.size.width, self.rich_style)
 
         if y == 1:
             line = self._render_header(y)

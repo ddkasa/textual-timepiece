@@ -136,6 +136,7 @@ extra_css:
 
 watch:
   - src/textual_timepiece
+  - docs/
 
 nav:
   - Home: index.md
