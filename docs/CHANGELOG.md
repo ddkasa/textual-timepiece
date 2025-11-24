@@ -9,33 +9,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0] - 2025-11-24
 
 ### Added
-- `time-picker`: Add recompose to circumvent rendering issues
-- `ActivityHeatmap`: Add style to blank `Strip`
-- `DatePicker`: Add style to blank strip
-- `greedy`: Add `greedy` parameter to layouts
-- Add annotation import
+- `time-picker`: Add recompose to circumvent rendering issues by @ddkasa
+- `ActivityHeatmap`: Add style to blank `Strip` by @ddkasa
+- `DatePicker`: Add style to blank strip by @ddkasa
+- `greedy`: Add `greedy` parameter to layouts by @ddkasa
+- Add annotation import by @ddkasa
 
 ### Changed
-- `heatmap`: Pass style to blank `Strip`
-- `time-picker`: Apply `compact` styles
-- `ExpandButton`: Restrict width to 3
-- `HeatmapManager`: Handle `Input.Blurred` instead of `DescendantBlur`
+- `heatmap`: Pass style to blank `Strip` by @ddkasa
+- `time-picker`: Apply `compact` styles by @ddkasa
+- `ExpandButton`: Restrict width to 3 by @ddkasa
+- `HeatmapManager`: Handle `Input.Blurred` instead of `DescendantBlur` by @ddkasa
 
 ### Fixed
-- `range-picker`: Apply mini class to correct `Widget`
-- Update snapshots
-- `time-picker`: Override `notify_style_update` to circumvent rendering issues
-- `time-picker`: More specific styles
-- `AbstractTimeline`: Use correct entry type
-- Update snapshots
-- `snapshot`: Update snapshots
+- `range-picker`: Apply mini class to correct `Widget` by @ddkasa
+- Update snapshots by @ddkasa
+- `time-picker`: Override `notify_style_update` to circumvent rendering issues by @ddkasa
+- `time-picker`: More specific styles by @ddkasa
+- `AbstractTimeline`: Use correct entry type by @ddkasa
+- Update snapshots by @ddkasa
+- `snapshot`: Update snapshots by @ddkasa
 
 ### Removed
-- `heatmap`: Remove unnecessary `DescendantBlur` import
-- `ExpandButton`: Remove `icon` reactive
+- `heatmap`: Remove unnecessary `DescendantBlur` import by @ddkasa
+- `ExpandButton`: Remove `icon` reactive by @ddkasa
 
 ## [0.5.1] - 2025-06-07
 
@@ -283,7 +283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @ddkasa made their first contribution
-[unreleased]: https://github.com/ddkasa/textual-timepiece/compare/v0.5.1..HEAD
+[0.6.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.5.1..v0.6.0
 [0.5.1]: https://github.com/ddkasa/textual-timepiece/compare/v0.5.0..v0.5.1
 [0.5.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/ddkasa/textual-timepiece/compare/v0.3.1..v0.4.0
