@@ -17,7 +17,7 @@ def type_check(session: nox.Session) -> None:
     session.run("uv", "run", "--active", "mypy", "src")
 
 
-@nox.session(python=["3.10", "3.11", "3.12", "3.13"])
+@nox.session(python=["3.10", "3.11", "3.12", "3.13", "3.14"])
 def test(session: nox.Session) -> None:
     python_version = f"--python={session.python}"
     session.run(
