@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - "v*.*.*"
+  pull_request:
+    branches:
+      - main
+
 
 jobs:
   tests:
@@ -12,6 +16,7 @@ jobs:
     uses: ./.github/workflows/tests.yaml
 
   publish:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: tests
     permissions:
       contents: read
@@ -19,12 +24,14 @@ jobs:
     uses: ./.github/workflows/publish.yaml
 
   release:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: publish
     permissions:
       contents: write
     uses: ./.github/workflows/changelog.yaml
 
   documentation:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: publish
     permissions:
       contents: write
