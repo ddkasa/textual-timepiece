@@ -43,7 +43,7 @@ Documentation = "https://ddkasa.github.io/textual-timepiece/"
 
 [dependency-groups]
 dev = ["nox>=2024.10.9", "textual-dev>=1.7.0"]
-type = ["mypy>=1.15.0"]
+type = ["mypy>=1.18.2"]
 test = [
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",

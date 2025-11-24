@@ -1827,7 +1827,7 @@ test = [
     { name = "pytest-textual-snapshot", specifier = ">=1.0.0" },
     { name = "pytest-xdist", specifier = ">=3.6.1" },
 ]
-type = [{ name = "mypy", specifier = ">=1.15.0" }]
+type = [{ name = "mypy", specifier = ">=1.18.2" }]
 
 [[package]]
 name = "tomli"
