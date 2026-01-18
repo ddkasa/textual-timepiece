@@ -1,4 +1,5 @@
-local enable_lsp = { "ruff", "mypy" }
+vim.lsp.enable("ruff")
+vim.lsp.enable("pyright")
 
 local cwd = vim.fn.getcwd()
 
