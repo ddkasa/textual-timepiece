@@ -20,9 +20,9 @@ from textual.validation import Validator
 from textual.widgets import Button
 from textual.widgets import Input
 from textual.widgets import Rule
-from whenever import SystemDateTime
 from whenever import Time
 from whenever import TimeDelta
+from whenever import ZonedDateTime
 from whenever import hours
 from whenever import minutes
 from whenever import seconds
@@ -248,7 +248,7 @@ class TimeSelect(BaseOverlayWidget):
         interval = minutes(30)
         for time in range(48):
             yield Button(
-                start.format_common_iso().removesuffix(":00"),
+                start.format_iso().removesuffix(":00"),
                 id=f"time-{time}",
                 classes="time icon",
                 compact=True,
@@ -257,7 +257,7 @@ class TimeSelect(BaseOverlayWidget):
 
     def _on_button_pressed(self, message: Button.Pressed) -> None:
         message.stop()
-        time = Time.parse_common_iso(f"{message.button.label}:00")
+        time = Time.parse_iso(f"{message.button.label}:00")
         self.post_message(self.Selected(self, time))
 
     def action_focus_neighbor(self, direction: Directions) -> None:
@@ -492,7 +492,7 @@ class DurationPicker(BasePicker[DurationInput, TimeDelta, DurationOverlay]):
 class TimeValidator(Validator):
     def validate(self, value: str) -> ValidationResult:
         try:
-            Time.parse_common_iso(value.strip())
+            Time.parse_iso(value.strip())
         except ValueError:
             return ValidationResult(
                 [
@@ -535,7 +535,7 @@ class TimeInput(AbstractInput[Time]):
     def _watch_time(self, time: Time | None) -> None:
         with self.prevent(Input.Changed), suppress(ValueError):
             if time:
-                self.value = time.format_common_iso()
+                self.value = time.format_iso()
             else:
                 self.value = ""
 
@@ -548,7 +548,7 @@ class TimeInput(AbstractInput[Time]):
 
     def convert(self) -> Time | None:
         try:
-            return Time.parse_common_iso(self.value)
+            return Time.parse_iso(self.value)
         except ValueError:
             return None
 
@@ -678,4 +678,4 @@ class TimePicker(BasePicker[TimeInput, Time, TimeOverlay]):
 
     def to_default(self) -> None:
         """Reset time to the local current time."""
-        self.time = SystemDateTime.now().time()
+        self.time = ZonedDateTime.now_in_system_tz().time()

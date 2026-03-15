@@ -10,7 +10,7 @@ class DatePickerApp(App[None]):
     def on_date_picker_changed(self, message: DatePicker.Changed) -> None:
         message.stop()
         if message.date:
-            msg = f"Date changed to {message.date.format_common_iso()}."
+            msg = f"Date changed to {message.date.format_iso()}."
         else:
             msg = "Date was removed."
 

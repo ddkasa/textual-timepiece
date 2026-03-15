@@ -1,7 +1,6 @@
 from textual.app import App, ComposeResult
 from textual_timepiece.pickers import DateTimeRangePicker
-from textual import on
-from whenever import Date, SystemDateTime
+from whenever import ZonedDateTime
 
 
 class DTPickerRangeApp(App[None]):
@@ -12,11 +11,11 @@ class DTPickerRangeApp(App[None]):
         self.notify("Started timer!")
 
     def compose(self) -> ComposeResult:
-        yield DateTimeRangePicker(SystemDateTime.now().local())
+        yield DateTimeRangePicker(ZonedDateTime.now_in_system_tz().to_plain())
     
     def stop_timer(self) -> None:
         dt_range = self.query_one(DateTimeRangePicker).disable_end(disable=False)
-        dt_range.end_dt = SystemDateTime.now().local()
+        dt_range.end_dt = ZonedDateTime.now_in_system_tz().to_plain()
 
 
 if __name__ == "__main__":
