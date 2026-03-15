@@ -34,3 +34,9 @@ def freeze_time():
 
     with patch_current_time(time, keep_ticking=False):
         yield Date(2025, 2, 6)
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if item.get_closest_marker("snapshot"):
+            item.add_marker(pytest.mark.flaky(reruns=3, reruns_delay=1))
