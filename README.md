@@ -123,11 +123,12 @@ if __name__ == "__main__":
 ```py
 from textual.app import App, ComposeResult
 from textual_timepiece.pickers import DateTimePicker
-from whenever import SystemDateTime
+from whenever import ZonedDateTime
 
 class DateTimePickerApp(App[None]):
     def compose(self) -> ComposeResult:
-        yield DateTimePicker(SystemDateTime(2025, 3, 4, 9, 42, 47)))
+        yield DateTimePicker(ZonedDateTime.from_system_tz(2025, 3, 4, 9, 42, 47)))
+
 
 if __name__ == "__main__":
     DateTimePickerApp().run()

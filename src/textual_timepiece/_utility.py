@@ -135,12 +135,12 @@ def add_time(time: DateTime, delta: TimeDelta) -> Time:
     value = time_to_seconds(time) + int(delta.in_seconds())
     if value <= 0:
         return Time()
-    return Time.parse_common_iso(format_seconds(min(value, 86399)))
+    return Time.parse_iso(format_seconds(min(value, 86399)))
 
 
 def round_time(time: DateTime, multiple: int) -> Time:
     seconds = round((time_to_seconds(time) / multiple) * multiple)
-    return Time.parse_common_iso(format_seconds(seconds))
+    return Time.parse_iso(format_seconds(seconds))
 
 
 def iterate_timespan(

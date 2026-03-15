@@ -22,9 +22,9 @@ from textual.widgets import Static
 from whenever import Date
 from whenever import DateDelta
 from whenever import PlainDateTime
-from whenever import SystemDateTime
 from whenever import Time
 from whenever import TimeDelta
+from whenever import ZonedDateTime
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import LockButton
@@ -378,19 +378,19 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     Examples:
         ```python
             def compose(self) -> ComposeResult:
-                now = SystemDateTime.now().to_plain()
+                now = ZonedDateTime.now_in_system_tz().to_plain()
                 yield DateTimeRangePicker(now, time_range=TimeDelta(hours=5))
         ```
 
         ```python
             def compose(self) -> ComposeResult:
-                yield DateTimeRangePicker(SystemDateTime.now().to_plain())
+                yield DateTimeRangePicker(ZonedDateTime.now_in_system_tz().to_plain())
 
             def action_stop(self) -> None:
                 pick = self.query_one(DateTimeRangePicker)
-                pick.end_dt = SystemDateTime.now().to_plain()
+                pick.end_dt = ZonedDateTime.now_in_system_tz().to_plain()
         ```
-    """
+    """  # noqa: E501
 
     class Changed(BaseMessage["DateTimeRangePicker"]):
         """Message sent when the datetime range has changed."""
@@ -640,7 +640,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     ) -> None:
         if message:
             message.stop()
-        self.start_dt = SystemDateTime.now().to_plain()
+        self.start_dt = ZonedDateTime.now_in_system_tz().to_plain()
 
     @on(Button.Pressed, "#target-default-end")
     def _action_target_default_end(
@@ -649,7 +649,7 @@ class DateTimeRangePicker(AbstractPicker[DateTimeRangeOverlay]):
     ) -> None:
         if message:
             message.stop()
-        now = SystemDateTime.now().to_plain()
+        now = ZonedDateTime.now_in_system_tz().to_plain()
         if not self.start_dt or now >= self.start_dt:
             self.end_dt = now
         else:

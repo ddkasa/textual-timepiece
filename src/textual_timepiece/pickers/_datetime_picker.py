@@ -11,8 +11,8 @@ from textual.reactive import var
 from textual.widgets import Input
 from whenever import Date
 from whenever import PlainDateTime
-from whenever import SystemDateTime
 from whenever import Time
+from whenever import ZonedDateTime
 
 from textual_timepiece._extra import BaseMessage
 from textual_timepiece._extra import TargetButton
@@ -140,7 +140,7 @@ class DateTimeInput(AbstractInput[PlainDateTime]):
         """Adjust date with an offset depending on the text cursor position."""
         try:
             if self.datetime is None:
-                self.datetime = SystemDateTime.now().to_plain()
+                self.datetime = ZonedDateTime.now_in_system_tz().to_plain()
             elif self.cursor_position < 4:
                 self.datetime = self.datetime.add(
                     years=offset,
@@ -306,14 +306,16 @@ class DateTimePicker(
         if self.datetime:
             self.datetime = self.datetime.add(message.delta, ignore_dst=True)
         else:
-            self.datetime = SystemDateTime.now().to_plain()
+            self.datetime = ZonedDateTime.now_in_system_tz().to_plain()
 
     @on(TimeSelect.Selected)
     def _set_time(self, message: TimeSelect.Selected) -> None:
         message.stop()
         if self.datetime is None:
             self.datetime = (
-                SystemDateTime.now().to_plain().replace_time(message.target)
+                ZonedDateTime.now_in_system_tz()
+                .to_plain()
+                .replace_time(message.target)
             )
         else:
             self.datetime = self.datetime.replace_time(message.target)
@@ -326,5 +328,5 @@ class DateTimePicker(
 
     def to_default(self) -> None:
         """Reset the picker datetime to the current time."""
-        self.datetime = SystemDateTime.now().to_plain()
+        self.datetime = ZonedDateTime.now_in_system_tz().to_plain()
         self.overlay.date_select.scope = DateScope.MONTH

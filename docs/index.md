@@ -168,7 +168,6 @@ if __name__ == "__main__":
 ```py
 from textual.app import App, ComposeResult
 from textual_timepiece.pickers import DateTimePicker
-from whenever import SystemDateTime
 
 class DateTimePickerApp(App[None]):
     def compose(self) -> ComposeResult:
