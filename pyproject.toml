@@ -4,15 +4,15 @@ version = "0.7.0"
 authors = [{ name = "David Kasakaitis", email = "davidkasakaitis@proton.me" }]
 description = "Various time related widgets & functionality for Textual."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["textual>=6.0.0,<9.0.0", "whenever>=0.9.1,<0.10.0"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "License :: OSI Approved :: MIT License",
     "Development Status :: 3 - Alpha",
@@ -118,7 +118,7 @@ convention = "google"
 
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 exclude = ['noxfile.py']
 warn_unused_configs = true
 warn_redundant_casts = true
